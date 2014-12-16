@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <CheckedTextView
+        android:layout_width="321dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="0dp"
+        android:gravity="center_horizontal"
+        android:text="New CheckedTextView"
+        android:id="@+id/checkedTextView"
+        android:layout_gravity="center_vertical" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="420dp"
+        android:layout_gravity="bottom">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:id="@+id/msgText"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="0.98"
+            android:textColor="@android:color/black"
+            android:background="@android:color/holo_orange_light"/>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="115dp"
+            android:layout_height="50dp"
+            android:text="@string/sendMsg"
+            android:textSize="20dp"
+            android:id="@+id/sendButton"
+            android:layout_gravity="bottom"
+            android:background="#98fbffa6"
+            android:textColor="#ff3739ff"
+            android:textStyle="italic"
+            android:onClick="onSendButtonClick"/>
+
+    </LinearLayout>
+</LinearLayout>

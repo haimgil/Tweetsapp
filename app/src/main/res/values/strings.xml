@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Tweetsapp</string>
+    <string name="title_activity_tweetsapp_main_activity">tweetsapp_main_activity</string>
+    <string name="title_activity_google_play_services">tweetsApp</string>
+    <string name="sendMsg">Send</string>
+</resources>
