@@ -1,0 +1,14 @@
+{
+    "applications": {
+        "TweetsApp": {
+            "applicationId": "SmqqaJ358gtvsoD1wAli03oQ1xGXw7atn8DEfq3O", 
+            "masterKey": "I2KQsuNHMMt6c3wdaaY8cE5aE6ny4Q3cgbbRc77M"
+        }, 
+        "_default": {
+            "link": "TweetsApp"
+        }
+    }, 
+    "global": {
+        "parseVersion": "1.3.2"
+    }
+}

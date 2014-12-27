@@ -6,21 +6,25 @@ android {
 
     defaultConfig {
         applicationId "com.example.haim.tweetsapp"
-        minSdkVersion 19
+        minSdkVersion 15
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
     buildTypes {
         release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            /*runProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'*/
         }
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.+'
-    compile 'com.google.android.gms:play-services-base:6.5.+'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile files('libs/json-simple-1.1.1.jar')
+    compile files('libs/Parse-1.8.0.jar')
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'org.igniterealtime.smack:smack-tcp:4.1.0-alpha5'
+    compile 'com.google.android.gms:play-services:6.5.87'
+    compile 'com.facebook.android:facebook-android-sdk:3.21.1'
 }
