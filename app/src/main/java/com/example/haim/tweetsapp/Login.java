@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -18,10 +19,22 @@ import java.util.Arrays;
 
 public class Login extends Activity {
 
+    EditText mail;
+    EditText password;
+    String[] loginDetails;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mail = (EditText)findViewById(R.id.mailLogin);
+        password = (EditText)findViewById(R.id.passwordLogin);
+
+        Bundle extras = getIntent().getExtras();
+        loginDetails = extras.getStringArray("login_details");
+        mail.setText(loginDetails[0]);
+        password.setText(loginDetails[1]);
     }
 
 

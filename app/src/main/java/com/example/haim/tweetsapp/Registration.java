@@ -1,6 +1,7 @@
 package com.example.haim.tweetsapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -60,6 +61,7 @@ public class Registration extends Activity {
         String password = this.password.getText().toString();
         String confirmPass = this.confirm.getText().toString();
 
+        String[] login_details = {email, password};
         // Checks that Name field contains a real name
         if(name.length() < 2){
             this.name.setError("Please enter your full name");
@@ -104,5 +106,9 @@ public class Registration extends Activity {
         }
 
         Utils.alert(this,"Registration","You have successfully registered. Check your mail box for verification email");
+
+        Intent i = new Intent(this, Login.class);
+        i.putExtra("login_details", login_details);
+        startActivity(i);
     }
 }
