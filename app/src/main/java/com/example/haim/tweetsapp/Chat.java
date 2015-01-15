@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.parse.ParseInstallation;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 public class Chat extends Activity {
 
@@ -57,9 +56,9 @@ public class Chat extends Activity {
         EditText txtMessage = (EditText)findViewById(R.id.txtMessage);
 
         printMessage(txtMessage.getText().toString());
-
-        ParseQuery allOthers = ParseQuery.getQuery(ParseInstallation.class);
-        allOthers.whereNotEqualTo("user", ParseUser.getCurrentUser());
+        // Query that get all users from installation list except the current user.
+        ParseQuery<ParseInstallation> allOthers = ParseQuery.getQuery(ParseInstallation.class);
+        allOthers = allOthers.whereNotEqualTo("objectId", ParseInstallation.getCurrentInstallation().getObjectId());
 
         ParsePush.sendMessageInBackground("PUSH: " + txtMessage.getText(), allOthers);
 
