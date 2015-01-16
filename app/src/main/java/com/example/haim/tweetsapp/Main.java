@@ -20,7 +20,7 @@ public class Main extends Activity {
         if(ParseUser.getCurrentUser()!=null)
             activity = new Intent(this, Chat.class);
         else
-            activity = new Intent(this,Registration.class);
+            activity = new Intent(this,Login.class);
 
         startActivity(activity);
     }

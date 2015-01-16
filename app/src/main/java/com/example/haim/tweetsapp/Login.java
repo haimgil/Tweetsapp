@@ -83,4 +83,9 @@ public class Login extends Activity {
             }
         });
     }
+
+    public void onSignUpClick(View view){
+        Intent iReg = new Intent(this, Registration.class);
+        startActivity(iReg);
+    }
 }

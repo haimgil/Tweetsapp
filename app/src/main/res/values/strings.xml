@@ -15,5 +15,7 @@
     <string name="password">Password</string>
     <string name="login_button">Login</string>
     <string name="facebook_login">Login with Facebook</string>
+    <string name="sign_up_button">Sign Up</string>
+    <string name="or_txt">OR</string>
 
 </resources>
