@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -32,9 +33,13 @@ public class Login extends Activity {
         password = (EditText)findViewById(R.id.passwordLogin);
 
         Bundle extras = getIntent().getExtras();
-        loginDetails = extras.getStringArray("login_details");
-        mail.setText(loginDetails[0]);
-        password.setText(loginDetails[1]);
+        // When Login activity powered by Registration activity then gets the login details from Registration activity.
+        Intent iFromReg = getIntent();
+        if(iFromReg != null && iFromReg.hasExtra("login_details")){
+            loginDetails = extras.getStringArray("login_details");
+            mail.setText(loginDetails[0]);
+            password.setText(loginDetails[1]);
+        }
     }
 
 
@@ -87,5 +92,36 @@ public class Login extends Activity {
     public void onSignUpClick(View view){
         Intent iReg = new Intent(this, Registration.class);
         startActivity(iReg);
+    }
+
+    public void onLoginClick(View view){
+        boolean isUserExist = false;
+        String userMail = mail.getText().toString();
+        String userPassword = password.getText().toString();
+        ParseUser.logInInBackground(userMail, userPassword, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if (user != null) {
+                    // If user exist and authenticated, send user to Welcome.class
+                    Intent intent = new Intent(
+                            Login.this,
+                            Chat.class);
+
+                    /* ---- Save the currentUser to Extra for using in Chat.class-------- */
+
+                    startActivity(intent);
+                    Toast.makeText(getApplicationContext(),
+                            "Successfully Logged in",
+                            Toast.LENGTH_LONG).show();
+                    finish();
+                }
+                else{
+                    Toast.makeText(
+                            getApplicationContext(),
+                            "No such user exist, please signup",
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }

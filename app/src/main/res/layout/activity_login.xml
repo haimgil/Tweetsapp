@@ -42,10 +42,11 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/login_button"
                 android:id="@+id/button"
+                android:text="@string/login_button"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="20dp"
+                android:onClick="onLoginClick" />
 
             <View
                 android:layout_width="fill_parent"
