@@ -105,9 +105,9 @@ public class Login extends Activity {
                     // If user exist and authenticated, send user to Welcome.class
                     Intent intent = new Intent(
                             Login.this,
-                            Chat.class);
+                            Users_list.class);
 
-                    /* ---- Save the currentUser to Extra for using in Chat.class-------- */
+                    // TODO here => Save the currentUser to Extra for using in Chat.class
 
                     startActivity(intent);
                     Toast.makeText(getApplicationContext(),
@@ -118,7 +118,7 @@ public class Login extends Activity {
                 else{
                     Toast.makeText(
                             getApplicationContext(),
-                            "No such user exist, please signup",
+                            "E-mail address or password was incorrect. Try again or Sign Up now",
                             Toast.LENGTH_LONG).show();
                 }
             }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="facebook_app_id">1753813288177461</string>
 
+    <string name="facebook_app_id">1753813288177461</string>
     <string name="app_name">Tweetsapp</string>
     <string name="title_activity_tweetsapp_main_activity">tweetsapp_main_activity</string>
     <string name="title_activity_google_play_services">tweetsApp</string>
@@ -17,5 +17,8 @@
     <string name="facebook_login">Login with Facebook</string>
     <string name="sign_up_button">Sign Up</string>
     <string name="or_txt">OR</string>
+    <string name="title_activity_users_list">Users</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="back_button">Users</string>
 
 </resources>

@@ -1,6 +1,7 @@
 package com.example.haim.tweetsapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,10 +13,12 @@ import android.widget.TextView;
 import com.parse.ParseInstallation;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 public class Chat extends Activity {
 
     private static Chat INSTANCE = null;
+    public  static ParseUser chatWith = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,8 @@ public class Chat extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_chat, menu);
+        TextView userName = (TextView)findViewById(R.id.chatting_with);
+        userName.setText(chatWith.getUsername());
         return true;
     }
 
@@ -63,6 +68,11 @@ public class Chat extends Activity {
         ParsePush.sendMessageInBackground("PUSH: " + txtMessage.getText(), allOthers);
 
         txtMessage.setText("");
+    }
+
+    public void onUsersClick(View view){
+        Intent iUsersList = new Intent(this, Users_list.class);
+        startActivity(iUsersList);
     }
 
     public void printMessage(String msg){

@@ -4,22 +4,38 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="fill_parent"
+            android:text="@string/back_button"
+            android:id="@+id/button3"
+            android:background="@android:color/holo_blue_dark"
+            android:onClick="onUsersClick" />
+
+        <TextView
+        android:layout_width="306dp"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:gravity="center"
-        android:text="..."
         android:textSize="20dp"
-        android:id="@+id/mTextView"
-        android:layout_gravity="top" />
+        android:id="@+id/chatting_with"
+        android:layout_gravity="top"
+        android:background="@android:color/holo_blue_light"
+        android:autoText="false" />
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/messagesScrollView"
         android:layout_gravity="center"
-        android:layout_weight="1" >
+        android:layout_weight="1"
+        android:background="@android:color/background_light">
 
         <LinearLayout
             android:orientation="vertical"
@@ -49,6 +65,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:text="SEND"
             android:id="@+id/sendButton"
             android:onClick="onSendButtonClick"
