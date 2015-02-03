@@ -25,8 +25,12 @@ public class Chat extends Activity {
         super.onCreate(savedInstanceState);
 
         INSTANCE = this;
-
         setContentView(R.layout.activity_chat);
+        TextView userName = (TextView)findViewById(R.id.chatting_with);
+        if(chatWith != null)
+            userName.setText(chatWith.getUsername());
+        else
+            userName.setText("Everyone");
     }
 
     static public Chat getInstance(){
@@ -37,8 +41,6 @@ public class Chat extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_chat, menu);
-        TextView userName = (TextView)findViewById(R.id.chatting_with);
-        userName.setText(chatWith.getUsername());
         return true;
     }
 
@@ -59,18 +61,23 @@ public class Chat extends Activity {
 
     public void onSendButtonClick(View view){
         EditText txtMessage = (EditText)findViewById(R.id.txtMessage);
-
         printMessage(txtMessage.getText().toString());
-        // Query that get all users from installation list except the current user.
-        ParseQuery<ParseInstallation> allOthers = ParseQuery.getQuery(ParseInstallation.class);
-        allOthers = allOthers.whereNotEqualTo("objectId", ParseInstallation.getCurrentInstallation().getObjectId());
 
-        ParsePush.sendMessageInBackground("PUSH: " + txtMessage.getText(), allOthers);
-
+        ParseQuery<ParseInstallation> destination;
+        destination = ParseQuery.getQuery(ParseInstallation.class);
+        if(chatWith == null) {
+            // Query that get all users from installation list except the current user.
+            destination = destination.whereNotEqualTo("objectId", ParseInstallation.getCurrentInstallation().getObjectId());
+        }
+        else{
+            destination = destination.whereEqualTo("user", chatWith);
+        }
+        ParsePush.sendMessageInBackground("PUSH: " + txtMessage.getText(), destination);
         txtMessage.setText("");
     }
 
     public void onUsersClick(View view){
+        chatWith = null;
         Intent iUsersList = new Intent(this, Users_list.class);
         startActivity(iUsersList);
     }

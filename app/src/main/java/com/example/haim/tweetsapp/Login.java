@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import java.util.Arrays;
@@ -82,7 +83,8 @@ public class Login extends Activity {
                     Utils.alert(Login.this,"","Login with Facebook failed");
                 }else{
                     // TODO: get full name from facebook profile
-                    Intent i = new Intent(Login.this, Chat.class);
+                    pairingUserToInstallationId();
+                    Intent i = new Intent(Login.this, Users_list.class);
                     startActivity(i);
                 }
             }
@@ -108,6 +110,7 @@ public class Login extends Activity {
                             Users_list.class);
 
                     // TODO here => Save the currentUser to Extra for using in Chat.class
+                    pairingUserToInstallationId();
 
                     startActivity(intent);
                     Toast.makeText(getApplicationContext(),
@@ -123,5 +126,11 @@ public class Login extends Activity {
                 }
             }
         });
+    }
+
+    private void pairingUserToInstallationId() {
+        ParseInstallation pInstallation = ParseInstallation.getCurrentInstallation();
+        pInstallation.put("user", ParseUser.getCurrentUser());
+        pInstallation.saveInBackground();
     }
 }

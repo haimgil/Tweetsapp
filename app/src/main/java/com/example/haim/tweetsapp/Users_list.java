@@ -45,9 +45,12 @@ public class Users_list extends Activity implements AdapterView.OnItemClickListe
      * The user names using for showing in the users List.
      */
     private void getUsersNames() {
-        for(int i=0; i < usersObjects.size(); i++){
+        int i;
+        for(i=0; i < usersObjects.size(); i++){
             usersNames.add(usersObjects.get(i).getUsername());
         }
+        if(i>1)
+            usersNames.add("All Users"); // Option to chatting with all users.
     }
 
     /**
@@ -60,7 +63,7 @@ public class Users_list extends Activity implements AdapterView.OnItemClickListe
         try {
             usersObjects = allUsers.find();
         }catch (ParseException pe){
-            Log.d("com.parse.ParseException", "Saving users names failed");
+            Log.d("com.parse.ParseException", "Saving users objects failed");
             return;
         }
     }
@@ -90,7 +93,9 @@ public class Users_list extends Activity implements AdapterView.OnItemClickListe
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Chat.chatWith = usersObjects.get(position);
+        if(position < usersObjects.size()) {
+            Chat.chatWith = usersObjects.get(position);
+        }
         Intent iChat = new Intent(this, Chat.class);
         startActivity(iChat);
     }
