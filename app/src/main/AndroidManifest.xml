@@ -47,7 +47,7 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".TweetsBroadcastReceiver"
+            android:name=".helpers.TweetsBroadcastReceiver"
             android:exported="false" >
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />

@@ -10,22 +10,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.haim.tweetsapp.helpers.Utils;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
 
 public class Registration extends Activity {
 
-    EditText name;
-    EditText email;
-    EditText password;
-    EditText confirm;
+    private EditText username;
+    private EditText name;
+    private EditText email;
+    private EditText password;
+    private EditText confirm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
+        username = (EditText)findViewById(R.id.userField);
         name = (EditText)findViewById(R.id.nameField);
         email = (EditText)findViewById(R.id.emailField);
         password = (EditText)findViewById(R.id.passwordField);
@@ -56,12 +60,20 @@ public class Registration extends Activity {
     }
 
     public void onRegisterClick(View view){
+        String username = this.username.getText().toString().trim();
         String name = this.name.getText().toString().trim();
         String email = this.email.getText().toString().trim();
         String password = this.password.getText().toString();
         String confirmPass = this.confirm.getText().toString();
 
-        String[] login_details = {email, password};
+        String[] login_details = {username, password};
+
+        // Checks that username field contains username
+        if(username.length() < 2){
+            this.name.setError("Please enter username");
+            return;
+        }
+
         // Checks that Name field contains a real name
         if(name.length() < 2){
             this.name.setError("Please enter your full name");
@@ -89,7 +101,7 @@ public class Registration extends Activity {
         // create new user
         ParseUser user = new ParseUser();
         user.put("name", name);
-        user.setUsername(email);
+        user.setUsername(username);
         user.setEmail(email);
         user.setPassword(password);
 
@@ -97,9 +109,14 @@ public class Registration extends Activity {
         try {
             user.signUp();
         } catch (ParseException | IllegalArgumentException e){
-            if(e.getMessage().equals("email_in_use")){
-                Utils.alert(this,"Registration", "Registration Failed. Email address already in use.");
-            }else {
+            if(e.getMessage().equals("email_in_use")) {
+                Utils.alert(this, "Registration", "Registration Failed. Email address already in use.");
+            }
+            //TODO - handle this part
+            /*else if(e.getMessage().equals("username_in_use")){
+                Utils.alert(this, "Registration", "Registration Failed. Username already in use.");
+            }*/
+            else {
                 Utils.alert(this,"Registration", "Registration Failed. Check your internet connection.");
             }
             return;

@@ -28,7 +28,7 @@
                 android:ems="10"
                 android:id="@+id/mailLogin"
                 android:layout_gravity="center_horizontal"
-                android:hint="@string/email" />
+                android:hint="@string/text" />
 
             <EditText
                 android:layout_width="match_parent"

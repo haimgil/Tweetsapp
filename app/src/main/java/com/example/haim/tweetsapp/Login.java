@@ -3,6 +3,7 @@ package com.example.haim.tweetsapp;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,6 +11,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.haim.tweetsapp.helpers.Utils;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.model.GraphUser;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
@@ -21,9 +26,11 @@ import java.util.Arrays;
 
 public class Login extends Activity {
 
-    EditText mail;
-    EditText password;
-    String[] loginDetails;
+    private EditText mail;
+    private EditText password;
+    private String[] loginDetails;
+    private SharedPreferences settings;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,15 +87,37 @@ public class Login extends Activity {
                 pd.dismiss();
 
                 if(parseUser == null || e!=null) {
-                    Utils.alert(Login.this,"","Login with Facebook failed");
+                    Utils.alert(Login.this, "", "Login with Facebook failed");
                 }else{
-                    // TODO: get full name from facebook profile
+                    makeMeRequest();
+
+                    settings = getSharedPreferences("PrefsFile", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putBoolean("login",true);
+                    editor.commit();
+
                     pairingUserToInstallationId();
                     Intent i = new Intent(Login.this, Users_list.class);
                     startActivity(i);
                 }
             }
         });
+    }
+
+    public void makeMeRequest() {
+        if (ParseFacebookUtils.getSession().isOpened()) {
+            Request.newMeRequest(ParseFacebookUtils.getSession(), new Request.GraphUserCallback() {
+
+                @Override
+                public void onCompleted(GraphUser facebookUser, Response response) {
+                    if (facebookUser != null) {
+                        ParseUser.getCurrentUser().put("name", facebookUser.getFirstName());
+                        ParseUser.getCurrentUser().setUsername(facebookUser.getName());
+                        ParseUser.getCurrentUser().saveInBackground();
+                    }
+                }
+            }).executeAsync();
+        }
     }
 
     public void onSignUpClick(View view){
@@ -108,6 +137,11 @@ public class Login extends Activity {
                     Intent intent = new Intent(
                             Login.this,
                             Users_list.class);
+
+                    settings = getSharedPreferences("PrefsFile", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putBoolean("login",true);
+                    editor.commit();
 
                     // TODO here => Save the currentUser to Extra for using in Chat.class
                     pairingUserToInstallationId();

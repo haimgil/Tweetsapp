@@ -2,6 +2,7 @@ package com.example.haim.tweetsapp;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,13 +12,20 @@ import com.parse.ParseUser;
 
 public class Main extends Activity {
 
+    private boolean isLoggedIn;
+    private SharedPreferences settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        settings = getSharedPreferences("PrefsFile", MODE_PRIVATE);
+        isLoggedIn = settings.getBoolean("login", false);
+
+
         Intent activity = null;
-        if(ParseUser.getCurrentUser()!=null)
+        if(ParseUser.getCurrentUser()!=null && isLoggedIn)
             activity = new Intent(this, Users_list.class);
         else
             activity = new Intent(this,Login.class);

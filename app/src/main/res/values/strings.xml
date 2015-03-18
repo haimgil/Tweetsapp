@@ -11,14 +11,18 @@
     <string name="title_activity_chat">Chat</string>
     <string name="title_activity_main">TweetsApp</string>
     <string name="title_activity_login">Login</string>
-    <string name="email">Email address</string>
+    <string name="text">Username</string>
     <string name="password">Password</string>
     <string name="login_button">Login</string>
     <string name="facebook_login">Login with Facebook</string>
     <string name="sign_up_button">Sign Up</string>
     <string name="or_txt">OR</string>
     <string name="title_activity_users_list">Users</string>
-    <string name="hello_world">Hello world!</string>
     <string name="back_button">Users</string>
+    <string name="reg_filled_1">Username</string>
+    <string name="reg_filled_2">Full name</string>
+    <string name="reg_filled_3">Email</string>
+    <string name="reg_filled_4">Password</string>
+    <string name="reg_filled_5">Confirm</string>
 
 </resources>
