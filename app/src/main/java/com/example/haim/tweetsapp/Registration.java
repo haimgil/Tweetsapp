@@ -124,8 +124,10 @@ public class Registration extends Activity {
 
         Utils.alert(this,"Registration","You have successfully registered. Check your mail box for verification email");
 
-        Intent i = new Intent(this, Login.class);
-        i.putExtra("login_details", login_details);
-        startActivity(i);
+        Intent intent = new Intent(this, Login.class);
+        intent.putExtra("login_details", login_details);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 }

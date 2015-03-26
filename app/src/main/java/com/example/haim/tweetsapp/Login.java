@@ -146,6 +146,7 @@ public class Login extends Activity {
                     // TODO here => Save the currentUser to Extra for using in Chat.class
                     pairingUserToInstallationId();
 
+                    intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     Toast.makeText(getApplicationContext(),
                             "Successfully Logged in",

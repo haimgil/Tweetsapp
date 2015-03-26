@@ -30,7 +30,9 @@ public class Main extends Activity {
         else
             activity = new Intent(this,Login.class);
 
+        activity.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(activity);
+        finish();
     }
 
 

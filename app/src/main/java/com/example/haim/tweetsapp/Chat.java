@@ -1,30 +1,38 @@
 package com.example.haim.tweetsapp;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.haim.tweetsapp.Objcets.Message;
 import com.parse.ParseInstallation;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-public class Chat extends Activity {
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+public class Chat extends ActionBarActivity{
 
     private static Chat INSTANCE = null;
     public  static ParseUser chatWith = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
 
         INSTANCE = this;
+
         setContentView(R.layout.activity_chat);
         TextView userName = (TextView)findViewById(R.id.chatting_with);
         if(chatWith != null)
@@ -61,6 +69,10 @@ public class Chat extends Activity {
 
     public void onSendButtonClick(View view){
         EditText txtMessage = (EditText)findViewById(R.id.txtMessage);
+
+        Message message = createNewMessage(txtMessage.getText().toString());
+        //TODO - Handle the message object(insert to db?!?)
+
         printMessage(txtMessage.getText().toString());
 
         ParseQuery<ParseInstallation> destination;
@@ -74,6 +86,16 @@ public class Chat extends Activity {
         }
         ParsePush.sendMessageInBackground("PUSH: " + txtMessage.getText(), destination);
         txtMessage.setText("");
+    }
+
+    // Save the message details for db storage.
+    private Message createNewMessage(String msg) {
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy\r\nHH:mm");
+        Calendar calendar = Calendar.getInstance();
+        String time = dateFormat.format(calendar.getTime());
+        Message message = new Message(msg, time);
+
+        return message;
     }
 
     public void onUsersClick(View view){

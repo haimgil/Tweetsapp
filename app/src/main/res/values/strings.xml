@@ -24,5 +24,6 @@
     <string name="reg_filled_3">Email</string>
     <string name="reg_filled_4">Password</string>
     <string name="reg_filled_5">Confirm</string>
+    <string name="action_search">Search</string>
 
 </resources>
