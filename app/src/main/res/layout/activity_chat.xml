@@ -52,7 +52,8 @@
             android:id="@+id/txtMessage"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:textSize="25dp" />
+            android:textSize="25dp"
+            android:maxLength="100"/>
 
         <ImageButton
             android:layout_width="wrap_content"

@@ -9,12 +9,12 @@ import java.util.ArrayList;
 /**
  * Created by Haim on 3/26/2015.
  */
-public class FriendsGroup {
+public class Conversation {
 
     private String groupName;
     private ArrayList<ParseUser> users;
 
-    public FriendsGroup(String groupName) {
+    public Conversation(String groupName) {
         this.groupName = groupName;
         this.users = new ArrayList<ParseUser>();
     }

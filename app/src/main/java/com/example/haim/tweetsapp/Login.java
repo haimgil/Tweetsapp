@@ -97,7 +97,7 @@ public class Login extends Activity {
                     editor.commit();
 
                     pairingUserToInstallationId();
-                    Intent i = new Intent(Login.this, Users_list.class);
+                    Intent i = new Intent(Login.this, Conversations.class);
                     startActivity(i);
                 }
             }
@@ -136,7 +136,7 @@ public class Login extends Activity {
                     // If user exist and authenticated, send user to Welcome.class
                     Intent intent = new Intent(
                             Login.this,
-                            Users_list.class);
+                            Conversations.class);
 
                     settings = getSharedPreferences("PrefsFile", MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();

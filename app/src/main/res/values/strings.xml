@@ -25,5 +25,10 @@
     <string name="reg_filled_4">Password</string>
     <string name="reg_filled_5">Confirm</string>
     <string name="action_search">Search</string>
+    <string name="title_activity_conversations">Conversations</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_group_create">Create Group</string>
+    <string name="groupCreateField1">Group name</string>
+    <string name="GroupCreateFiled2">Add users</string>
 
 </resources>
