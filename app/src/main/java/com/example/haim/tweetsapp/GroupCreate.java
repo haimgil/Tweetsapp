@@ -1,17 +1,26 @@
 package com.example.haim.tweetsapp;
 
-import android.support.v7.app.ActionBarActivity;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 
 public class GroupCreate extends ActionBarActivity {
+
+    TextView groupCreateTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_create);
+
+        groupCreateTextView = (TextView)findViewById(R.id.groupCreateButton);
+        Typeface myFont = Typeface.createFromAsset(getAssets(),"fonts/FFF_Tusj.ttf");
+        groupCreateTextView.setTypeface(myFont);
     }
 
 
@@ -35,5 +44,9 @@ public class GroupCreate extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onCreateGroupClick(View view){
+
     }
 }

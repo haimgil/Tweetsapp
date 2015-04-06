@@ -30,5 +30,8 @@
     <string name="title_activity_group_create">Create Group</string>
     <string name="groupCreateField1">Group name</string>
     <string name="GroupCreateFiled2">Add users</string>
+    <string name="create_button">Create group</string>
+    <string name="group">New group...</string>
+    <string name="new_conversation">New message</string>
 
 </resources>

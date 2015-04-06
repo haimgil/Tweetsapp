@@ -1,20 +1,15 @@
 package com.example.haim.tweetsapp;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -85,31 +80,6 @@ public class Users_list extends ActionBarActivity implements AdapterView.OnItemC
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.action_search:
-                android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-                // add the custom view to the action bar
-                actionBar.setCustomView(R.layout.text_search_layout);
-                EditText search = (EditText) actionBar.getCustomView().findViewById(R.id.search_field);
-                search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                    @Override
-                    public boolean onEditorAction(TextView v, int actionId,
-                                                  KeyEvent event) {
-                        Toast.makeText(Users_list.this, "Search triggered",
-                                Toast.LENGTH_LONG).show();
-                        return false;
-                    }
-                });
-                actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM
-                        | ActionBar.DISPLAY_SHOW_HOME);
-                break;
-        }
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

@@ -12,48 +12,62 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="50dp"
-        android:layout_weight="3">
+        android:layout_height="53dp"
+        android:layout_marginTop="50dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/groupCreateField1"
-            android:id="@+id/textView2"
-            android:textSize="27dp"
-            android:textColor="#ea040504" />
+            android:id="@+id/groupNameText"
+            android:textSize="25dp"
+            android:textColor="#ea040504"
+            android:layout_marginLeft="45dp" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText" />
+            android:id="@+id/groupNameFiled" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:weightSum="1">
+        android:layout_height="wrap_content"
+        android:layout_weight="0.10"
+        android:weightSum="1"
+        android:layout_marginTop="5dp">
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/GroupCreateFiled2"
-            android:id="@+id/textView3"
-            android:textSize="27dp"
+            android:id="@+id/userAddText"
+            android:textSize="25dp"
             android:textColor="#ea040504"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="20dp" />
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="10dp" />
 
         <ImageButton
             android:layout_width="42dp"
-            android:layout_height="73dp"
-            android:id="@+id/imageButton"
-            android:background="@android:drawable/ic_input_add"
-            android:layout_marginLeft="30dp" />
+            android:layout_height="92dp"
+            android:id="@+id/userAddButton"
+            android:background="@drawable/ic_action_add_person"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="0.07" />
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create_button"
+        android:id="@+id/groupCreateButton"
+        android:layout_gravity="center"
+        android:singleLine="true"
+        android:textSize="40dp"
+        android:textColor="#ea040504"
+        android:layout_marginLeft="0dp"
+        android:layout_marginBottom="200dp" />
 
 </LinearLayout>

@@ -26,7 +26,7 @@ public class Main extends Activity {
 
         Intent activity = null;
         if(ParseUser.getCurrentUser()!=null && isLoggedIn)
-            activity = new Intent(this, Users_list.class);
+            activity = new Intent(this, Conversations.class);
         else
             activity = new Intent(this,Login.class);
 

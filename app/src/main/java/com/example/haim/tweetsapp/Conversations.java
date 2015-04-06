@@ -1,5 +1,6 @@
 package com.example.haim.tweetsapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -37,7 +38,7 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
 
     /**
      * Method that collects the names of all groups that user involved in.
-     * @return ArrayList
+     * @return ArrayList - contains the names of the conversation/s (user name/group name)
      */
     private ArrayList<String> getConversationsNames() {
         ArrayList<String> names = new ArrayList<String>();
@@ -50,11 +51,12 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
 
     /**
      * Method that gets all conversations from db.
-     * @return List
+     * @return List - contains all conversations of specific user.
      */
     private List<Conversation> getUserConversations() {
+        List<Conversation> conversationsList = new ArrayList<Conversation>();
         //TODO - Get all conversations from db
-        return null;
+        return conversationsList;
     }
 
 
@@ -71,11 +73,23 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        Intent actionIntent = null;
+        switch (id) {
+            case R.id.action_settings:
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+                break;
+            case R.id.action_group_create:
+                actionIntent = new Intent(this, GroupCreate.class);
+                break;
+            case R.id.action_new_conversation:
+                actionIntent = new Intent(this, Users_list.class);
+                break;
+            case R.id.action_search:
+
+                break;
         }
+        if(actionIntent != null)
+            startActivity(actionIntent);
 
         return super.onOptionsItemSelected(item);
     }

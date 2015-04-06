@@ -73,7 +73,7 @@
         <activity
             android:name=".Chat"
             android:label="@string/title_activity_chat"
-            android:parentActivityName=".Users_list"
+            android:parentActivityName=".Conversations"
             android:theme="@style/Theme.AppCompat.Light" >
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
@@ -99,7 +99,8 @@
         <activity
             android:name=".Users_list"
             android:label="@string/title_activity_users_list"
-            android:theme="@style/Theme.AppCompat.Light" >
+            android:theme="@style/Theme.AppCompat.Light"
+            android:parentActivityName=".Conversations" >
         </activity>
         <activity
             android:name=".Conversations"
