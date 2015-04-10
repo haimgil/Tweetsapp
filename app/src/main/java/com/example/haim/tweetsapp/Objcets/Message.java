@@ -5,18 +5,43 @@ package com.example.haim.tweetsapp.Objcets;
  */
 public class Message {
 
-    private String msg_text;
+    private String message_text;
+    private String message_owner;
     private String time;
     private int rating;
-    private double average_rating;
     private int number_of_ratings;
+    private double average_rating;
 
-    public Message(String msg_text, String time) {
-        this.msg_text = msg_text;
+    public Message(String message_text, String time) {
+        this.message_text = message_text;
         this.time = time;
         rating = 0;
         average_rating = 0;
         number_of_ratings = 0;
+    }
+
+    public String getMessage_text() {
+        return message_text;
+    }
+
+    public void setMessage_text(String message_text) {
+        this.message_text = message_text;
+    }
+
+    public String getMessage_owner() {
+        return message_owner;
+    }
+
+    public void setMessage_owner(String message_owner) {
+        this.message_owner = message_owner;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getTime() {
+        return time;
     }
 
     public double getAverage_rating() {
@@ -29,4 +54,5 @@ public class Message {
         double tmpAverage = this.rating / this.number_of_ratings;
         this.average_rating = tmpAverage;
     }
+
 }
