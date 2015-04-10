@@ -1,4 +1,4 @@
-package com.example.haim.tweetsapp;
+package il.tweetsapp.proj.tweetsapp;
 
 import android.content.Intent;
 import android.os.Bundle;

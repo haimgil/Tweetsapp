@@ -1,4 +1,4 @@
-package com.example.haim.tweetsapp.helpers;
+package il.tweetsapp.proj.tweetsapp.helpers;
 
 import android.app.AlertDialog;
 import android.content.Context;

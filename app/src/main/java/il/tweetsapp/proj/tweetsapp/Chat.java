@@ -1,4 +1,4 @@
-package com.example.haim.tweetsapp;
+package il.tweetsapp.proj.tweetsapp;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.haim.tweetsapp.Objcets.Message;
+import il.tweetsapp.proj.tweetsapp.Objcets.Message;
 import com.parse.ParseInstallation;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;

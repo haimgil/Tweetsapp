@@ -1,4 +1,4 @@
-package com.example.haim.tweetsapp.Objcets;
+package il.tweetsapp.proj.tweetsapp.Objcets;
 
 import android.util.Log;
 

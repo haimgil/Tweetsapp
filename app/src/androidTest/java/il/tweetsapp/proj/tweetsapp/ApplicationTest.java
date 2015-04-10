@@ -1,4 +1,4 @@
-package com.example.haim.tweetsapp;
+package il.tweetsapp.proj.tweetsapp;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

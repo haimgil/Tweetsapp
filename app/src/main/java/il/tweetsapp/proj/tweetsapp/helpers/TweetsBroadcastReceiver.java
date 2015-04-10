@@ -1,10 +1,10 @@
-package com.example.haim.tweetsapp.helpers;
+package il.tweetsapp.proj.tweetsapp.helpers;
 
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.example.haim.tweetsapp.Chat;
+import il.tweetsapp.proj.tweetsapp.Chat;
 import com.parse.ParseBroadcastReceiver;
 
 import org.json.JSONException;

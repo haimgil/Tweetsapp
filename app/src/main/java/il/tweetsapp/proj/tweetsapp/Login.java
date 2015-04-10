@@ -1,4 +1,4 @@
-package com.example.haim.tweetsapp;
+package il.tweetsapp.proj.tweetsapp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.haim.tweetsapp.helpers.Utils;
+import il.tweetsapp.proj.tweetsapp.helpers.Utils;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;

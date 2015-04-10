@@ -1,4 +1,4 @@
-package com.example.haim.tweetsapp.Objcets;
+package il.tweetsapp.proj.tweetsapp.Objcets;
 
 /**
  * Created by Haim on 3/26/2015.
