@@ -4,9 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-
-import java.sql.SQLException;
 
 import il.tweetsapp.proj.tweetsapp.helpers.Constants;
 
@@ -28,16 +25,10 @@ public class ConversationDAL {
         // Save the values of a new row in ContentValues object
         ContentValues values = new ContentValues();
         values.put(Constants.COLUMN_CONVERSATION_NAME, conversationName);
-
         // Insert the row to the table and.
-        try {
-            db.insertOrThrow(Constants.CONVERSATIONS_TABLE_NAME, null, values);
-        }catch (SQLException){ // in case that some exception occurs, handling it and close the db.
-            Log.e("InsertNewRowToTable", "Insert new row failed!");
-            db.close();
-            return false;
-        }
+        db.insertOrThrow(Constants.CONVERSATIONS_TABLE_NAME, null, values);
         db.close();
+
         return true;
     }
 
