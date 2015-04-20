@@ -127,12 +127,12 @@ public class GroupCreate extends ActionBarActivity {
                 for(int i=0; i < usersList.size(); i++){
                     ParseUser parseUser = usersList.get(i);
                     if(hashMap.get(parseUser)){
-                        responseText.append("\n" + parseUser.getUsername());
+                        newGroupUsers.add(parseUser);
                     }
                 }
                 hashMap.clear();
                 Toast.makeText(getApplicationContext(),
-                        responseText, Toast.LENGTH_LONG).show();
+                        newGroupUsers.get(0).getUsername() + "\r\n" + newGroupUsers.get(1).getUsername(), Toast.LENGTH_LONG).show();
                 addUserDialog.dismiss();
             }
         });
