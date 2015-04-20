@@ -12,12 +12,21 @@ public class Message {
     private int number_of_ratings;
     private double average_rating;
 
-    public Message(String message_text, String time) {
+    public Message(String message_text, String message_owner, String time) {
         this.message_text = message_text;
+        this.message_owner = message_owner;
         this.time = time;
         rating = 0;
         average_rating = 0;
         number_of_ratings = 0;
+    }
+
+    public Message(String message_text, String message_owner, String msgTime, int msgRating, int number_of_ratings){
+        this.message_text = message_text;
+        this.message_owner = message_owner;
+        this.time = msgTime;
+        this.rating = msgRating;
+        this.number_of_ratings = number_of_ratings;
     }
 
     public String getMessage_text() {

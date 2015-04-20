@@ -54,7 +54,9 @@
             android:id="@+id/userAddButton"
             android:background="@drawable/ic_action_add_person"
             android:layout_marginLeft="15dp"
-            android:layout_weight="0.07" />
+            android:layout_weight="0.07"
+            android:onClick="onAddUsersClick"
+            android:nestedScrollingEnabled="false" />
 
     </LinearLayout>
 

@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import il.tweetsapp.proj.tweetsapp.Objcets.Message;
 import com.parse.ParseInstallation;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
@@ -20,6 +19,8 @@ import com.parse.ParseUser;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import il.tweetsapp.proj.tweetsapp.Objcets.Message;
 
 public class Chat extends ActionBarActivity{
 
@@ -70,7 +71,7 @@ public class Chat extends ActionBarActivity{
     public void onSendButtonClick(View view){
         EditText txtMessage = (EditText)findViewById(R.id.txtMessage);
 
-        Message message = createNewMessage(txtMessage.getText().toString());
+        Message message = createNewMessage(txtMessage.getText().toString(), ParseUser.getCurrentUser());
         //TODO - Handle the message object(insert to db?!?)
 
         printMessage(txtMessage.getText().toString());
@@ -89,11 +90,11 @@ public class Chat extends ActionBarActivity{
     }
 
     // Save the message details for db storage.
-    private Message createNewMessage(String msg) {
+    private Message createNewMessage(String msg, ParseUser parseUser) {
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy\r\nHH:mm");
         Calendar calendar = Calendar.getInstance();
         String time = dateFormat.format(calendar.getTime());
-        Message message = new Message(msg, time);
+        Message message = new Message(msg, parseUser.getUsername(), time);
 
         return message;
     }

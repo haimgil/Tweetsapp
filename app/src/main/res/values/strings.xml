@@ -33,5 +33,7 @@
     <string name="create_button">Create group</string>
     <string name="group">New group...</string>
     <string name="new_conversation">New message</string>
+    <string name="username">Username</string>
+    <string name="usersSelectButton">OK</string>
 
 </resources>

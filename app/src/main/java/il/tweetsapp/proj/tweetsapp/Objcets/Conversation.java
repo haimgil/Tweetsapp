@@ -2,6 +2,9 @@ package il.tweetsapp.proj.tweetsapp.Objcets;
 
 import android.util.Log;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
@@ -20,6 +23,26 @@ public class Conversation {
         this.groupName = groupName;
         this.users = new ArrayList<ParseUser>();
         messages_list= new ArrayList<Message>();
+    }
+
+    public void setMessages_list(List<Message> messages){
+        messages_list = messages;
+    }
+
+    public void setUsers(List<String> usersNames){
+        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        for(int i=0; i < usersNames.size(); i++) {
+            query = query.whereEqualTo("username", usersNames.get(i));
+            query.findInBackground(new FindCallback<ParseUser>() {
+                @Override
+                public void done(List<ParseUser> parseUsers, ParseException e) {
+                    if (e == null) {  // some results found
+                        for (int i = 0; i < parseUsers.size(); i++)
+                            users.add(parseUsers.get(i));
+                    }
+                }
+            });
+        }
     }
 
     public String getGroupName() {

@@ -20,6 +20,19 @@ public class TweetsAppDbHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE " + Constants.CONVERSATIONS_TABLE_NAME + "(" +
                 Constants._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 Constants.COLUMN_CONVERSATION_NAME + " TEXT NOT NULL);");
+
+        db.execSQL("CREATE TABLE " + Constants.USERS_IN_CONVERSATION_TABLE_NAME + "(" +
+                Constants._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                Constants.COLUMN_CONVERSATION_NAME + " TEXT NOT NULL, " +
+                Constants.COLUMN_USER_NAME + " TEXT NOT NULL);");
+
+        db.execSQL("CREATE TABLE " + Constants.MESSAGES_TABLE_NAME + "(" +
+                Constants.COLUMN_CONVERSATION_NAME + " TEXT NOT NULL, " +
+                Constants.COLUMN_MSG_TXT_NAME + " TEXT NOT NULL, " +
+                Constants.COLUMN_MSG_OWNER_NAME + " TEXT NOT NULL, " +
+                Constants.COLUMN_MSG_TIME_NAME + " TEXT NOT NULL, " +
+                Constants.COLUMN_MSG_RATING_NAME + " INTEGER, " +
+                Constants.COLUMN_MSG_QUANTITY_RATINGS_NAME + " INTEGER);");
     }
 
     @Override
