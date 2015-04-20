@@ -47,7 +47,6 @@ public class GroupCreate extends ActionBarActivity {
 
         newGroupUsers = new ArrayList<ParseUser>();
         addUserDialog = null;
-        isDialogOpened = false;
         groupCreateTextView = (TextView) findViewById(R.id.groupCreateButton);
         Typeface myFont = Typeface.createFromAsset(getAssets(), "fonts/FFF_Tusj.ttf");
         groupCreateTextView.setTypeface(myFont);
@@ -88,6 +87,7 @@ public class GroupCreate extends ActionBarActivity {
         addUserDialog.setTitle("Select user");
         addUserDialog.setContentView(R.layout.listview_dialog_layout);
         ArrayList<ParseUser> usersList = getUsersObjects();
+        insertToHashMap(usersList);
         dataAdapter = new MyCustomAdapter(this, R.layout.row_listview_dialog_layout, usersList);
         ListView listView = (ListView)addUserDialog.findViewById(R.id.dialogListView);
         listView.setAdapter(dataAdapter);
@@ -103,8 +103,13 @@ public class GroupCreate extends ActionBarActivity {
         });
 
         addUserDialog.show();
-        isDialogOpened = true;
         return addUserDialog;
+    }
+
+    private void insertToHashMap(ArrayList<ParseUser> usersList) {
+        for(int i=0; i < usersList.size(); i++){
+            hashMap.put(usersList.get(i), false);
+        }
     }
 
     private void checkButtonClick() {
@@ -119,13 +124,13 @@ public class GroupCreate extends ActionBarActivity {
                 responseText.append("The following were selected...\n");
 
                 ArrayList<ParseUser> usersList = dataAdapter.usersList;
-                for(int i=0;i<usersList.size();i++){
+                for(int i=0; i < usersList.size(); i++){
                     ParseUser parseUser = usersList.get(i);
                     if(hashMap.get(parseUser)){
                         responseText.append("\n" + parseUser.getUsername());
                     }
                 }
-
+                hashMap.clear();
                 Toast.makeText(getApplicationContext(),
                         responseText, Toast.LENGTH_LONG).show();
                 addUserDialog.dismiss();
