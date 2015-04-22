@@ -60,6 +60,14 @@
 
     </LinearLayout>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/button3"
+        android:layout_gravity="center_horizontal"
+        android:onClick="onCheckclick" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -70,6 +78,8 @@
         android:textSize="40dp"
         android:textColor="#ea040504"
         android:layout_marginLeft="0dp"
+        android:clickable="true"
+        android:onClick="onCreateGroupClick"
         android:layout_marginBottom="200dp" />
 
 </LinearLayout>

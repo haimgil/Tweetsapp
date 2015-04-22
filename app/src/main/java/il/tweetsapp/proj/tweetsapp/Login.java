@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import il.tweetsapp.proj.tweetsapp.helpers.Utils;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.model.GraphUser;
@@ -23,10 +22,12 @@ import com.parse.ParseUser;
 
 import java.util.Arrays;
 
+import il.tweetsapp.proj.tweetsapp.helpers.Utils;
+
 
 public class Login extends Activity {
 
-    private EditText mail;
+    private EditText username;
     private EditText password;
     private String[] loginDetails;
     private SharedPreferences settings;
@@ -37,7 +38,7 @@ public class Login extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mail = (EditText)findViewById(R.id.mailLogin);
+        username = (EditText)findViewById(R.id.mailLogin);
         password = (EditText)findViewById(R.id.passwordLogin);
 
         Bundle extras = getIntent().getExtras();
@@ -45,7 +46,7 @@ public class Login extends Activity {
         Intent iFromReg = getIntent();
         if(iFromReg != null && iFromReg.hasExtra("login_details")){
             loginDetails = extras.getStringArray("login_details");
-            mail.setText(loginDetails[0]);
+            username.setText(loginDetails[0]);
             password.setText(loginDetails[1]);
         }
     }
@@ -127,7 +128,7 @@ public class Login extends Activity {
 
     public void onLoginClick(View view){
         boolean isUserExist = false;
-        String userMail = mail.getText().toString();
+        String userMail = username.getText().toString();
         String userPassword = password.getText().toString();
         ParseUser.logInInBackground(userMail, userPassword, new LogInCallback() {
             @Override
@@ -156,7 +157,7 @@ public class Login extends Activity {
                 else{
                     Toast.makeText(
                             getApplicationContext(),
-                            "E-mail address or password was incorrect. Try again or Sign Up now",
+                            "Username or password was incorrect. Try again or Sign Up now",
                             Toast.LENGTH_LONG).show();
                 }
             }

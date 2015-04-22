@@ -53,6 +53,7 @@ public class DataBL {
         while(cursor.moveToNext()){
                 conversation = new Conversation(cursor.getString(0));
         }
+        dataDAL.closeDb();
 
         List<String> conversationUsers = getConversationUsers(conversation.getGroupName());
         List<Message> conversationMessages = getConversationMessages(conversation.getGroupName());
@@ -75,17 +76,19 @@ public class DataBL {
                     cursor.getInt(4));
             messages.add(tmpMsg);
         }
+        dataDAL.closeDb();
         return messages;
     }
 
 
-    private List<String> getConversationUsers(String conversationName) {
+    public List<String> getConversationUsers(String conversationName) {
         Cursor cursor = dataDAL.pullConversationUsers(conversationName);
         List<String> users = new ArrayList<String>();
 
         while(cursor.moveToNext()){
             users.add(cursor.getString(0));
         }
+        dataDAL.closeDb();
         return users;
     }
 

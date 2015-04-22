@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import il.tweetsapp.proj.tweetsapp.Database.DataBL;
+import il.tweetsapp.proj.tweetsapp.Objcets.Conversation;
 
 
 public class GroupCreate extends ActionBarActivity {
@@ -138,8 +142,46 @@ public class GroupCreate extends ActionBarActivity {
         });
     }
 
-    public void onCreateGroupClick(View view) {
 
+    /*********************************/
+    public void onCheckclick(View view){
+        Button b = (Button)findViewById(R.id.button3);
+        DataBL tstData = new DataBL(this);
+        Conversation tstConversation;
+        tstConversation = tstData.getConversation("test group");
+        String[] usersNames = {tstConversation.getUsers().get(0).getUsername(), tstConversation.getUsers().get(1).getUsername()};
+
+        Toast.makeText(this, "The users in that group is:\n" + usersNames[0] + "\n" + usersNames[1], Toast.LENGTH_LONG).show();
+    }
+
+
+
+    /**********************************/
+
+
+
+    public void onCreateGroupClick(View view) {
+        EditText groupNameEditT = (EditText)findViewById(R.id.groupNameFiled);
+        String groupName = groupNameEditT.getText().toString();
+        // Checks that group name was entered.
+        String checkStr = groupName.trim();
+        if(groupName.length() < 1 || checkStr.length() < 1){
+            Toast.makeText(this, "Group name must contains at least 1 character!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Validates that some users has been selected.
+        if(newGroupUsers.size() < 1){
+            Toast.makeText(this, "At least 1 user is required for create a new group!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Insert the group data to database
+        DataBL dbObject = new DataBL(this);
+        dbObject.addConversation(groupName);
+        for(int i=0; i < newGroupUsers.size(); i++) {
+           dbObject.addUserToDbTable(groupName, newGroupUsers.get(i).getUsername());
+        }
+        Toast.makeText(this, "The group" + groupName + " was created successfully!", Toast.LENGTH_LONG).show();
     }
 
     /**

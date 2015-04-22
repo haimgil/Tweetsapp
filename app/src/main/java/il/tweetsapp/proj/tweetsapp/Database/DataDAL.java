@@ -32,6 +32,8 @@ public class DataDAL {
             db = dbHelper.getWritableDatabase();
         }catch (SQLiteException e){
             Log.e("getWritableDatabase", "Failed!");
+            if(db.isOpen())
+                db.close();
             return false;
         }
 
@@ -57,6 +59,8 @@ public class DataDAL {
             db = dbHelper.getWritableDatabase();
         }catch (SQLiteException e){
             Log.e("getWritableDatabase", "Failed!");
+            if(db.isOpen())
+                db.close();
             return false;
         }
 
@@ -87,6 +91,8 @@ public class DataDAL {
             db = dbHelper.getWritableDatabase();
         }catch (SQLiteException e){
             Log.e("getWritableDatabase", "Failed!");
+            if(db.isOpen())
+                db.close();
             return false;
         }
 
@@ -114,6 +120,8 @@ public class DataDAL {
             db = dbHelper.getReadableDatabase();
         }catch (SQLiteException e){
             Log.e("getReadableDatabase", "Failed!");
+            if(db.isOpen())
+                db.close();
             return null;
         }
         String[] columns = {Constants.COLUMN_CONVERSATION_NAME};
@@ -121,7 +129,6 @@ public class DataDAL {
         Cursor cursor = db.query(Constants.CONVERSATIONS_TABLE_NAME,
                                     columns, // Columns to return from query.
                                         null, null, null, null, null);
-        db.close();
         return cursor;
     }
 
@@ -130,15 +137,20 @@ public class DataDAL {
             db = dbHelper.getReadableDatabase();
         }catch (SQLiteException e){ // Handling exception
             Log.e("getReadableDatabase", "Failed!");
+            if(db.isOpen())
+                db.close();
             return null;
         }
         //Columns that get from preferably table
         String[] columns = {Constants.COLUMN_CONVERSATION_NAME};
 
-        Cursor cursor = db.query(Constants.CONVERSATIONS_TABLE_NAME,
+        /*Cursor cursor = db.query(Constants.CONVERSATIONS_TABLE_NAME,
                             columns, // Columns to return from query.
-                                Constants.COLUMN_CONVERSATION_NAME + "=?", new String[]{conversationName}, null, null, null);
-        db.close();
+                                Constants.COLUMN_CONVERSATION_NAME + "=?", new String[]{conversationName}, null, null, null);*/
+        String[] args = {conversationName};
+        Cursor cursor = db.rawQuery("SELECT " + Constants.COLUMN_CONVERSATION_NAME + " FROM " + Constants.CONVERSATIONS_TABLE_NAME + " WHERE "
+                + Constants.COLUMN_CONVERSATION_NAME + "=?", args);
+
         return cursor;
     }
 
@@ -153,6 +165,8 @@ public class DataDAL {
             db = dbHelper.getReadableDatabase();
         }catch (SQLiteException e){ // Handling exception
             Log.e("getReadableDatabase", "Failed!");
+            if(db.isOpen())
+                db.close();
             return null;
         }
 
@@ -163,7 +177,6 @@ public class DataDAL {
         cursor = db.query(Constants.USERS_IN_CONVERSATION_TABLE_NAME,
                             columns,
                                 Constants.COLUMN_CONVERSATION_NAME + "=?", new String[] {ConversationName}, null, null, null);
-        db.close();
         return cursor;
     }
 
@@ -179,6 +192,8 @@ public class DataDAL {
             db = dbHelper.getReadableDatabase();
         }catch (SQLiteException e){ // Handling exception
             Log.e("getReadableDatabase", "Failed!");
+            if(db.isOpen())
+                db.close();
             return null;
         }
 
@@ -191,8 +206,16 @@ public class DataDAL {
         cursor = db.query(Constants.MESSAGES_TABLE_NAME,
                             columns,
                              Constants.COLUMN_CONVERSATION_NAME + "=?", new String[] {ConversationName}, null, null, null);
-        db.close();
+
         return cursor;
+    }
+
+    /**
+     * That method used for closing the database after read data from cursor.
+     */
+    public void closeDb(){
+        if(db.isOpen())
+            db.close();
     }
 
 }

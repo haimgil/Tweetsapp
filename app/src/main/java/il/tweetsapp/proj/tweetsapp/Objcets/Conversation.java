@@ -2,7 +2,6 @@ package il.tweetsapp.proj.tweetsapp.Objcets;
 
 import android.util.Log;
 
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -30,18 +29,18 @@ public class Conversation {
     }
 
     public void setUsers(List<String> usersNames){
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
+        ParseQuery<ParseUser>[] query = new ParseQuery[usersNames.size()];
+        List<ParseUser> usersToAdd = null;
         for(int i=0; i < usersNames.size(); i++) {
-            query = query.whereEqualTo("username", usersNames.get(i));
-            query.findInBackground(new FindCallback<ParseUser>() {
-                @Override
-                public void done(List<ParseUser> parseUsers, ParseException e) {
-                    if (e == null) {  // some results found
-                        for (int i = 0; i < parseUsers.size(); i++)
-                            users.add(parseUsers.get(i));
-                    }
-                }
-            });
+            query[i] = ParseUser.getQuery();
+            query[i] = query[i].whereEqualTo("username", usersNames.get(i));
+            try {
+                usersToAdd = query[i].find();
+            }catch(ParseException pe){
+                Log.d("com.parse.ParseException", "get ParseUser by username failed");
+                return;
+            }
+            users.add(usersToAdd.get(0));
         }
     }
 
@@ -62,6 +61,10 @@ public class Conversation {
             Log.d("UserAdding","User added to group successfully!");
 
         return succeeded;
+    }
+
+    public List<ParseUser> getUsers(){
+        return this.users;
     }
 
 
