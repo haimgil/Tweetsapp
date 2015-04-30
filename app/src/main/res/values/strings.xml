@@ -35,5 +35,8 @@
     <string name="new_conversation">New message</string>
     <string name="username">Username</string>
     <string name="usersSelectButton">OK</string>
+    <string name="msg_time_text">HH:mm</string>
+    <string name="msg_text">Message text</string>
+    <string name="rate_button">Rate</string>
 
 </resources>

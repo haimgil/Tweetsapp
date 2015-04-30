@@ -89,6 +89,9 @@ public class Users_list extends ActionBarActivity implements AdapterView.OnItemC
             Chat.chatWith = usersObjects.get(position);
         }
         Intent iChat = new Intent(this, Chat.class);
+        //TODO - Remove this code after debug
+        iChat.putExtra("Conversation name", Chat.chatWith.getUsername());
+        //end debug
         startActivity(iChat);
     }
 }

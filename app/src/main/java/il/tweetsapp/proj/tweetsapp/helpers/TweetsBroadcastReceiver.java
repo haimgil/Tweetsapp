@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import il.tweetsapp.proj.tweetsapp.Chat;
+import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
 
 /**
@@ -26,7 +27,7 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
         Log.i("ParseBroadcastReceiver", intent.getExtras().getString("com.parse.Data"));
         String msg = intent.getExtras().getString("com.parse.Data");
 
-        if(msg.contains("alert")) {
+        /*if(msg.contains("alert")) {
             try {
 
                 JSONObject data = new JSONObject(msg);
@@ -38,22 +39,42 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
                 Toast.makeText(context, "Invalid JSON received", Toast.LENGTH_LONG).show();
             }
         }
-        else {
+        else {*/
             try {
                 JSONObject data = new JSONObject(msg);
-                Message msgToDb = new Message(data.getString("msg_txt"),
+                Message msgToDb = new Message(data.getString("alert"),
                         data.getString("msg_owner"),
                         data.getString("msg_time"),
                         data.getString("msg_date"),
                         data.getInt("msg_rating"),
                         data.getInt("msg_ratings"));
-                msgToDb.setAverage_rating(msgToDb.getRating());
-                //dataBL.addMessageToDbTable(msgToDb, msgToDb.getMessage_owner());
-                Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+                if (Chat.getInstance() != null)
+                    Chat.getInstance().printMessage(msgToDb.getMessage_owner() + ": " + data.getString("alert"));
+                msgToDb.calculateAverageRating();
+                pushCurrentMessageToDb(context, msgToDb);
+                Toast.makeText(context, msgToDb.toString(), Toast.LENGTH_LONG).show();
             } catch (JSONException je) {
                 Log.e("ParseBroadcastReceiver", je.getMessage());
                 return;
             }
-        }
+        //}
+    }
+
+    private void pushCurrentMessageToDb(Context context, Message message) {
+        DataBL dataBL = new DataBL(context);
+        dataBL.addMessageToDbTable(message, message.getMessage_owner());
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

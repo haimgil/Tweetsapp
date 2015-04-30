@@ -64,7 +64,7 @@ public class DataBL {
         return conversation;
     }
 
-    private List<Message> getConversationMessages(String conversationName) {
+    public List<Message> getConversationMessages(String conversationName) {
         List<Message> messages = new ArrayList<Message>();
         Cursor cursor = dataDAL.pullConversationMessages(conversationName);
         Message tmpMsg = null;
@@ -108,3 +108,21 @@ public class DataBL {
                                                                     message.getDate(), message.getRating(), message.getNumber_of_ratings());
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

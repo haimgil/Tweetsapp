@@ -67,7 +67,10 @@ public class Message {
     }
 
     public double calculateAverageRating(){
-        return this.average_rating = this.rating / this.number_of_ratings;
+        if(this.number_of_ratings == 0)
+            return 0;
+        else
+            return this.average_rating = this.rating / this.number_of_ratings;
     }
 
     public String getDate() {
@@ -84,6 +87,12 @@ public class Message {
 
     public int getRating() {
         return rating;
+    }
+
+    public String toString(){
+        String msgVariables = "Text: " + this.message_text + "\r\nOwner: " + this.message_owner + "\r\nTime: " + this.time
+                + "\r\nDate: " +  this.date + "\r\nRating: " + this.rating + "\r\nRatings: " + this.number_of_ratings + "\r\nAverage: " + this.average_rating;
+        return  msgVariables;
     }
 }
 

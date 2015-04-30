@@ -1,5 +1,6 @@
 package il.tweetsapp.proj.tweetsapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -9,7 +10,6 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.parse.ParseInstallation;
 import com.parse.ParsePush;
@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
@@ -45,6 +46,15 @@ public class Chat extends ActionBarActivity{
             userName.setText(chatWith.getUsername());
         else
             userName.setText("Everyone");
+        //TODO - Remove this code after debug
+        Intent intent = getIntent();
+        if(intent.hasExtra("Conversation name")){
+           String conversationName = intent.getStringExtra("Conversation name");
+            List<Message> messages = dataBL.getConversationMessages(conversationName);
+            for(int i=0; i < messages.size(); i++){
+                printMessage(messages.get(i).getMessage_text());
+            }
+        }
     }
 
     static public Chat getInstance(){
@@ -95,7 +105,7 @@ public class Chat extends ActionBarActivity{
             destination = destination.whereEqualTo("user", chatWith);
         }
 
-        ParsePush.sendMessageInBackground(newMsg.getMessage_owner() + ": " + newMsg.getMessage_text(), destination);
+        //ParsePush.sendMessageInBackground(newMsg.getMessage_owner() + ": " + newMsg.getMessage_text(), destination);
         try {
             final JSONObject messageDetails =  generateMessageJSONObject(newMsg);
             ParsePush.sendDataInBackground(messageDetails, destination);
@@ -107,13 +117,12 @@ public class Chat extends ActionBarActivity{
 
     private JSONObject generateMessageJSONObject(Message msg) throws JSONException {
         JSONObject object = new JSONObject();
-        object.put("msg_txt", msg.getMessage_text());
+        object.put("alert", msg.getMessage_text());
         object.put("msg_owner", msg.getMessage_owner());
         object.put("msg_time", msg.getTime());
         object.put("msg_date", msg.getDate());
         object.put("msg_rating", msg.getRating());
         object.put("msg_ratings", msg.getNumber_of_ratings());
-        Toast.makeText(this, object.toString(),Toast.LENGTH_LONG).show();
 
         return object;
     }
