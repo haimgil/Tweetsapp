@@ -52,7 +52,7 @@ public class Chat extends ActionBarActivity{
            String conversationName = intent.getStringExtra("Conversation name");
             List<Message> messages = dataBL.getConversationMessages(conversationName);
             for(int i=0; i < messages.size(); i++){
-                printMessage(messages.get(i).getMessage_text());
+                printMessage(messages.get(i));
             }
         }
     }
@@ -93,7 +93,7 @@ public class Chat extends ActionBarActivity{
         dataBL.addMessageToDbTable(newMsg, chatWith.getUsername());
 
 
-        printMessage(txtMessage.getText().toString());
+        printMessage(newMsg);
 
         ParseQuery<ParseInstallation> destination;
         destination = ParseQuery.getQuery(ParseInstallation.class);
@@ -144,12 +144,23 @@ public class Chat extends ActionBarActivity{
         return time;
     }
 
-    public void printMessage(String msg){
+    public void printMessage(Message msg){
         LinearLayout messages = (LinearLayout)findViewById(R.id.messages);
-        TextView message = new TextView(this);
-        message.setText(msg);
+        LinearLayout inflatedView;
+        if(msg.getMessage_owner().equals(ParseUser.getCurrentUser().getUsername()))
+            inflatedView = (LinearLayout)View.inflate(this, R.layout.current_user_message_layout, null);
+        else
+        //TODO - check this section
+            inflatedView = (LinearLayout)View.inflate(this, R.layout.users_message_layout, null);
+        //View newMsgLayout = inflater.inflate(R.layout.current_user_message_layout, messages, true);
+        TextView msgTxtV = (TextView)inflatedView.findViewById(R.id.msgTextView);
+        TextView timeTxtV = (TextView)inflatedView.findViewById(R.id.msgTimeText);
+        msgTxtV.setText(msg.getMessage_owner() + ": " + msg.getMessage_text());
+        timeTxtV.setText(msg.getTime());
+        //TextView message = new TextView(this);
+        //message.setText(msg);
 
-        messages.addView(message);
+        messages.addView(inflatedView);
     }
 
 }

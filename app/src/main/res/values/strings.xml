@@ -38,5 +38,6 @@
     <string name="msg_time_text">HH:mm</string>
     <string name="msg_text">Message text</string>
     <string name="rate_button">Rate</string>
+    <string name="date_text">mm/dd/yyyy</string>
 
 </resources>

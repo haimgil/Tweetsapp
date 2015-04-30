@@ -49,7 +49,7 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
                         data.getInt("msg_rating"),
                         data.getInt("msg_ratings"));
                 if (Chat.getInstance() != null)
-                    Chat.getInstance().printMessage(msgToDb.getMessage_owner() + ": " + data.getString("alert"));
+                    Chat.getInstance().printMessage(msgToDb);
                 msgToDb.calculateAverageRating();
                 pushCurrentMessageToDb(context, msgToDb);
                 Toast.makeText(context, msgToDb.toString(), Toast.LENGTH_LONG).show();

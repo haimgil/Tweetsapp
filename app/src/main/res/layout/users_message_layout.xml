@@ -45,13 +45,24 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/rate_button"
+                android:id="@+id/rateTextView"
+                android:textSize="15dp"
+                android:clickable="false"
+                android:background="@color/material_blue_grey_900"
+                android:layout_marginLeft="20dp"
+                android:textColor="#ffffffff" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/msg_text"
                 android:id="@+id/msgTextView"
-                android:textSize="22dp"
+                android:textSize="20dp"
                 android:textColor="#fffffff5"
-                android:background="#ffffad0d"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"/>
+                android:background="#ffff1d4a"
+                android:layout_gravity="center|right"
+                android:layout_marginLeft="150dp" />
 
         </LinearLayout>
 
