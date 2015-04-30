@@ -72,8 +72,10 @@ public class DataBL {
             tmpMsg = new Message(cursor.getString(0),
                     cursor.getString(1),
                     cursor.getString(2),
-                    cursor.getInt(3),
-                    cursor.getInt(4));
+                    cursor.getString(3),
+                    cursor.getInt(4),
+                    cursor.getInt(5));
+            tmpMsg.calculateAverageRating();
             messages.add(tmpMsg);
         }
         dataDAL.closeDb();
@@ -101,8 +103,8 @@ public class DataBL {
         return dataDAL.pushRowToConversationUsersTable(conversationName, userName);
     }
 
-    public boolean addMessageToDbTable(String conversationName, String msgTxt, String msgOwner,
-                                            String msgTime, int msgTotalRating, int ratingsQuantity){
-        return dataDAL.pushRowToMessagesTable(conversationName, msgTxt, msgOwner, msgTime, msgTotalRating, ratingsQuantity);
+    public boolean addMessageToDbTable(Message message, String conversationName){
+        return dataDAL.pushRowToMessagesTable(conversationName, message.getMessage_text(), message.getMessage_owner(), message.getTime(),
+                                                                    message.getDate(), message.getRating(), message.getNumber_of_ratings());
     }
 }
