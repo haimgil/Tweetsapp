@@ -60,9 +60,10 @@
                 android:id="@+id/msgTextView"
                 android:textSize="20dp"
                 android:textColor="#fffffff5"
-                android:background="#ffff1d4a"
                 android:layout_gravity="center|right"
-                android:layout_marginLeft="150dp" />
+                android:layout_marginLeft="180dp"
+                android:autoText="false"
+                android:background="@drawable/bg_layout_users_msg" />
 
         </LinearLayout>
 

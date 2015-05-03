@@ -127,9 +127,6 @@ public class Chat extends ActionBarActivity{
         return object;
     }
 
-
-    //TODO - Last time I stop here! need to check pulling messages from db
-
     private String getCurrentDate() {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -148,9 +145,10 @@ public class Chat extends ActionBarActivity{
         LinearLayout messages = (LinearLayout)findViewById(R.id.messages);
         LinearLayout inflatedView;
         if(msg.getMessage_owner().equals(ParseUser.getCurrentUser().getUsername()))
+            //inflate view for current user messages
             inflatedView = (LinearLayout)View.inflate(this, R.layout.current_user_message_layout, null);
         else
-        //TODO - check this section
+            //inflate view for other users messages
             inflatedView = (LinearLayout)View.inflate(this, R.layout.users_message_layout, null);
         //View newMsgLayout = inflater.inflate(R.layout.current_user_message_layout, messages, true);
         TextView msgTxtV = (TextView)inflatedView.findViewById(R.id.msgTextView);
