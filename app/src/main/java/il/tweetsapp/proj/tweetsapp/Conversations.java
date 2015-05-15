@@ -10,10 +10,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import il.tweetsapp.proj.tweetsapp.Objcets.Conversation;
-
-import java.util.ArrayList;
 import java.util.List;
+
+import il.tweetsapp.proj.tweetsapp.Database.DataBL;
+import il.tweetsapp.proj.tweetsapp.Objcets.Conversation;
 
 
 public class Conversations extends ActionBarActivity implements AdapterView.OnItemClickListener {
@@ -21,7 +21,7 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
     private ListView conversationsListView;
     private List<Conversation> userConversations;
     private ArrayAdapter<String> arrayAdapter;
-    private ArrayList<String> conversationsNames;
+    private List<String> conversationsNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
         conversationsListView = (ListView)findViewById(R.id.conversationsList);
         userConversations = getUserConversations();
         conversationsNames = getConversationsNames();
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2, conversationsNames);
+        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, conversationsNames);
         conversationsListView.setAdapter(arrayAdapter);
         conversationsListView.setOnItemClickListener(this);
     }
@@ -40,12 +40,10 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
      * Method that collects the names of all groups that user involved in.
      * @return ArrayList - contains the names of the conversation/s (user name/group name)
      */
-    private ArrayList<String> getConversationsNames() {
-        ArrayList<String> names = new ArrayList<String>();
-        // Get name of every group and adding it to the list.
-        for (int i=0; i < userConversations.size(); i++){
-            names.add(userConversations.get(i).getGroupName());
-        }
+    private List<String> getConversationsNames() {
+        DataBL dataBL = new DataBL(this);
+        List<String> names = dataBL.getConversationsNames();
+
         return names;
     }
 
@@ -54,9 +52,8 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
      * @return List - contains all conversations of specific user.
      */
     private List<Conversation> getUserConversations() {
-        List<Conversation> conversationsList = new ArrayList<Conversation>();
-        //TODO - Get all conversations from db
-        return conversationsList;
+        //TODO - get conversations from db
+        return null;
     }
 
 
