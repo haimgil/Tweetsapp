@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.parse.ParseInstallation;
@@ -19,12 +18,11 @@ import com.parse.ParseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
+import il.tweetsapp.proj.tweetsapp.helpers.NotifyHelper;
 
 public class Chat extends ActionBarActivity{
 
@@ -52,7 +50,7 @@ public class Chat extends ActionBarActivity{
            String conversationName = intent.getStringExtra("Conversation name");
             List<Message> messages = dataBL.getConversationMessages(conversationName);
             for(int i=0; i < messages.size(); i++){
-                printMessage(messages.get(i));
+                NotifyHelper.printMessage(INSTANCE, messages.get(i));
             }
         }
     }
@@ -88,12 +86,12 @@ public class Chat extends ActionBarActivity{
 
         // Create new message object for insert to database
         final Message newMsg = new Message(txtMessage.getText().toString(), ParseUser.getCurrentUser().getUsername(),
-                getCurrentTime(), getCurrentDate());
+                NotifyHelper.getCurrentTime(), NotifyHelper.getCurrentDate());
 
         dataBL.addMessageToDbTable(newMsg, chatWith.getUsername());
 
 
-        printMessage(newMsg);
+        NotifyHelper.printMessage(INSTANCE, newMsg);
 
         ParseQuery<ParseInstallation> destination;
         destination = ParseQuery.getQuery(ParseInstallation.class);
@@ -107,7 +105,7 @@ public class Chat extends ActionBarActivity{
 
         //ParsePush.sendMessageInBackground(newMsg.getMessage_owner() + ": " + newMsg.getMessage_text(), destination);
         try {
-            final JSONObject messageDetails =  generateMessageJSONObject(newMsg);
+            final JSONObject messageDetails =  NotifyHelper.generateMessageJSONObject(newMsg, true);
             ParsePush.sendDataInBackground(messageDetails, destination);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -115,7 +113,7 @@ public class Chat extends ActionBarActivity{
         txtMessage.setText("");
     }
 
-    private JSONObject generateMessageJSONObject(Message msg) throws JSONException {
+    /*private JSONObject generateMessageJSONObject(Message msg) throws JSONException {
         JSONObject object = new JSONObject();
         object.put("alert", msg.getMessage_text());
         object.put("msg_owner", msg.getMessage_owner());
@@ -125,9 +123,9 @@ public class Chat extends ActionBarActivity{
         object.put("msg_ratings", msg.getNumber_of_ratings());
 
         return object;
-    }
+    }*/
 
-    private String getCurrentDate() {
+    /*private String getCurrentDate() {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         String date = sdf.format(cal.getTime());
@@ -159,6 +157,6 @@ public class Chat extends ActionBarActivity{
         //message.setText(msg);
 
         messages.addView(inflatedView);
-    }
+    }*/
 
 }

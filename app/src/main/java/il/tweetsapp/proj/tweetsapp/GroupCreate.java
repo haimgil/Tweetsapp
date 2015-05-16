@@ -3,6 +3,7 @@ package il.tweetsapp.proj.tweetsapp;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -21,8 +22,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
+import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +40,8 @@ import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Conversation;
+import il.tweetsapp.proj.tweetsapp.Objcets.Message;
+import il.tweetsapp.proj.tweetsapp.helpers.NotifyHelper;
 
 
 public class GroupCreate extends ActionBarActivity {
@@ -135,8 +146,8 @@ public class GroupCreate extends ActionBarActivity {
                     }
                 }
                 hashMap.clear();
-                Toast.makeText(getApplicationContext(),
-                        newGroupUsers.get(0).getUsername() + "\r\n" + newGroupUsers.get(1).getUsername(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(),
+//                        newGroupUsers.get(0).getUsername() + "\r\n" + newGroupUsers.get(1).getUsername(), Toast.LENGTH_LONG).show();
                 addUserDialog.dismiss();
             }
         });
@@ -162,10 +173,9 @@ public class GroupCreate extends ActionBarActivity {
 
     public void onCreateGroupClick(View view) {
         EditText groupNameEditT = (EditText)findViewById(R.id.groupNameFiled);
-        String groupName = groupNameEditT.getText().toString();
+        final String groupName = groupNameEditT.getText().toString().trim();
         // Checks that group name was entered.
-        String checkStr = groupName.trim();
-        if(groupName.length() < 1 || checkStr.length() < 1){
+        if(groupName.length() < 1){
             Toast.makeText(this, "Group name must contains at least 1 character!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -175,13 +185,80 @@ public class GroupCreate extends ActionBarActivity {
             Toast.makeText(this, "At least 1 user is required for create a new group!", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Insert the group data to database
-        DataBL dbObject = new DataBL(this);
-        dbObject.addConversation(groupName);
-        for(int i=0; i < newGroupUsers.size(); i++) {
-           dbObject.addUserToDbTable(groupName, newGroupUsers.get(i).getUsername());
+
+        final ParseObject group = new ParseObject("Group");
+        group.put("name",groupName);
+        group.put("owner",ParseUser.getCurrentUser());
+        ParseRelation<ParseUser> groupUsers = group.getRelation("users");
+        groupUsers.add(ParseUser.getCurrentUser());
+        for(ParseUser newUser : newGroupUsers){
+            groupUsers.add(newUser);
         }
-        Toast.makeText(this, "The group" + groupName + " was created successfully!", Toast.LENGTH_LONG).show();
+
+        final Context ctx = this;
+
+        group.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e!=null){
+                    // TODO: DISPLAY ERROR MESSAGE
+                }else{
+                    (new AsyncTask<ParseObject,Void,Void>(){
+                        @Override
+                        protected Void doInBackground(ParseObject... groups) {
+                            ParseObject group = groups[0];
+
+                            // save group in local DB
+                            // TODO HANDLE ERRORS (call cancel)
+                            DataBL dbObject = new DataBL(ctx);
+                            dbObject.addConversation(groupName);
+                            for(ParseUser newUser :newGroupUsers){
+                                dbObject.addUserToDbTable(groupName, newUser.getUsername());
+                            }
+
+                            // send notification to group members
+                            // group.getObjectId()
+                            String msg = "You was added to group " + groupName + " by " + ParseUser.getCurrentUser();
+                            Message gCreateNotify = new Message(msg, ParseUser.getCurrentUser().getUsername(),
+                                    NotifyHelper.getCurrentTime(),NotifyHelper.getCurrentDate());
+                            ParseQuery<ParseInstallation> destination;
+                            try {
+                                JSONObject jsonObject = NotifyHelper.generateMessageJSONObject(gCreateNotify, false);
+                                jsonObject.put("groupID", group.getObjectId());
+                                for(ParseUser user : newGroupUsers) {
+                                    destination = ParseQuery.getQuery(ParseInstallation.class);
+                                    destination = destination.whereEqualTo("user", user);
+                                    ParsePush.sendDataInBackground(jsonObject, destination);
+                                }
+                            }catch (JSONException je){
+                                je.printStackTrace();
+                            }
+
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            // display OK message
+                        }
+
+                        @Override
+                        protected void onCancelled() {
+                            // display error message
+                        }
+                    }).execute(group);
+                }
+            }
+        });
+
+        // Insert the group data to database
+
+        notifyUsers();
+        Toast.makeText(this, "The group " + groupName + " was created successfully!", Toast.LENGTH_LONG).show();
+    }
+
+    private void notifyUsers() {
+
     }
 
     /**
