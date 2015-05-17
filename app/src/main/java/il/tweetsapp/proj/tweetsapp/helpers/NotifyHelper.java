@@ -33,10 +33,11 @@ public class NotifyHelper {
         //View newMsgLayout = inflater.inflate(R.layout.current_user_message_layout, messages, true);
         TextView msgTxtV = (TextView)inflatedView.findViewById(R.id.msgTextView);
         TextView timeTxtV = (TextView)inflatedView.findViewById(R.id.msgTimeText);
+        TextView dateTxtV = (TextView)inflatedView.findViewById(R.id.msgDateTextView);
         msgTxtV.setText(msg.getMessage_owner() + ": " + msg.getMessage_text());
         timeTxtV.setText(msg.getTime());
-        //TextView message = new TextView(this);
-        //message.setText(msg);
+        dateTxtV.setText(msg.getDate());
+
 
         messages.addView(inflatedView);
     }

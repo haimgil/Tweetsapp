@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.parse.ParseException;
@@ -18,11 +17,13 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import il.tweetsapp.proj.tweetsapp.helpers.listItemAdapter;
+
 
 public class Users_list extends ActionBarActivity implements AdapterView.OnItemClickListener{
 
     private ListView users_list;
-    private ArrayAdapter<String> arrayAdapter;
+    private listItemAdapter cAdapter;
     private List<ParseUser> usersObjects;
     private ArrayList<String> usersNames;
 
@@ -35,8 +36,8 @@ public class Users_list extends ActionBarActivity implements AdapterView.OnItemC
         usersNames = new ArrayList<String>();
         getUsersObjects();
         getUsersNames();
-        arrayAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, usersNames);
-        users_list.setAdapter(arrayAdapter);
+        cAdapter = new listItemAdapter(this, usersNames);
+        users_list.setAdapter(cAdapter);
         users_list.setOnItemClickListener(this);
 
     }

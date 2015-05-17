@@ -186,6 +186,7 @@ public class GroupCreate extends ActionBarActivity {
             return;
         }
 
+        // Creating new group instance in Parse and update the values.
         final ParseObject group = new ParseObject("Group");
         group.put("name",groupName);
         group.put("owner",ParseUser.getCurrentUser());
@@ -201,7 +202,9 @@ public class GroupCreate extends ActionBarActivity {
             @Override
             public void done(ParseException e) {
                 if(e!=null){
-                    // TODO: DISPLAY ERROR MESSAGE
+                    // Some error occurred.
+                    Toast.makeText(ctx, "Error occurred in group create progress", Toast.LENGTH_LONG).show();
+                    return;
                 }else{
                     (new AsyncTask<ParseObject,Void,Void>(){
                         @Override
@@ -218,7 +221,7 @@ public class GroupCreate extends ActionBarActivity {
 
                             // send notification to group members
                             // group.getObjectId()
-                            String msg = "You was added to group " + groupName + " by " + ParseUser.getCurrentUser();
+                            String msg = "You have been added to group " + groupName + " by " + ParseUser.getCurrentUser();
                             Message gCreateNotify = new Message(msg, ParseUser.getCurrentUser().getUsername(),
                                     NotifyHelper.getCurrentTime(),NotifyHelper.getCurrentDate());
                             ParseQuery<ParseInstallation> destination;

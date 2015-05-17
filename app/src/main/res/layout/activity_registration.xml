@@ -6,7 +6,8 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context="il.tweetsapp.proj.tweetsapp.Registration"
-    android:id="@+id/mainLayout">
+    android:id="@+id/mainLayout"
+    android:background="@drawable/tweetsapp_background2">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -25,14 +26,16 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:textSize="@dimen/text_size" />
+            android:textSize="@dimen/text_size"
+            android:textColor="#ffffff" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/userField"
             android:layout_weight="1"
-            android:textSize="@dimen/text_size" />
+            android:textSize="@dimen/text_size"
+            android:textColor="#ffffff" />
     </LinearLayout>
 
     <LinearLayout
@@ -52,14 +55,16 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:textSize="@dimen/text_size" />
+            android:textSize="@dimen/text_size"
+            android:textColor="#ffffff" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/nameField"
             android:layout_weight="1"
-            android:textSize="@dimen/text_size" />
+            android:textSize="@dimen/text_size"
+            android:textColor="#ffffff" />
     </LinearLayout>
 
     <LinearLayout
@@ -81,7 +86,8 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:textSize="@dimen/text_size" />
+            android:textSize="@dimen/text_size"
+            android:textColor="#ffffff" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -90,7 +96,8 @@
             android:ems="10"
             android:id="@+id/emailField"
             android:layout_weight="1"
-            android:textSize="@dimen/text_size" />
+            android:textSize="@dimen/text_size"
+            android:textColor="#ffffff" />
     </LinearLayout>
 
     <LinearLayout
@@ -112,7 +119,8 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:textSize="@dimen/text_size" />
+            android:textSize="@dimen/text_size"
+            android:textColor="#ffffff" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -121,7 +129,8 @@
             android:ems="10"
             android:id="@+id/passwordField"
             android:layout_weight="1"
-            android:textSize="@dimen/text_size" />
+            android:textSize="@dimen/text_size"
+            android:textColor="#ffffff" />
     </LinearLayout>
 
     <LinearLayout
@@ -143,7 +152,8 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:textSize="@dimen/text_size" />
+            android:textSize="@dimen/text_size"
+            android:textColor="#ffffff" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -152,7 +162,8 @@
             android:ems="10"
             android:id="@+id/confirmField"
             android:layout_weight="1"
-            android:textSize="@dimen/text_size" />
+            android:textSize="@dimen/text_size"
+            android:textColor="#ffffff" />
     </LinearLayout>
 
     <Button
@@ -162,6 +173,7 @@
         android:id="@+id/registerButton"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="25dp"
-        android:onClick="onRegisterClick" />
+        android:onClick="onRegisterClick"
+        android:background="#ffffffff" />
 
 </LinearLayout>

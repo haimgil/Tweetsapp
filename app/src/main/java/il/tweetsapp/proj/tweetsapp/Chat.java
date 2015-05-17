@@ -27,7 +27,8 @@ import il.tweetsapp.proj.tweetsapp.helpers.NotifyHelper;
 public class Chat extends ActionBarActivity{
 
     private static Chat INSTANCE = null;
-    public  static ParseUser chatWith = null;
+    public static ParseUser chatWith = null;
+    //public static String
     private DataBL dataBL;
 
     @Override

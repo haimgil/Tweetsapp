@@ -73,7 +73,7 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
     private NotificationCompat.Builder createNotification(Context context, Message message, boolean isGroupCreate) {
         String notifyMsg;
         if(isGroupCreate)
-            notifyMsg = "New group was created by ";
+            notifyMsg = "New group created by ";
         else
             notifyMsg = "New tweetApp from ";
         NotificationCompat.Builder notification=

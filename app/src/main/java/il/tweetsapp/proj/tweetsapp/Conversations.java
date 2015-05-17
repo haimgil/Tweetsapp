@@ -7,20 +7,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Conversation;
+import il.tweetsapp.proj.tweetsapp.helpers.listItemAdapter;
 
 
 public class Conversations extends ActionBarActivity implements AdapterView.OnItemClickListener {
 
     private ListView conversationsListView;
-    private List<Conversation> userConversations;
-    private ArrayAdapter<String> arrayAdapter;
+    private listItemAdapter cAdapter;
     private List<String> conversationsNames;
 
     @Override
@@ -29,10 +28,9 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
         setContentView(R.layout.activity_conversations);
 
         conversationsListView = (ListView)findViewById(R.id.conversationsList);
-        userConversations = getUserConversations();
         conversationsNames = getConversationsNames();
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, conversationsNames);
-        conversationsListView.setAdapter(arrayAdapter);
+        cAdapter = new listItemAdapter(this, conversationsNames);
+        conversationsListView.setAdapter(cAdapter);
         conversationsListView.setOnItemClickListener(this);
     }
 
