@@ -221,12 +221,12 @@ public class GroupCreate extends ActionBarActivity {
 
                             // send notification to group members
                             // group.getObjectId()
-                            String msg = "You have been added to group " + groupName + " by " + ParseUser.getCurrentUser();
-                            Message gCreateNotify = new Message(msg, ParseUser.getCurrentUser().getUsername(),
-                                    NotifyHelper.getCurrentTime(),NotifyHelper.getCurrentDate());
+                            String msg = "You have been added to group " + groupName + " by " + ParseUser.getCurrentUser().getUsername();
+                            Message gCreateNotify = new Message(msg, groupName,
+                                    NotifyHelper.getCurrentTime(),NotifyHelper.getCurrentDate(), true);
                             ParseQuery<ParseInstallation> destination;
                             try {
-                                JSONObject jsonObject = NotifyHelper.generateMessageJSONObject(gCreateNotify, false);
+                                JSONObject jsonObject = NotifyHelper.generateMessageJSONObject(gCreateNotify);
                                 jsonObject.put("groupID", group.getObjectId());
                                 for(ParseUser user : newGroupUsers) {
                                     destination = ParseQuery.getQuery(ParseInstallation.class);

@@ -51,7 +51,7 @@ public class Chat extends ActionBarActivity{
            String conversationName = intent.getStringExtra("Conversation name");
             List<Message> messages = dataBL.getConversationMessages(conversationName);
             for(int i=0; i < messages.size(); i++){
-                NotifyHelper.printMessage(INSTANCE, messages.get(i));
+                NotifyHelper.printMessage(INSTANCE, messages.get(i), messages.get(i).getIsGroupCreateMsg());
             }
         }
     }
@@ -87,12 +87,12 @@ public class Chat extends ActionBarActivity{
 
         // Create new message object for insert to database
         final Message newMsg = new Message(txtMessage.getText().toString(), ParseUser.getCurrentUser().getUsername(),
-                NotifyHelper.getCurrentTime(), NotifyHelper.getCurrentDate());
+                NotifyHelper.getCurrentTime(), NotifyHelper.getCurrentDate(), false);
 
         dataBL.addMessageToDbTable(newMsg, chatWith.getUsername());
 
 
-        NotifyHelper.printMessage(INSTANCE, newMsg);
+        NotifyHelper.printMessage(INSTANCE, newMsg, newMsg.getIsGroupCreateMsg());
 
         ParseQuery<ParseInstallation> destination;
         destination = ParseQuery.getQuery(ParseInstallation.class);
@@ -106,7 +106,7 @@ public class Chat extends ActionBarActivity{
 
         //ParsePush.sendMessageInBackground(newMsg.getMessage_owner() + ": " + newMsg.getMessage_text(), destination);
         try {
-            final JSONObject messageDetails =  NotifyHelper.generateMessageJSONObject(newMsg, true);
+            final JSONObject messageDetails =  NotifyHelper.generateMessageJSONObject(newMsg);
             ParsePush.sendDataInBackground(messageDetails, destination);
         } catch (JSONException e) {
             e.printStackTrace();

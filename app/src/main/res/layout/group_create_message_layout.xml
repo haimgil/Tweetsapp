@@ -35,7 +35,7 @@
                 android:layout_gravity="center" />
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -46,15 +46,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/msg_text"
-                android:id="@+id/gCreateTextView"
-                android:textSize="20dp"
+                android:id="@+id/msgTextView"
+                android:textSize="12dp"
                 android:textColor="#fffffff5"
-                android:layout_gravity="center|right"
-                android:layout_marginLeft="115dp"
+                android:layout_gravity="center"
                 android:autoText="false"
-                android:background="@drawable/bg_layout_gcreate_msg" />
+                android:background="@drawable/bg_layout_gcreate_msg"
+                android:gravity="center"
+                android:maxWidth="270dp"
+                android:layout_centerInParent="true" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 </LinearLayout>

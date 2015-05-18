@@ -8,9 +8,16 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.parse.ParseBroadcastReceiver;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseRelation;
+import com.parse.ParseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Chat;
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
@@ -21,66 +28,75 @@ import il.tweetsapp.proj.tweetsapp.R;
  * Created by Haim on 12/27/2014.
  */
 public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
+
+    DataBL dataBL;
+
     public TweetsBroadcastReceiver(){
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        dataBL = new DataBL(context);
         Log.i("ParseBroadcastReceiver", intent.getExtras().getString("com.parse.Data"));
         String msg = intent.getExtras().getString("com.parse.Data");
         Message msgToDb;
         String groupID;
 
-        boolean isGroupCreate = false;
-            try {
-                JSONObject data = new JSONObject(msg);
-                if(data.getString("gCreateAlert") != null){
-                    msgToDb = new Message(data.getString("gCreateAlert"),
-                            data.getString("msg_owner"),
-                            data.getString("msg_time"),
-                            data.getString("msg_date"),
-                            data.getInt("msg_rating"),
-                            data.getInt("msg_ratings"));
-                    groupID = data.getString("groupID");
-                    isGroupCreate = true;
-                }
-                else {
-                    msgToDb = new Message(data.getString("msgAlert"),
-                            data.getString("msg_owner"),
-                            data.getString("msg_time"),
-                            data.getString("msg_date"),
-                            data.getInt("msg_rating"),
-                            data.getInt("msg_ratings"));
-                }
-                if(Chat.getInstance() == null){
-                   NotificationCompat.Builder notification = createNotification(context, msgToDb, isGroupCreate);
+        try {
+            JSONObject data = new JSONObject(msg);
 
-                }
-                else if (Chat.getInstance() != null)
-                    NotifyHelper.printMessage(Chat.getInstance(), msgToDb);
-                msgToDb.calculateAverageRating();
-                pushCurrentMessageToDb(context, msgToDb);
-                //Todo - delete code below (1 Line for debug)
-                //Toast.makeText(context, msgToDb.toString(), Toast.LENGTH_LONG).show();
-            } catch (JSONException je) {
-                Log.e("ParseBroadcastReceiver", je.getMessage());
+            msgToDb = new Message(data.getString("alert"),
+                    data.getString("msg_owner"), // In case that the message is notify about group create this value is the Group Name.
+                    data.getString("msg_time"),
+                    data.getString("msg_date"),
+                    data.getInt("msg_rating"),
+                    data.getInt("msg_ratings"),
+                    data.getBoolean("msg_gCreate"));
+            groupID = data.getString("groupID");
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("Group");
+            try{// Get the group details for inserting to local db.
+                ParseObject group = query.get(groupID);
+                String groupName = (String)group.get("name");
+                ParseRelation<ParseUser> groupUsers = group.getRelation("users");
+                ParseQuery<ParseUser> usersQuery = groupUsers.getQuery();
+                List<ParseUser> gUsersList = usersQuery.find();
+                dataBL.addConversation(groupName);
+                for(ParseUser user : gUsersList)
+                    dataBL.addUserToDbTable(groupName, user.getUsername());
+
+            }catch (ParseException pe){
+                Log.e("ParseException", "Get group details failed");
                 return;
             }
-        //}
+
+            if(Chat.getInstance() == null){
+               NotificationCompat.Builder notification = createNotification(context, msgToDb, msgToDb.getIsGroupCreateMsg());
+
+            }
+            else if (Chat.getInstance() != null)
+                NotifyHelper.printMessage(Chat.getInstance(), msgToDb, msgToDb.getIsGroupCreateMsg());
+            msgToDb.calculateAverageRating();
+            pushCurrentMessageToDb(context, msgToDb);
+            //Todo - delete code below (1 Line for debug)
+            //Toast.makeText(context, msgToDb.toString(), Toast.LENGTH_LONG).show();
+        } catch (JSONException je) {
+            Log.e("ParseBroadcastReceiver", je.getMessage());
+            return;
+        }
     }
 
     private NotificationCompat.Builder createNotification(Context context, Message message, boolean isGroupCreate) {
         String notifyMsg;
         if(isGroupCreate)
-            notifyMsg = "New group created by ";
+            notifyMsg = "TweetsAppNew-group created ";
         else
-            notifyMsg = "New tweetApp from ";
+            notifyMsg = "TweetsApp-New tweetApp (`･⊝･´)";
         NotificationCompat.Builder notification=
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle(notifyMsg + message.getMessage_owner())
-                        .setContentText(message.getMessage_text().substring(0, 10).concat("..."));
+                        .setContentTitle(notifyMsg)
+                        .setContentText(message.getMessage_text());
 
         Intent resultIntent = new Intent(context, Chat.class);
 

@@ -21,12 +21,15 @@ import il.tweetsapp.proj.tweetsapp.R;
  */
 public class NotifyHelper {
 
-    public static void printMessage(Activity activity, Message msg){
+    public static void printMessage(Activity activity, Message msg, boolean isGroupCreateMsg){
         LinearLayout messages = (LinearLayout)activity.findViewById(R.id.messages);
         LinearLayout inflatedView;
         if(msg.getMessage_owner().equals(ParseUser.getCurrentUser().getUsername()))
             //inflate view for current user messages
-            inflatedView = (LinearLayout) View.inflate(activity.getApplicationContext(), R.layout.current_user_message_layout, null);
+            inflatedView = (LinearLayout)View.inflate(activity.getApplicationContext(), R.layout.current_user_message_layout, null);
+        else if(isGroupCreateMsg)
+            //inflate view for group create message
+            inflatedView = (LinearLayout)View.inflate(activity.getApplicationContext(), R.layout.group_create_message_layout, null);
         else
             //inflate view for other users messages
             inflatedView = (LinearLayout)View.inflate(activity.getApplicationContext(), R.layout.users_message_layout, null);
@@ -43,17 +46,15 @@ public class NotifyHelper {
     }
 
 
-    public static JSONObject generateMessageJSONObject(Message msg, boolean isMsg) throws JSONException {
+    public static JSONObject generateMessageJSONObject(Message msg) throws JSONException {
         JSONObject object = new JSONObject();
-        if(isMsg)
-            object.put("msgAlert", msg.getMessage_text());
-        else //
-            object.put("gCreateAlert", msg.getMessage_text());
+        object.put("alert", msg.getMessage_text());
         object.put("msg_owner", msg.getMessage_owner());
         object.put("msg_time", msg.getTime());
         object.put("msg_date", msg.getDate());
         object.put("msg_rating", msg.getRating());
         object.put("msg_ratings", msg.getNumber_of_ratings());
+        object.put("msg_gCreate", msg.getIsGroupCreateMsg());
 
         return object;
     }

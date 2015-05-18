@@ -12,24 +12,28 @@ public class Message {
     private int rating;
     private int number_of_ratings;
     private double average_rating;
+    private Boolean isGroupCreateMsg;
 
-    public Message(String message_text, String message_owner, String time, String date) {
+    public Message(String message_text, String message_owner, String time, String date, Boolean isGroupCreateMsg) {
         this.message_text = message_text;
         this.message_owner = message_owner;
         this.time = time;
         this.date = date;
+        this.isGroupCreateMsg = isGroupCreateMsg;
         rating = 0;
         average_rating = 0;
         number_of_ratings = 0;
     }
 
-    public Message(String message_text, String message_owner, String msgTime, String msgDate, int msgRating, int number_of_ratings){
+    public Message(String message_text, String message_owner, String msgTime, String msgDate,
+                                                int msgRating, int number_of_ratings, boolean isGroupCreateMsg){
         this.message_text = message_text;
         this.message_owner = message_owner;
         this.time = msgTime;
         this.date = msgDate;
         this.rating = msgRating;
         this.number_of_ratings = number_of_ratings;
+        this.isGroupCreateMsg = isGroupCreateMsg;
     }
 
     public String getMessage_text() {
@@ -93,6 +97,10 @@ public class Message {
         String msgVariables = "Text: " + this.message_text + "\r\nOwner: " + this.message_owner + "\r\nTime: " + this.time
                 + "\r\nDate: " +  this.date + "\r\nRating: " + this.rating + "\r\nRatings: " + this.number_of_ratings + "\r\nAverage: " + this.average_rating;
         return  msgVariables;
+    }
+
+    public Boolean getIsGroupCreateMsg() {
+        return isGroupCreateMsg;
     }
 }
 

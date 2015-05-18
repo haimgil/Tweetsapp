@@ -19,4 +19,5 @@ public class Constants implements BaseColumns{
     public static final String COLUMN_MSG_DATE_NAME = "date";
     public static final String COLUMN_MSG_RATING_NAME = "rating";
     public static final String COLUMN_MSG_QUANTITY_RATINGS_NAME = "quantity_ratings";
+    public static final String COLUMN_MSG_BOOLEAN_NAME = "group_create_message";
 }

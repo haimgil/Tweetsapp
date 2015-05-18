@@ -33,7 +33,8 @@ public class TweetsAppDbHelper extends SQLiteOpenHelper {
                 Constants.COLUMN_MSG_TIME_NAME + " TEXT NOT NULL, " +
                 Constants.COLUMN_MSG_DATE_NAME + " TEXT NOT NULL, " +
                 Constants.COLUMN_MSG_RATING_NAME + " INTEGER, " +
-                Constants.COLUMN_MSG_QUANTITY_RATINGS_NAME + " INTEGER);");
+                Constants.COLUMN_MSG_QUANTITY_RATINGS_NAME + " INTEGER, " +
+                Constants.COLUMN_MSG_BOOLEAN_NAME + " INTEGER);");
     }
 
     @Override

@@ -86,7 +86,7 @@ public class DataDAL {
      * @return True if row added successfully, otherwise return false.
      */
     public boolean pushRowToMessagesTable(String conversationName, String msgTxt, String msgOwner,
-                                          String msgTime, String msgDate, int msgRating, int msgRatingsQuantity){
+                                          String msgTime, String msgDate, int msgRating, int msgRatingsQuantity, int isGroupCreate){
         try{
             db = dbHelper.getWritableDatabase();
         }catch (SQLiteException e){
@@ -105,6 +105,7 @@ public class DataDAL {
         values.put(Constants.COLUMN_MSG_DATE_NAME, msgDate);
         values.put(Constants.COLUMN_MSG_RATING_NAME, msgRating);
         values.put(Constants.COLUMN_MSG_QUANTITY_RATINGS_NAME, msgRatingsQuantity);
+        values.put(Constants.COLUMN_MSG_BOOLEAN_NAME, isGroupCreate);
         // Insert the row to the table and close the connection
         db.insertOrThrow(Constants.MESSAGES_TABLE_NAME, null, values);
         db.close();
@@ -130,6 +131,7 @@ public class DataDAL {
         Cursor cursor = db.query(Constants.CONVERSATIONS_TABLE_NAME,
                                     columns, // Columns to return from query.
                                         null, null, null, null, null);
+
         return cursor;
     }
 
@@ -202,7 +204,7 @@ public class DataDAL {
         //Columns that get from preferably table
         String [] columns = {Constants.COLUMN_MSG_TXT_NAME, Constants.COLUMN_MSG_OWNER_NAME,
                                 Constants.COLUMN_MSG_TIME_NAME, Constants.COLUMN_MSG_DATE_NAME, Constants.COLUMN_MSG_RATING_NAME,
-                                    Constants.COLUMN_MSG_QUANTITY_RATINGS_NAME};
+                                    Constants.COLUMN_MSG_QUANTITY_RATINGS_NAME, Constants.COLUMN_MSG_BOOLEAN_NAME};
 
         cursor = db.query(Constants.MESSAGES_TABLE_NAME,
                             columns,
