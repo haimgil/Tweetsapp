@@ -10,9 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import il.tweetsapp.proj.tweetsapp.helpers.Utils;
 import com.parse.ParseException;
 import com.parse.ParseUser;
+
+import il.tweetsapp.proj.tweetsapp.helpers.Utils;
 
 
 public class Registration extends Activity {
@@ -127,6 +128,7 @@ public class Registration extends Activity {
         Intent intent = new Intent(this, Login.class);
         intent.putExtra("login_details", login_details);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);
         finish();
     }

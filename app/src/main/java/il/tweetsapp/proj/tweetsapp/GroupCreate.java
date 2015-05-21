@@ -1,7 +1,11 @@
 package il.tweetsapp.proj.tweetsapp;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -153,23 +157,6 @@ public class GroupCreate extends ActionBarActivity {
     }
 
 
-    /*********************************/
-   /* public void onCheckclick(View view){
-        Button b = (Button)findViewById(R.id.button3);
-        DataBL tstData = new DataBL(this);
-        Conversation tstConversation;
-        tstConversation = tstData.getConversation("test group");
-        String[] usersNames = {tstConversation.getUsers().get(0).getUsername(), tstConversation.getUsers().get(1).getUsername()};
-
-        Toast.makeText(this, "The users in that group is:\n" + usersNames[0] + "\n" + usersNames[1], Toast.LENGTH_LONG).show();
-    }*/
-
-
-
-    /**********************************/
-
-
-
     public void onCreateGroupClick(View view) {
         EditText groupNameEditT = (EditText)findViewById(R.id.groupNameFiled);
         final String groupName = groupNameEditT.getText().toString().trim();
@@ -206,20 +193,37 @@ public class GroupCreate extends ActionBarActivity {
                     return;
                 }else{
                     (new AsyncTask<ParseObject,Void,Void>(){
+                        ProgressDialog pDialog;
+
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+                            pDialog = new ProgressDialog(ctx);
+                            pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                            pDialog.setMessage("Please wait...");
+                            pDialog.show();
+
+                        }
+
                         @Override
                         protected Void doInBackground(ParseObject... groups) {
+
+
+
                             ParseObject group = groups[0];
 
                             // save group in local DB
-                            // TODO HANDLE ERRORS (call cancel)
                             DataBL dbObject = new DataBL(ctx);
                             dbObject.addConversation(groupName);
                             for(ParseUser newUser :newGroupUsers){
                                 dbObject.addUserToDbTable(groupName, newUser.getUsername());
                             }
+                            //Push automatic message to local db of the group creator about creating new group.
+                            Message message = new Message("You just created the group " + groupName + "!", groupName,
+                                                            NotifyHelper.getCurrentTime(), NotifyHelper.getCurrentDate(), true);
+                            dbObject.addMessageToDbTable(message, groupName);
 
                             // send notification to group members
-                            // group.getObjectId()
                             String msg = "You have been added to group " + groupName + " by " + ParseUser.getCurrentUser().getUsername();
                             Message gCreateNotify = new Message(msg, groupName,
                                     NotifyHelper.getCurrentTime(),NotifyHelper.getCurrentDate(), true);
@@ -233,34 +237,46 @@ public class GroupCreate extends ActionBarActivity {
                                     ParsePush.sendDataInBackground(jsonObject, destination);
                                 }
                             }catch (JSONException je){
+                                onCancelled();
                                 je.printStackTrace();
                             }
-
+                            try {
+                                Thread.sleep(2000); //2 second.
+                            } catch(InterruptedException ex) {
+                                onCancelled();
+                                Thread.currentThread().interrupt();
+                            }
                             return null;
                         }
 
                         @Override
                         protected void onPostExecute(Void aVoid) {
-                            // display OK message
+                            if(pDialog.isShowing())
+                                pDialog.dismiss();
+
+                            Intent iChat = new Intent(ctx, Chat.class);
+                            iChat.putExtra("Conversation name",groupName);
+                            iChat.putExtra("Group created successfully",0);
+                            startActivity(iChat);
                         }
 
                         @Override
                         protected void onCancelled() {
-                            // display error message
+                            AlertDialog alertDialog = new AlertDialog.Builder(ctx.getApplicationContext()).create();
+                            alertDialog.setTitle("New group error");
+                            alertDialog.setMessage("Group creating failed. Try again!");
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            alertDialog.show();
                         }
                     }).execute(group);
                 }
             }
         });
-
-        // Insert the group data to database
-
-        notifyUsers();
-        Toast.makeText(this, "The group " + groupName + " was created successfully!", Toast.LENGTH_LONG).show();
-    }
-
-    private void notifyUsers() {
-
     }
 
     /**

@@ -99,6 +99,7 @@ public class Login extends Activity {
 
                     pairingUserToInstallationId();
                     Intent i = new Intent(Login.this, Conversations.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(i);
                 }
             }
@@ -144,10 +145,9 @@ public class Login extends Activity {
                     editor.putBoolean("login",true);
                     editor.commit();
 
-                    // TODO here => Save the currentUser to Extra for using in Chat.class
                     pairingUserToInstallationId();
 
-                    intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags( Intent.FLAG_FROM_BACKGROUND);
                     startActivity(intent);
                     Toast.makeText(getApplicationContext(),
                             "Successfully Logged in",

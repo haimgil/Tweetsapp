@@ -31,6 +31,7 @@ public class Main extends Activity {
             activity = new Intent(this,Login.class);
 
         activity.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(activity);
         finish();
     }

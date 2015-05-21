@@ -43,8 +43,9 @@ public class Chat extends ActionBarActivity{
 
         setContentView(R.layout.activity_chat);
         TextView cNameTextV = (TextView)findViewById(R.id.chatting_with);
-        //TODO - Remove this code after debug
+
         Intent intent = getIntent();
+
         isChatWithSingle = intent.hasExtra("Chat with single");
 
         if(intent.hasExtra("Conversation name")){
@@ -54,6 +55,8 @@ public class Chat extends ActionBarActivity{
             for(int i=0; i < messages.size(); i++){
                 NotifyHelper.printMessage(INSTANCE, messages.get(i), messages.get(i).getIsGroupCreateMsg());
             }
+            if(intent.hasExtra("Group created successfully"))
+                Toast.makeText(this, "The group \"" + conversationName + "\" was created successfully!", Toast.LENGTH_LONG).show();
         }else {
             conversationName = null;
             Toast.makeText(this, "Some error occurred in conversation name assigning!", Toast.LENGTH_LONG).show();

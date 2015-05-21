@@ -91,7 +91,7 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
                     return;
                 }
             }
-            else
+            else // In this case, the conversation name is the username of the user that chatting with
                 conversationName = data.getString("Conversation name");
 
             msgToDb.calculateAverageRating();

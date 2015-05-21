@@ -75,6 +75,7 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
                 break;
             case R.id.action_group_create:
                 actionIntent = new Intent(this, GroupCreate.class);
+                actionIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 break;
             case R.id.action_new_conversation:
                 actionIntent = new Intent(this, Users_list.class);
