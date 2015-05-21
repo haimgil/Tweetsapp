@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseInstallation;
@@ -42,7 +41,6 @@ public class Chat extends ActionBarActivity{
         dataBL = new DataBL(this);
 
         setContentView(R.layout.activity_chat);
-        TextView cNameTextV = (TextView)findViewById(R.id.chatting_with);
 
         Intent intent = getIntent();
 
@@ -50,7 +48,8 @@ public class Chat extends ActionBarActivity{
 
         if(intent.hasExtra("Conversation name")){
             conversationName = intent.getStringExtra("Conversation name");
-            cNameTextV.setText(conversationName);
+            this.setTitle(conversationName);
+
             List<Message> messages = dataBL.getConversationMessages(conversationName);
             for(int i=0; i < messages.size(); i++){
                 NotifyHelper.printMessage(INSTANCE, messages.get(i), messages.get(i).getIsGroupCreateMsg());
@@ -95,12 +94,11 @@ public class Chat extends ActionBarActivity{
         // Create new message object for insert to database
         final Message newMsg = new Message(txtMessage.getText().toString(), ParseUser.getCurrentUser().getUsername(),
                 NotifyHelper.getCurrentTime(), NotifyHelper.getCurrentDate(), false);
-        //Todo - check the problem here
+
+        //Print the message to the sender screen.
+        NotifyHelper.printMessage(INSTANCE, newMsg, newMsg.getIsGroupCreateMsg());
         for(ParseUser user : chatWith)
             dataBL.addMessageToDbTable(newMsg, user.getUsername());
-
-
-        NotifyHelper.printMessage(INSTANCE, newMsg, newMsg.getIsGroupCreateMsg());
 
         ParseQuery<ParseInstallation> destQuery = ParseQuery.getQuery(ParseInstallation.class);
 

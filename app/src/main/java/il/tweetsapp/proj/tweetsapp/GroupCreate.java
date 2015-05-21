@@ -1,10 +1,8 @@
 package il.tweetsapp.proj.tweetsapp;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -44,7 +42,7 @@ import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
-import il.tweetsapp.proj.tweetsapp.helpers.NotifyHelper;
+import il.tweetsapp.proj.tweetsapp.helpers.Utils;
 
 
 public class GroupCreate extends ActionBarActivity {
@@ -219,17 +217,17 @@ public class GroupCreate extends ActionBarActivity {
                                 dbObject.addUserToDbTable(groupName, newUser.getUsername());
                             }
                             //Push automatic message to local db of the group creator about creating new group.
-                            Message message = new Message("You just created the group " + groupName + "!", groupName,
-                                                            NotifyHelper.getCurrentTime(), NotifyHelper.getCurrentDate(), true);
+                            Message message = new Message("You just created the group \"" + groupName + "\"!", groupName,
+                                                            Utils.getCurrentTime(), Utils.getCurrentDate(), true);
                             dbObject.addMessageToDbTable(message, groupName);
 
                             // send notification to group members
-                            String msg = "You have been added to group " + groupName + " by " + ParseUser.getCurrentUser().getUsername();
+                            String msg = "You have been added to group \"" + groupName + "\" by " + ParseUser.getCurrentUser().getUsername();
                             Message gCreateNotify = new Message(msg, groupName,
-                                    NotifyHelper.getCurrentTime(),NotifyHelper.getCurrentDate(), true);
+                                    Utils.getCurrentTime(),Utils.getCurrentDate(), true);
                             ParseQuery<ParseInstallation> destination;
                             try {
-                                JSONObject jsonObject = NotifyHelper.generateMessageJSONObject(gCreateNotify);
+                                JSONObject jsonObject = Utils.generateMessageJSONObject(gCreateNotify);
                                 jsonObject.put("groupID", group.getObjectId());
                                 for(ParseUser user : newGroupUsers) {
                                     destination = ParseQuery.getQuery(ParseInstallation.class);
@@ -262,16 +260,7 @@ public class GroupCreate extends ActionBarActivity {
 
                         @Override
                         protected void onCancelled() {
-                            AlertDialog alertDialog = new AlertDialog.Builder(ctx.getApplicationContext()).create();
-                            alertDialog.setTitle("New group error");
-                            alertDialog.setMessage("Group creating failed. Try again!");
-                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            alertDialog.show();
+                            Utils.alert(ctx.getApplicationContext(), "New group error", "Group creating failed. Try again!");
                         }
                     }).execute(group);
                 }

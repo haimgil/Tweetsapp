@@ -77,6 +77,7 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
                 } catch (ParseException pe) {
                     Log.e("ParseException", "Get group details failed");
                     // Let the user know that some user have been added him to a group but error occurred.
+
                     AlertDialog alertDialog = new AlertDialog.Builder(context.getApplicationContext()).create();
                     alertDialog.setTitle("New group error");
                     alertDialog.setMessage(msgToDb.getMessage_owner() +
@@ -108,7 +109,7 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
                 sendNotification(context, msgToDb, conversationName, msgToDb.getIsGroupCreateMsg());
             }
             else if (Chat.getInstance() != null)
-                NotifyHelper.printMessage(Chat.getInstance(), msgToDb, msgToDb.getIsGroupCreateMsg());
+                Utils.printMessage(Chat.getInstance(), msgToDb, msgToDb.getIsGroupCreateMsg());
 
             //Todo - delete code below (1 Line for debug)
             //Toast.makeText(context, msgToDb.toString(), Toast.LENGTH_LONG).show();
