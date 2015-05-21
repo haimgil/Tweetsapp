@@ -17,6 +17,7 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.helpers.listItemAdapter;
 
 
@@ -25,7 +26,8 @@ public class Users_list extends ActionBarActivity implements AdapterView.OnItemC
     private ListView users_list;
     private listItemAdapter cAdapter;
     private List<ParseUser> usersObjects;
-    private ArrayList<String> usersNames;
+    private List<String> usersNames;
+    private DataBL dataBL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class Users_list extends ActionBarActivity implements AdapterView.OnItemC
         setContentView(R.layout.activity_users_list);
         users_list = (ListView) findViewById(R.id.usersList);
         usersNames = new ArrayList<String>();
+        dataBL = new DataBL(this);
         getUsersObjects();
         getUsersNames();
         cAdapter = new listItemAdapter(this, usersNames);
@@ -48,11 +51,8 @@ public class Users_list extends ActionBarActivity implements AdapterView.OnItemC
      */
     private void getUsersNames() {
         int i;
-        for(i=0; i < usersObjects.size(); i++){
+        for(i=0; i < usersObjects.size(); i++)
             usersNames.add(usersObjects.get(i).getUsername());
-        }
-        if(i>1)
-            usersNames.add("All Users"); // Option to chatting with all users.
     }
 
     /**
@@ -86,13 +86,21 @@ public class Users_list extends ActionBarActivity implements AdapterView.OnItemC
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(position < usersObjects.size()) {
-            Chat.chatWith = usersObjects.get(position);
+
+        // Update the user to chat with.
+        ParseUser user = usersObjects.get(position);
+        Chat.chatWith = new ArrayList<ParseUser>();
+        Chat.chatWith.add(user);
+
+        String conversationName = user.getUsername();
+        //Check if the conversation is exist and in case not, create it.
+        if(dataBL.getConversation(conversationName) == null) {
+            dataBL.addConversation(conversationName);
+            dataBL.addUserToDbTable(conversationName, user.getUsername());
         }
         Intent iChat = new Intent(this, Chat.class);
-        //TODO - Remove this code after debug
-        iChat.putExtra("Conversation name", Chat.chatWith.getUsername());
-        //end debug
+        iChat.putExtra("Conversation name", user.getUsername());
+        iChat.putExtra("Chat with single", true);
         startActivity(iChat);
     }
 }

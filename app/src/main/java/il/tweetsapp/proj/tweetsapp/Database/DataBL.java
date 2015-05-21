@@ -54,12 +54,13 @@ public class DataBL {
                 conversation = new Conversation(cursor.getString(0));
         }
         dataDAL.closeDb();
+        if(conversation != null) {
+            List<String> conversationUsers = getConversationUsers(conversation.getGroupName());
+            List<Message> conversationMessages = getConversationMessages(conversation.getGroupName());
 
-        List<String> conversationUsers = getConversationUsers(conversation.getGroupName());
-        List<Message> conversationMessages = getConversationMessages(conversation.getGroupName());
-
-        conversation.setUsers(conversationUsers);
-        conversation.setMessages_list(conversationMessages);
+            conversation.setUsers(conversationUsers);
+            conversation.setMessages_list(conversationMessages);
+        }
 
         return conversation;
     }

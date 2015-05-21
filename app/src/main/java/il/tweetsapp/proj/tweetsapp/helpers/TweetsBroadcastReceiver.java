@@ -1,8 +1,10 @@
 package il.tweetsapp.proj.tweetsapp.helpers;
 
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -29,19 +31,18 @@ import il.tweetsapp.proj.tweetsapp.R;
  */
 public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
 
-    DataBL dataBL;
-
     public TweetsBroadcastReceiver(){
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        dataBL = new DataBL(context);
+        DataBL dataBL = new DataBL(context);
+        String conversationName;
         Log.i("ParseBroadcastReceiver", intent.getExtras().getString("com.parse.Data"));
         String msg = intent.getExtras().getString("com.parse.Data");
         Message msgToDb;
-        String groupID;
+        String groupID = null;
 
         try {
             JSONObject data = new JSONObject(msg);
@@ -53,31 +54,62 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
                     data.getInt("msg_rating"),
                     data.getInt("msg_ratings"),
                     data.getBoolean("msg_gCreate"));
-            groupID = data.getString("groupID");
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("Group");
-            try{// Get the group details for inserting to local db.
-                ParseObject group = query.get(groupID);
-                String groupName = (String)group.get("name");
-                ParseRelation<ParseUser> groupUsers = group.getRelation("users");
-                ParseQuery<ParseUser> usersQuery = groupUsers.getQuery();
-                List<ParseUser> gUsersList = usersQuery.find();
-                dataBL.addConversation(groupName);
-                for(ParseUser user : gUsersList)
-                    dataBL.addUserToDbTable(groupName, user.getUsername());
 
-            }catch (ParseException pe){
-                Log.e("ParseException", "Get group details failed");
-                return;
+            // In case that the message is notify about group create
+            if(msgToDb.getIsGroupCreateMsg()) {
+                groupID = data.getString("groupID");
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("Group");
+
+                try {// Get the group details for inserting to local db.
+                    ParseObject group = query.get(groupID);
+                    conversationName = (String) group.get("name");
+                    ParseRelation<ParseUser> groupUsers = group.getRelation("users");
+                    ParseQuery<ParseUser> usersQuery = groupUsers.getQuery();
+                    // Remove the current user from the group users list (doesn't needed for local db).
+                    usersQuery = usersQuery.whereNotEqualTo("objectId", ParseUser.getCurrentUser().getObjectId());
+                    List<ParseUser> gUsersList = usersQuery.find();
+                    dataBL.addConversation(conversationName); // push the conversation to local db
+                    for (ParseUser user : gUsersList) // push the users to local db according to conversation.
+                        dataBL.addUserToDbTable(conversationName, user.getUsername());
+                    if(Chat.getInstance() != null) // In any case the user isn't in group chat screen, so has to notify him about it
+                        sendNotification(context, msgToDb, conversationName, msgToDb.getIsGroupCreateMsg());
+
+                } catch (ParseException pe) {
+                    Log.e("ParseException", "Get group details failed");
+                    // Let the user know that some user have been added him to a group but error occurred.
+                    AlertDialog alertDialog = new AlertDialog.Builder(context.getApplicationContext()).create();
+                    alertDialog.setTitle("New group error");
+                    alertDialog.setMessage(msgToDb.getMessage_owner() +
+                            " have been added you to his Group but error occurred in try to fetch the group details.");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                    return;
+                }
+            }
+            else
+                conversationName = data.getString("Conversation name");
+
+            msgToDb.calculateAverageRating();
+            // Handle in case that the conversation is with one user and the conversation not exist in the local db.
+            if(dataBL.getConversation(conversationName) == null) {
+                dataBL.addConversation(conversationName);
+                dataBL.addUserToDbTable(conversationName, msgToDb.getMessage_owner());
             }
 
-            if(Chat.getInstance() == null){
-               NotificationCompat.Builder notification = createNotification(context, msgToDb, msgToDb.getIsGroupCreateMsg());
+            // Push the message to the local db
+            dataBL.addMessageToDbTable(msgToDb, conversationName);
 
+            if(Chat.getInstance() == null){
+                sendNotification(context, msgToDb, conversationName, msgToDb.getIsGroupCreateMsg());
             }
             else if (Chat.getInstance() != null)
                 NotifyHelper.printMessage(Chat.getInstance(), msgToDb, msgToDb.getIsGroupCreateMsg());
-            msgToDb.calculateAverageRating();
-            pushCurrentMessageToDb(context, msgToDb);
+
             //Todo - delete code below (1 Line for debug)
             //Toast.makeText(context, msgToDb.toString(), Toast.LENGTH_LONG).show();
         } catch (JSONException je) {
@@ -86,10 +118,10 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
         }
     }
 
-    private NotificationCompat.Builder createNotification(Context context, Message message, boolean isGroupCreate) {
+    private void sendNotification(Context context, Message message, String conversationName, boolean isGroupCreate) {
         String notifyMsg;
         if(isGroupCreate)
-            notifyMsg = "TweetsAppNew-group created ";
+            notifyMsg = "TweetsApp-New group created ";
         else
             notifyMsg = "TweetsApp-New tweetApp (`･⊝･´)";
         NotificationCompat.Builder notification=
@@ -99,6 +131,7 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
                         .setContentText(message.getMessage_text());
 
         Intent resultIntent = new Intent(context, Chat.class);
+        resultIntent.putExtra("Conversation name", conversationName);
 
         // Because clicking the notification opens a new ("special") activity, there's no need to create an artificial back stack.
         PendingIntent resultPendingIntent =
@@ -112,12 +145,6 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
         NotificationManager mNotifyMgr = (NotificationManager)context.getSystemService(context.NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
         mNotifyMgr.notify(mNotificationId, notification.build());
-        return notification;
-    }
-
-    private void pushCurrentMessageToDb(Context context, Message message) {
-        DataBL dataBL = new DataBL(context);
-        dataBL.addMessageToDbTable(message, message.getMessage_owner());
     }
 }
 

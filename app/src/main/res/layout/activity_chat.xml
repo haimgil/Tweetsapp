@@ -27,7 +27,7 @@
         android:id="@+id/messagesScrollView"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:background="@android:color/background_light">
+        android:background="@drawable/chat_background2">
 
         <LinearLayout
             android:orientation="vertical"

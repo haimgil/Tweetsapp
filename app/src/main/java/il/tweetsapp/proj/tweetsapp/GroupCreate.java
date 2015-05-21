@@ -39,7 +39,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
-import il.tweetsapp.proj.tweetsapp.Objcets.Conversation;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
 import il.tweetsapp.proj.tweetsapp.helpers.NotifyHelper;
 
@@ -63,7 +62,7 @@ public class GroupCreate extends ActionBarActivity {
         newGroupUsers = new ArrayList<ParseUser>();
         addUserDialog = null;
         groupCreateTextView = (TextView) findViewById(R.id.groupCreateButton);
-        Typeface myFont = Typeface.createFromAsset(getAssets(), "fonts/FFF_Tusj.ttf");
+        Typeface myFont = Typeface.createFromAsset(getAssets(), "fonts/Top_Secret.ttf");
         groupCreateTextView.setTypeface(myFont);
     }
 
@@ -155,7 +154,7 @@ public class GroupCreate extends ActionBarActivity {
 
 
     /*********************************/
-    public void onCheckclick(View view){
+   /* public void onCheckclick(View view){
         Button b = (Button)findViewById(R.id.button3);
         DataBL tstData = new DataBL(this);
         Conversation tstConversation;
@@ -163,7 +162,7 @@ public class GroupCreate extends ActionBarActivity {
         String[] usersNames = {tstConversation.getUsers().get(0).getUsername(), tstConversation.getUsers().get(1).getUsername()};
 
         Toast.makeText(this, "The users in that group is:\n" + usersNames[0] + "\n" + usersNames[1], Toast.LENGTH_LONG).show();
-    }
+    }*/
 
 
 
