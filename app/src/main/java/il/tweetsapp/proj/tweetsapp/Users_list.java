@@ -98,6 +98,8 @@ public class Users_list extends ActionBarActivity implements AdapterView.OnItemC
             dataBL.addConversation(conversationName);
             dataBL.addUserToDbTable(conversationName, user.getUsername());
         }
+
+        Conversations.isConvsOpen.put(conversationName, true);
         Intent iChat = new Intent(this, Chat.class);
         iChat.putExtra("Conversation name", user.getUsername());
         iChat.putExtra("Chat with single", true);

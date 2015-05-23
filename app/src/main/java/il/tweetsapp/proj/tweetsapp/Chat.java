@@ -22,7 +22,7 @@ import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
-import il.tweetsapp.proj.tweetsapp.helpers.NotifyHelper;
+import il.tweetsapp.proj.tweetsapp.helpers.Utils;
 
 public class Chat extends ActionBarActivity{
 
@@ -52,7 +52,7 @@ public class Chat extends ActionBarActivity{
 
             List<Message> messages = dataBL.getConversationMessages(conversationName);
             for(int i=0; i < messages.size(); i++){
-                NotifyHelper.printMessage(INSTANCE, messages.get(i), messages.get(i).getIsGroupCreateMsg());
+                Utils.printMessage(INSTANCE, messages.get(i), messages.get(i).getIsGroupCreateMsg());
             }
             if(intent.hasExtra("Group created successfully"))
                 Toast.makeText(this, "The group \"" + conversationName + "\" was created successfully!", Toast.LENGTH_LONG).show();
@@ -93,16 +93,16 @@ public class Chat extends ActionBarActivity{
 
         // Create new message object for insert to database
         final Message newMsg = new Message(txtMessage.getText().toString(), ParseUser.getCurrentUser().getUsername(),
-                NotifyHelper.getCurrentTime(), NotifyHelper.getCurrentDate(), false);
+                Utils.getCurrentTime(), Utils.getCurrentDate(), false);
 
         //Print the message to the sender screen.
-        NotifyHelper.printMessage(INSTANCE, newMsg, newMsg.getIsGroupCreateMsg());
+        Utils.printMessage(INSTANCE, newMsg, newMsg.getIsGroupCreateMsg());
         for(ParseUser user : chatWith)
             dataBL.addMessageToDbTable(newMsg, user.getUsername());
 
         ParseQuery<ParseInstallation> destQuery = ParseQuery.getQuery(ParseInstallation.class);
 
-        //Todo - handle in the destination (get all the user in the current conversation);
+        //Todo - handle in the destination (get all users in the current conversation);
         for(ParseUser user : chatWith) { // Every iteration send the message to one of the users group.
             ParseQuery<ParseInstallation> destination = destQuery.whereEqualTo("user", user);
             try {
@@ -111,7 +111,7 @@ public class Chat extends ActionBarActivity{
                     conversationName = ParseUser.getCurrentUser().getUsername();
                 else
                     conversationName = this.conversationName;
-                final JSONObject messageDetails = NotifyHelper.generateMessageJSONObject(newMsg);
+                final JSONObject messageDetails = Utils.generateMessageJSONObject(newMsg);
                 messageDetails.put("Conversation name", conversationName);
                 ParsePush.sendDataInBackground(messageDetails, destination);
             } catch (JSONException e) {

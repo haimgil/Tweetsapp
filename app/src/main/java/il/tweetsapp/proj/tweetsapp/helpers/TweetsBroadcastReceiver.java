@@ -6,6 +6,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -19,9 +22,11 @@ import com.parse.ParseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Chat;
+import il.tweetsapp.proj.tweetsapp.Conversations;
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
 import il.tweetsapp.proj.tweetsapp.R;
@@ -105,11 +110,16 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
             // Push the message to the local db
             dataBL.addMessageToDbTable(msgToDb, conversationName);
 
-            if(Chat.getInstance() == null){
-                sendNotification(context, msgToDb, conversationName, msgToDb.getIsGroupCreateMsg());
-            }
-            else if (Chat.getInstance() != null)
+            //todo - remove debug
+            boolean tmpBool = Conversations.isConvsOpen.get(conversationName);
+            HashMap<String,Boolean> tmpHash = Conversations.isConvsOpen;
+           // end here.
+
+            //Print the message or send notification.
+            if(Chat.getInstance() != null && Conversations.isConvsOpen.get(conversationName))
                 Utils.printMessage(Chat.getInstance(), msgToDb, msgToDb.getIsGroupCreateMsg());
+            else
+                sendNotification(context, msgToDb, conversationName, msgToDb.getIsGroupCreateMsg());
 
             //Todo - delete code below (1 Line for debug)
             //Toast.makeText(context, msgToDb.toString(), Toast.LENGTH_LONG).show();
@@ -122,14 +132,15 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
     private void sendNotification(Context context, Message message, String conversationName, boolean isGroupCreate) {
         String notifyMsg;
         if(isGroupCreate)
-            notifyMsg = "TweetsApp-New group created ";
+            notifyMsg = "TweetsApp-New group created!";
         else
-            notifyMsg = "TweetsApp-New tweetApp (`･⊝･´)";
+            notifyMsg = "New tweetApp from " + message.getMessage_owner();
         NotificationCompat.Builder notification=
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.drawable.ic_tweetsapp)
                         .setContentTitle(notifyMsg)
                         .setContentText(message.getMessage_text());
+        notification.setAutoCancel(true);
 
         Intent resultIntent = new Intent(context, Chat.class);
         resultIntent.putExtra("Conversation name", conversationName);
@@ -138,6 +149,7 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(context, 0, resultIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
+
         notification.setContentIntent(resultPendingIntent);
 
         // Sets an ID for the notification
@@ -146,6 +158,17 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
         NotificationManager mNotifyMgr = (NotificationManager)context.getSystemService(context.NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
         mNotifyMgr.notify(mNotificationId, notification.build());
+        playRingNotification(context);
+    }
+
+    private void playRingNotification(Context context) {
+        try {
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone r = RingtoneManager.getRingtone(context.getApplicationContext(), notification);
+            r.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 

@@ -27,11 +27,12 @@ public class Main extends Activity {
         Intent activity = null;
         if(ParseUser.getCurrentUser()!=null && isLoggedIn)
             activity = new Intent(this, Conversations.class);
-        else
-            activity = new Intent(this,Login.class);
+        else {
+            activity = new Intent(this, Login.class);
+            activity.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        }
 
-        activity.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK);
-        activity.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(activity);
         finish();
     }

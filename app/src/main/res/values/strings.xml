@@ -40,5 +40,8 @@
     <string name="rate_button">Rate</string>
     <string name="date_text">mm/dd/yyyy</string>
     <string name="rowItemText">Item name</string>
+    <string name="search_title">Search</string>
+    <string name="conversation_search_hint">Search conversation...</string>
+    <string name="user_search_hint">Search user...</string>
 
 </resources>

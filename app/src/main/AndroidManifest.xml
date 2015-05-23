@@ -31,7 +31,7 @@
     <application
         android:name=".TweetsApp"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_tweetsapp"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
         <meta-data
@@ -77,6 +77,9 @@
         <activity
             android:name=".Conversations"
             android:label="@string/title_activity_conversations" >
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
         </activity>
         <activity
             android:name=".GroupCreate"
