@@ -24,20 +24,19 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
-import il.tweetsapp.proj.tweetsapp.Objcets.Conversation;
+import il.tweetsapp.proj.tweetsapp.helpers.ListItemAdapter;
 import il.tweetsapp.proj.tweetsapp.helpers.Utils;
-import il.tweetsapp.proj.tweetsapp.helpers.listItemAdapter;
 
 
 public class Conversations extends ActionBarActivity implements AdapterView.OnItemClickListener {
 
     private ListView conversationsListView;
-    private listItemAdapter cAdapter;
+    private SearchView searchView;
+    private ListItemAdapter cAdapter;
     private List<String> conversationsNames;
     private DataBL dataBL;
 
     public static HashMap<String, Boolean> isConvsOpen; // Save for every conversation if it now open.
-    //Todo - create booleans for any conversation (is chat enabled at this time?)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +53,7 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
             isConvsOpen.put(convName, false);
         }
 
-        cAdapter = new listItemAdapter(this, conversationsNames);
+        cAdapter = new ListItemAdapter(this, conversationsNames);
         conversationsListView.setAdapter(cAdapter);
         conversationsListView.setOnItemClickListener(this);
     }
@@ -80,15 +79,6 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
         return names;
     }
 
-    /**
-     * Method that gets all conversations from db.
-     * @return List - contains all conversations of specific user.
-     */
-    private List<Conversation> getUserConversations() {
-        //TODO - get conversations from db
-        return null;
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -96,14 +86,41 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
         getMenuInflater().inflate(R.menu.menu_conversations, menu);
 
         // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        if(searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setIconifiedByDefault(false);
+        }
 
-        return true;
+        final Context ctx = this;
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if(s.equals("")) {
+                    conversationsListView.setAdapter(cAdapter);
+                    return true;
+                }
+                List<String> searchList = new ArrayList<String>();
+                // Check for every conversation name if contains the string 's'
+                for(String convName : conversationsNames){
+                    if(convName.contains(s)) {
+                        searchList.add(convName);
+                    }
+                }
+                ListItemAdapter searchAdapter = new ListItemAdapter(ctx, searchList);
+                conversationsListView.setAdapter(searchAdapter);
+
+                return true;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -113,6 +130,7 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         Intent actionIntent = null;
+
         switch (id) {
             case R.id.action_settings:
 
@@ -126,7 +144,7 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
                 actionIntent = new Intent(this, Users_list.class);
                 break;
             case R.id.action_search:
-                actionIntent = new Intent(Intent.ACTION_EDIT);
+                actionIntent = new Intent(Intent.ACTION_SEARCH);
 
                 break;
         }

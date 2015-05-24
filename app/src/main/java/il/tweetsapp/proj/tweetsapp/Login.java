@@ -2,6 +2,7 @@ package il.tweetsapp.proj.tweetsapp;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,8 +22,6 @@ import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import java.util.Arrays;
-
-import il.tweetsapp.proj.tweetsapp.helpers.Utils;
 
 
 public class Login extends Activity {
@@ -80,26 +79,28 @@ public class Login extends Activity {
         ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
     }
 
+    // Todo - handle facebook login problem
     public void onFacebookClick(View view){
+        final Context ctx = this;
         final ProgressDialog pd = ProgressDialog.show(this, "", "Logging in...", true);
         ParseFacebookUtils.logIn(Arrays.asList("public_profile", "email"), this, new LogInCallback() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 pd.dismiss();
-
                 if(parseUser == null || e!=null) {
-                    Utils.alert(Login.this, "", "Login with Facebook failed");
+                    Toast.makeText(ctx, "Login error", Toast.LENGTH_LONG).show();
+                    //  Utils.alert(Login.this, "", "Login with Facebook failed");
                 }else{
                     makeMeRequest();
 
                     settings = getSharedPreferences("PrefsFile", MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putBoolean("login",true);
-                    editor.commit();
+                    editor.apply();
 
                     pairingUserToInstallationId();
                     Intent i = new Intent(Login.this, Conversations.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     startActivity(i);
                 }
             }

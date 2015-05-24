@@ -18,16 +18,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
-import il.tweetsapp.proj.tweetsapp.helpers.listItemAdapter;
+import il.tweetsapp.proj.tweetsapp.helpers.ListItemAdapter;
 
 
 public class Users_list extends ActionBarActivity implements AdapterView.OnItemClickListener{
 
     private ListView users_list;
-    private listItemAdapter cAdapter;
+    private ListItemAdapter cAdapter;
     private List<ParseUser> usersObjects;
     private List<String> usersNames;
     private DataBL dataBL;
+
+    //Todo - Handle in search option
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,7 @@ public class Users_list extends ActionBarActivity implements AdapterView.OnItemC
         dataBL = new DataBL(this);
         getUsersObjects();
         getUsersNames();
-        cAdapter = new listItemAdapter(this, usersNames);
+        cAdapter = new ListItemAdapter(this, usersNames);
         users_list.setAdapter(cAdapter);
         users_list.setOnItemClickListener(this);
 

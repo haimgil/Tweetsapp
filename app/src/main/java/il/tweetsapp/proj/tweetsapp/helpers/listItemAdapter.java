@@ -14,14 +14,14 @@ import il.tweetsapp.proj.tweetsapp.R;
 /**
  * Created by Haim on 5/17/2015.
  */
-public class listItemAdapter extends BaseAdapter {
+public class ListItemAdapter extends BaseAdapter {
 
     Context context;
     List<String> itemsNames;
     TextView tView;
     private static LayoutInflater inflater = null;
 
-    public listItemAdapter(Context context, List<String> conversationsNames) {
+    public ListItemAdapter(Context context, List<String> conversationsNames) {
         this.context = context;
         this.itemsNames = conversationsNames;
         inflater = (LayoutInflater) context

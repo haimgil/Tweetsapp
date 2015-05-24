@@ -22,5 +22,5 @@
         android:title="@string/search_title"
         android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="collapseActionView|ifRoom"/>
+        app:showAsAction="ifRoom|collapseActionView"/>
 </menu>

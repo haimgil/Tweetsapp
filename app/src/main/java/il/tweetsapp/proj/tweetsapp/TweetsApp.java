@@ -21,7 +21,6 @@ public class TweetsApp extends Application {
 
         Parse.initialize(this, PARSE_APP_ID, PARSE_CLIENT_KEY);
         ParseFacebookUtils.initialize(getResources().getString(R.string.facebook_app_id));
-
         ParsePush.subscribeInBackground("", new SaveCallback() {
             @Override
             public void done(ParseException e) {
