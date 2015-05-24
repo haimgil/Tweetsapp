@@ -32,18 +32,18 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/txtMessage"
+            android:id="@+id/msgEditText"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:textSize="25dp"
             android:maxLength="100"/>
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Button
+            android:layout_width="47dp"
+            android:layout_height="match_parent"
             android:layout_gravity="bottom"
-
-            android:id="@+id/sendButton"
+            android:enabled="false"
+            android:id="@+id/sendMsgButton"
             android:onClick="onSendButtonClick"
             android:nestedScrollingEnabled="false"
             android:background="@android:drawable/ic_menu_send" />

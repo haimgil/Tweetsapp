@@ -35,6 +35,7 @@ import il.tweetsapp.proj.tweetsapp.R;
  * Created by Haim on 12/27/2014.
  */
 public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
+   private int notificationId = 001;
 
     public TweetsBroadcastReceiver(){
     }
@@ -116,7 +117,7 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
            // end here.
 
             //Print the message or send notification.
-            if(Chat.getInstance() != null && Conversations.isConvsOpen.get(conversationName))
+            if(Chat.getInstance() != null && Conversations.isConvsOpen.get(conversationName) && !Chat.onPauseCalled)
                 Utils.printMessage(Chat.getInstance(), msgToDb, msgToDb.getIsGroupCreateMsg());
             else
                 sendNotification(context, msgToDb, conversationName, msgToDb.getIsGroupCreateMsg());
@@ -153,7 +154,7 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
         notification.setContentIntent(resultPendingIntent);
 
         // Sets an ID for the notification
-        int mNotificationId = 001;
+        int mNotificationId = notificationId++;
         // Gets an instance of the NotificationManager service
         NotificationManager mNotifyMgr = (NotificationManager)context.getSystemService(context.NOTIFICATION_SERVICE);
         // Builds the notification and issues it.

@@ -156,6 +156,7 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent iChat = new Intent(this, Chat.class);
         // Update the user to chat with.
         String conversationName = conversationsNames.get(position);
         ParseQuery<ParseObject> groupQuery = ParseQuery.getQuery("Group");
@@ -184,7 +185,8 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
             Chat.chatWith.remove(ParseUser.getCurrentUser());
         }
         else { // The current user opened conversation with specific user or vice versa.
-            ParseQuery<ParseUser> userQuery = ParseQuery.getQuery("User");
+            iChat.putExtra("Chat with single", 0); // Update that the conversation is with single user (not a group)
+            ParseQuery<ParseUser> userQuery = ParseQuery.getQuery(ParseUser.class);
             userQuery = userQuery.whereEqualTo("username", conversationName);
             Chat.chatWith = new ArrayList<ParseUser>();
             try{
@@ -198,7 +200,7 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
         //"Open the conversation.
         isConvsOpen.put(conversationName, true);
 
-        Intent iChat = new Intent(this, Chat.class);
+
         iChat.putExtra("Conversation name", conversationName);
         startActivity(iChat);
     }

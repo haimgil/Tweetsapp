@@ -3,11 +3,15 @@ package il.tweetsapp.proj.tweetsapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.parse.ParseInstallation;
@@ -29,18 +33,53 @@ public class Chat extends ActionBarActivity{
     private static Chat INSTANCE = null;
     public static List <ParseUser> chatWith = null;
     public static String conversationName;
+    private Button sendButton;
+    private EditText msgEditText;
+    private ScrollView msgsScrollView;
     private DataBL dataBL;
     private boolean isChatWithSingle;
+    public static boolean onPauseCalled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chat);
 
         INSTANCE = this;
         dataBL = new DataBL(this);
+        onPauseCalled = false;
 
-        setContentView(R.layout.activity_chat);
+        msgEditText = (EditText)findViewById(R.id.msgEditText);
+        sendButton = (Button)findViewById(R.id.sendMsgButton);
+        msgsScrollView = (ScrollView)findViewById(R.id.messagesScrollView);
+        msgsScrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                msgsScrollView.fullScroll(View.FOCUS_DOWN);
+            }
+        });
+
+        //Todo - Check why not working (make the button enabled when editing text
+        msgEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(msgEditText.getText().toString().length() > 0)
+                    sendButton.setEnabled(true);
+                else
+                    sendButton.setEnabled(false);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         Intent intent = getIntent();
 
@@ -60,6 +99,18 @@ public class Chat extends ActionBarActivity{
             conversationName = null;
             Toast.makeText(this, "Some error occurred in conversation name assigning!", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        onPauseCalled = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        onPauseCalled = true;
     }
 
     static public Chat getInstance(){
@@ -89,7 +140,7 @@ public class Chat extends ActionBarActivity{
     }
 
     public void onSendButtonClick(View view){
-        EditText txtMessage = (EditText)findViewById(R.id.txtMessage);
+        EditText txtMessage = (EditText)findViewById(R.id.msgEditText);
 
         // Create new message object for insert to database
         final Message newMsg = new Message(txtMessage.getText().toString(), ParseUser.getCurrentUser().getUsername(),
@@ -119,5 +170,17 @@ public class Chat extends ActionBarActivity{
             }
         }
         txtMessage.setText("");
+        sendButton.setEnabled(false);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
