@@ -1,4 +1,4 @@
-package il.tweetsapp.proj.tweetsapp;
+package il.tweetsapp.proj.tweetsapp.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.parse.ParseUser;
+
+import il.tweetsapp.proj.tweetsapp.R;
 
 
 public class Main extends Activity {
@@ -30,7 +32,7 @@ public class Main extends Activity {
         else {
             activity = new Intent(this, Login.class);
             activity.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            //activity.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         }
 
         startActivity(activity);

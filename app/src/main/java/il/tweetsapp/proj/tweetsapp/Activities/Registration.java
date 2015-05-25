@@ -1,4 +1,4 @@
-package il.tweetsapp.proj.tweetsapp;
+package il.tweetsapp.proj.tweetsapp.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import il.tweetsapp.proj.tweetsapp.R;
 import il.tweetsapp.proj.tweetsapp.helpers.Utils;
 
 

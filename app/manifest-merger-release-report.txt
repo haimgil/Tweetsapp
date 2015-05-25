@@ -103,7 +103,7 @@ category#il.tweetsapp.proj.tweetsapp
 ADDED from AndroidManifest.xml:36:17
 	android:name
 		ADDED from AndroidManifest.xml:36:27
-receiver#il.tweetsapp.proj.tweetsapp.TweetsApp$TweetsBroadcastReceiver
+receiver#il.tweetsapp.proj.tweetsapp.Activities.TweetsApp$TweetsBroadcastReceiver
 ADDED from AndroidManifest.xml:39:9
 	android:exported
 		ADDED from AndroidManifest.xml:39:95
@@ -123,7 +123,7 @@ action#com.parse.push.intent.DELETE
 ADDED from AndroidManifest.xml:43:17
 	android:name
 		ADDED from AndroidManifest.xml:43:25
-activity#il.tweetsapp.proj.tweetsapp.TweetsApp
+activity#il.tweetsapp.proj.tweetsapp.Activities.TweetsApp
 ADDED from AndroidManifest.xml:61:9
 	android:label
 		ADDED from AndroidManifest.xml:63:13

@@ -1,4 +1,4 @@
-package il.tweetsapp.proj.tweetsapp;
+package il.tweetsapp.proj.tweetsapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
+import il.tweetsapp.proj.tweetsapp.R;
 import il.tweetsapp.proj.tweetsapp.helpers.ListItemAdapter;
 
 

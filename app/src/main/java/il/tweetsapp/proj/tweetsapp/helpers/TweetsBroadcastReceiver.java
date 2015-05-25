@@ -25,8 +25,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-import il.tweetsapp.proj.tweetsapp.Chat;
-import il.tweetsapp.proj.tweetsapp.Conversations;
+import il.tweetsapp.proj.tweetsapp.Activities.Chat;
+import il.tweetsapp.proj.tweetsapp.Activities.Conversations;
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
 import il.tweetsapp.proj.tweetsapp.R;

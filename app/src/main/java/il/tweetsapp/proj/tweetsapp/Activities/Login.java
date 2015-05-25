@@ -1,4 +1,4 @@
-package il.tweetsapp.proj.tweetsapp;
+package il.tweetsapp.proj.tweetsapp.Activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -23,6 +23,9 @@ import com.parse.ParseUser;
 
 import java.util.Arrays;
 
+import il.tweetsapp.proj.tweetsapp.R;
+import il.tweetsapp.proj.tweetsapp.helpers.Utils;
+
 
 public class Login extends Activity {
 
@@ -30,7 +33,6 @@ public class Login extends Activity {
     private EditText password;
     private String[] loginDetails;
     private SharedPreferences settings;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,13 +85,13 @@ public class Login extends Activity {
     public void onFacebookClick(View view){
         final Context ctx = this;
         final ProgressDialog pd = ProgressDialog.show(this, "", "Logging in...", true);
+
         ParseFacebookUtils.logIn(Arrays.asList("public_profile", "email"), this, new LogInCallback() {
             @Override
             public void done(ParseUser parseUser, ParseException e) {
                 pd.dismiss();
                 if(parseUser == null || e!=null) {
-                    Toast.makeText(ctx, "Login error", Toast.LENGTH_LONG).show();
-                    //  Utils.alert(Login.this, "", "Login with Facebook failed");
+                    Utils.alert(Login.this, "", "Login with Facebook failed");
                 }else{
                     makeMeRequest();
 
@@ -100,7 +102,6 @@ public class Login extends Activity {
 
                     pairingUserToInstallationId();
                     Intent i = new Intent(Login.this, Conversations.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     startActivity(i);
                 }
             }

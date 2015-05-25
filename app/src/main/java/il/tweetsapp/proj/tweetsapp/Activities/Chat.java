@@ -1,4 +1,4 @@
-package il.tweetsapp.proj.tweetsapp;
+package il.tweetsapp.proj.tweetsapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +26,7 @@ import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
+import il.tweetsapp.proj.tweetsapp.R;
 import il.tweetsapp.proj.tweetsapp.helpers.Utils;
 
 public class Chat extends ActionBarActivity{
@@ -148,25 +149,27 @@ public class Chat extends ActionBarActivity{
 
         //Print the message to the sender screen.
         Utils.printMessage(INSTANCE, newMsg, newMsg.getIsGroupCreateMsg());
-        for(ParseUser user : chatWith)
-            dataBL.addMessageToDbTable(newMsg, user.getUsername());
+        // Insert the message to current user local db.
+        dataBL.addMessageToDbTable(newMsg, ParseUser.getCurrentUser().getUsername());
 
         ParseQuery<ParseInstallation> destQuery = ParseQuery.getQuery(ParseInstallation.class);
 
-        //Todo - handle in the destination (get all users in the current conversation);
-        for(ParseUser user : chatWith) { // Every iteration send the message to one of the users group.
-            ParseQuery<ParseInstallation> destination = destQuery.whereEqualTo("user", user);
-            try {
-                String conversationName;
-                if(isChatWithSingle)
-                    conversationName = ParseUser.getCurrentUser().getUsername();
-                else
-                    conversationName = this.conversationName;
-                final JSONObject messageDetails = Utils.generateMessageJSONObject(newMsg);
-                messageDetails.put("Conversation name", conversationName);
-                ParsePush.sendDataInBackground(messageDetails, destination);
-            } catch (JSONException e) {
-                e.printStackTrace();
+        for(ParseUser user : chatWith) { // Every iteration send the message to one of the users group except the current user.
+            if(!ParseUser.getCurrentUser().getObjectId().equals(user.getObjectId())) {
+                ParseQuery<ParseInstallation> destination = destQuery.whereEqualTo("user", user);
+                try {
+                    String conversationName;
+                    if (isChatWithSingle)
+                        conversationName = ParseUser.getCurrentUser().getUsername();
+                    else
+                        conversationName = this.conversationName;
+                    final JSONObject messageDetails = Utils.generateMessageJSONObject(newMsg);
+                    messageDetails.put("Conversation name", conversationName);
+
+                    ParsePush.sendDataInBackground(messageDetails, destination);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
         txtMessage.setText("");

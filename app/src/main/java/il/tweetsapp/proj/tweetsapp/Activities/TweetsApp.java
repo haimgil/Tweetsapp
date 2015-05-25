@@ -1,4 +1,4 @@
-package il.tweetsapp.proj.tweetsapp;
+package il.tweetsapp.proj.tweetsapp.Activities;
 
 import android.app.Application;
 import android.util.Log;
@@ -9,17 +9,16 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParsePush;
 import com.parse.SaveCallback;
 
+import il.tweetsapp.proj.tweetsapp.R;
+
 
 public class TweetsApp extends Application {
-
-    private static final String PARSE_APP_ID = "SmqqaJ358gtvsoD1wAli03oQ1xGXw7atn8DEfq3O";
-    private static final String PARSE_CLIENT_KEY = "Itxa39Y8LIgIcBc587GZCkvqeKlGpQke3BoXPBJm";
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        Parse.initialize(this, PARSE_APP_ID, PARSE_CLIENT_KEY);
+        Parse.initialize(this, getResources().getString(R.string.parse_app_id), getResources().getString(R.string.parse_client_key));
         ParseFacebookUtils.initialize(getResources().getString(R.string.facebook_app_id));
         ParsePush.subscribeInBackground("", new SaveCallback() {
             @Override

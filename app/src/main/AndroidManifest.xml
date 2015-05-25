@@ -29,7 +29,7 @@
         android:maxSdkVersion="18" />
 
     <application
-        android:name=".TweetsApp"
+        android:name=".Activities.TweetsApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_tweetsapp"
         android:label="@string/app_name"
@@ -39,22 +39,22 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name=".Registration"
+            android:name=".Activities.Registration"
             android:label="@string/title_activity_registration" >
         </activity>
         <activity
-            android:name=".Chat"
+            android:name=".Activities.Chat"
             android:label="@string/title_activity_chat"
-            android:parentActivityName=".Conversations"
+            android:parentActivityName=".Activities.Conversations"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Users_list" />
+                android:value=".Activities.Users_list" />
         </activity>
         <activity
-            android:name=".Main"
+            android:name=".Activities.Main"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -63,31 +63,31 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Login"
+            android:name=".Activities.Login"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity android:name="com.facebook.LoginActivity" />
         <activity
-            android:name=".Users_list"
+            android:name=".Activities.Users_list"
             android:label="@string/title_activity_users_list"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
-            android:parentActivityName=".Conversations" >
+            android:parentActivityName=".Activities.Conversations" >
         </activity>
         <activity
-            android:name=".Conversations"
+            android:name=".Activities.Conversations"
             android:label="@string/title_activity_conversations" >
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
 
         </activity>
         <activity
-            android:name=".GroupCreate"
+            android:name=".Activities.GroupCreate"
             android:label="@string/title_activity_group_create"
-            android:parentActivityName=".Conversations" >
+            android:parentActivityName=".Activities.Conversations" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="il.tweetsapp.proj.tweetsapp.Conversations" />
+                android:value=".Activities.Conversations" />
         </activity>
 
         <service android:name="com.parse.PushService" />
