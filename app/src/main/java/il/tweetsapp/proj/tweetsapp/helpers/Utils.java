@@ -177,8 +177,6 @@ public class Utils {
         object.put("msg_owner", msg.getMessage_owner());
         object.put("msg_time", msg.getTime());
         object.put("msg_date", msg.getDate());
-        object.put("msg_rating", msg.getRating());
-        object.put("msg_ratings", msg.getNumber_of_ratings());
         object.put("msg_gCreate", msg.getIsGroupCreateMsg());
 
         return object;

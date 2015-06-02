@@ -57,8 +57,6 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
                     data.getString("msg_owner"), // In case that the message is notify about group create this value is the Group Name.
                     data.getString("msg_time"),
                     data.getString("msg_date"),
-                    data.getInt("msg_rating"),
-                    data.getInt("msg_ratings"),
                     data.getBoolean("msg_gCreate"));
 
             // In case that the message is notify about group create
@@ -101,7 +99,6 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
             else // In this case, the conversation name is the username of the user that chatting with
                 conversationName = data.getString("Conversation name");
 
-            msgToDb.calculateAverageRating();
             // Handle in case that the conversation is with one user and the conversation not exist in the local db.
             if(dataBL.getConversation(conversationName) == null) {
                 dataBL.addConversation(conversationName);

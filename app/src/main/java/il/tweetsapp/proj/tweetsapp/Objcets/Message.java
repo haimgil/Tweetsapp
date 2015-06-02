@@ -9,9 +9,6 @@ public class Message {
     private String message_owner;
     private String time;
     private String date;
-    private int rating;
-    private int number_of_ratings;
-    private double average_rating;
     private Boolean isGroupCreateMsg;
 
     public Message(String message_text, String message_owner, String time, String date, Boolean isGroupCreateMsg) {
@@ -20,21 +17,8 @@ public class Message {
         this.time = time;
         this.date = date;
         this.isGroupCreateMsg = isGroupCreateMsg;
-        rating = 0;
-        average_rating = 0;
-        number_of_ratings = 0;
     }
 
-    public Message(String message_text, String message_owner, String msgTime, String msgDate,
-                                                int msgRating, int number_of_ratings, boolean isGroupCreateMsg){
-        this.message_text = message_text;
-        this.message_owner = message_owner;
-        this.time = msgTime;
-        this.date = msgDate;
-        this.rating = msgRating;
-        this.number_of_ratings = number_of_ratings;
-        this.isGroupCreateMsg = isGroupCreateMsg;
-    }
 
     public String getMessage_text() {
         return message_text;
@@ -60,23 +44,6 @@ public class Message {
         return time;
     }
 
-    public double getAverage_rating() {
-        return average_rating;
-    }
-
-    public void setAverage_rating(double userRate) {
-        this.rating += userRate;
-        this.number_of_ratings++;
-        this.average_rating = this.rating / this.number_of_ratings;
-    }
-
-    public double calculateAverageRating(){
-        if(this.number_of_ratings == 0)
-            return 0;
-        else
-            return this.average_rating = this.rating / this.number_of_ratings;
-    }
-
     public String getDate() {
         return date;
     }
@@ -85,17 +52,9 @@ public class Message {
         this.date = date;
     }
 
-    public int getNumber_of_ratings() {
-        return number_of_ratings;
-    }
-
-    public int getRating() {
-        return rating;
-    }
-
     public String toString(){
         String msgVariables = "Text: " + this.message_text + "\r\nOwner: " + this.message_owner + "\r\nTime: " + this.time
-                + "\r\nDate: " +  this.date + "\r\nRating: " + this.rating + "\r\nRatings: " + this.number_of_ratings + "\r\nAverage: " + this.average_rating;
+                + "\r\nDate: " +  this.date;
         return  msgVariables;
     }
 
