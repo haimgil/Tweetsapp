@@ -45,5 +45,9 @@
     <string name="search_title">Search</string>
     <string name="conversation_search_hint">Search conversation...</string>
     <string name="user_search_hint">Search user...</string>
+    <string name="msg_comments">Comments</string>
+    <string name="curr_user_msg_recommendation">Should I?</string>
+    <string name="user_msg_menu_comment">Add comment...</string>
+    <string name="comment_hint">Add your comment...</string>
 
 </resources>

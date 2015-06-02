@@ -22,6 +22,7 @@ import com.parse.ParseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
@@ -39,6 +40,7 @@ public class Chat extends ActionBarActivity{
     private ScrollView msgsScrollView;
     private DataBL dataBL;
     private boolean isChatWithSingle;
+
     public static boolean onPauseCalled;
 
     @Override
@@ -61,12 +63,9 @@ public class Chat extends ActionBarActivity{
             }
         });
 
-        //Todo - Check why not working (make the button enabled when editing text
         msgEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -77,9 +76,7 @@ public class Chat extends ActionBarActivity{
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
         Intent intent = getIntent();
@@ -96,7 +93,12 @@ public class Chat extends ActionBarActivity{
             }
             if(intent.hasExtra("Group created successfully"))
                 Toast.makeText(this, "The group \"" + conversationName + "\" was created successfully!", Toast.LENGTH_LONG).show();
-        }else {
+            if(intent.hasExtra("Open conversation")) {
+                Conversations.isConvsOpen.put(conversationName, true);
+                chatWith = new ArrayList<ParseUser>();
+                Utils.setGroupUsersForChatting(this,conversationName);
+            }
+        }else { // Not supposed to be here
             conversationName = null;
             Toast.makeText(this, "Some error occurred in conversation name assigning!", Toast.LENGTH_LONG).show();
         }
@@ -150,11 +152,11 @@ public class Chat extends ActionBarActivity{
         //Print the message to the sender screen.
         Utils.printMessage(INSTANCE, newMsg, newMsg.getIsGroupCreateMsg());
         // Insert the message to current user local db.
-        dataBL.addMessageToDbTable(newMsg, ParseUser.getCurrentUser().getUsername());
+        dataBL.addMessageToDbTable(newMsg, conversationName);
 
         ParseQuery<ParseInstallation> destQuery = ParseQuery.getQuery(ParseInstallation.class);
 
-        for(ParseUser user : chatWith) { // Every iteration send the message to one of the users group except the current user.
+        for(ParseUser user :chatWith) { // Every iteration send the message to one of the users group except the current user.
             if(!ParseUser.getCurrentUser().getObjectId().equals(user.getObjectId())) {
                 ParseQuery<ParseInstallation> destination = destQuery.whereEqualTo("user", user);
                 try {
@@ -171,6 +173,7 @@ public class Chat extends ActionBarActivity{
                     e.printStackTrace();
                 }
             }
+
         }
         txtMessage.setText("");
         sendButton.setEnabled(false);

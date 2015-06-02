@@ -42,18 +42,12 @@
             android:weightSum="1"
             android:layout_weight="0.8">
 
-            <TextView
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/rate_button"
-                android:id="@+id/rateTextView"
-                android:textSize="15dp"
-                android:clickable="false"
-                android:background="@color/material_blue_grey_900"
-                android:layout_marginLeft="20dp"
-                android:textColor="#ffffffff"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="false" />
+                android:id="@+id/msg_user_menu"
+                android:background="@drawable/ic_action_overflow"
+                android:adjustViewBounds="false" />
 
             <TextView
                 android:layout_width="wrap_content"

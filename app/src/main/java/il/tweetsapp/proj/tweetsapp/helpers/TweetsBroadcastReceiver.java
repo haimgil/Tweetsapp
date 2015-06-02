@@ -22,7 +22,7 @@ import com.parse.ParseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Activities.Chat;
@@ -36,14 +36,14 @@ import il.tweetsapp.proj.tweetsapp.R;
  */
 public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
    private int notificationId = 001;
-
+   private DataBL dataBL;
     public TweetsBroadcastReceiver(){
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        DataBL dataBL = new DataBL(context);
+        dataBL = new DataBL(context);
         String conversationName;
         Log.i("ParseBroadcastReceiver", intent.getExtras().getString("com.parse.Data"));
         String msg = intent.getExtras().getString("com.parse.Data");
@@ -112,12 +112,21 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
             dataBL.addMessageToDbTable(msgToDb, conversationName);
 
             //todo - remove debug
-            boolean tmpBool = Conversations.isConvsOpen.get(conversationName);
-            HashMap<String,Boolean> tmpHash = Conversations.isConvsOpen;
-           // end here.
+            boolean isConvOpen = false;
+            if(Conversations.isConvsOpen != null){
+                if(Conversations.isConvsOpen.get(conversationName) != null)
+                    isConvOpen = Conversations.isConvsOpen.get(conversationName);
+            }
+            else{// In case that the Hashmap for conversations not initialized before, initializing it here.
+                List<String> convsNames = dataBL.getConversationsNames();
+                Conversations.isConvsOpen = new LinkedHashMap<String, Boolean>();
+                for(String convName : convsNames) {
+                    Conversations.isConvsOpen.put(convName, false);
+                }
+            }
 
             //Print the message or send notification.
-            if(Chat.getInstance() != null && Conversations.isConvsOpen.get(conversationName) && !Chat.onPauseCalled)
+            if(Chat.getInstance() != null && isConvOpen && !Chat.onPauseCalled)
                 Utils.printMessage(Chat.getInstance(), msgToDb, msgToDb.getIsGroupCreateMsg());
             else
                 sendNotification(context, msgToDb, conversationName, msgToDb.getIsGroupCreateMsg());
@@ -145,6 +154,7 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
 
         Intent resultIntent = new Intent(context, Chat.class);
         resultIntent.putExtra("Conversation name", conversationName);
+        resultIntent.putExtra("Open conversation", 0);
 
         // Because clicking the notification opens a new ("special") activity, there's no need to create an artificial back stack.
         PendingIntent resultPendingIntent =

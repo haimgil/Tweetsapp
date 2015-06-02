@@ -12,12 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseRelation;
-import com.parse.ParseUser;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -36,15 +30,17 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
     private ListItemAdapter cAdapter;
     private List<String> conversationsNames;
     private DataBL dataBL;
+    public static Intent iChat;
 
-    public static HashMap<String, Boolean> isConvsOpen; // Save for every conversation if it now open.
+    public static HashMap<String, Boolean> isConvsOpen = null; // Save for every conversation if it now open.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversations);
         dataBL = new DataBL(this);
-        isConvsOpen = new LinkedHashMap<String, Boolean>();
+        if(isConvsOpen == null) // In some cases that Hashmap initialized in TweetsBroadcastReceiver class.
+            isConvsOpen = new LinkedHashMap<String, Boolean>();
 
         conversationsListView = (ListView)findViewById(R.id.conversationsList);
         conversationsNames = getConversationsNames();
@@ -157,47 +153,48 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent iChat = new Intent(this, Chat.class);
+       iChat = new Intent(this, Chat.class);
         // Update the user to chat with.
         String conversationName = conversationsNames.get(position);
-        ParseQuery<ParseObject> groupQuery = ParseQuery.getQuery("Group");
-        groupQuery = groupQuery.whereEqualTo("name", conversationName);
-        ParseObject group = null;
-        boolean groupNameExist = true;
-        try {
-            group = groupQuery.getFirst();
-        } catch (ParseException e) {
-            // The conversation is only between 2 users so in some cases it is saved only in local db.
-            groupNameExist = false;
-        }
-        if(groupNameExist) { // Some user create the group
-            ParseRelation<ParseUser> groupUsers = group.getRelation("users");
-            ParseQuery<ParseUser> usersQuery = groupUsers.getQuery();
-
-            try {
-                Chat.chatWith = usersQuery.find();
-            } catch (ParseException e) {
-                e.printStackTrace();
-                Utils.alert(this, "Conversation users error!", "Some error occurred when trying to get users details of \"" +
-                        conversationName + "\" conversation.\r\n");
-                return;
-            }
-            //Remove the current user from the list that hold the users that will get the messages.
-            Chat.chatWith.remove(ParseUser.getCurrentUser());
-        }
-        else { // The current user opened conversation with specific user or vice versa.
-            iChat.putExtra("Chat with single", 0); // Update that the conversation is with single user (not a group)
-            ParseQuery<ParseUser> userQuery = ParseQuery.getQuery(ParseUser.class);
-            userQuery = userQuery.whereEqualTo("username", conversationName);
-            Chat.chatWith = new ArrayList<ParseUser>();
-            try{
-                Chat.chatWith.add(userQuery.getFirst());
-            }catch (ParseException pe){
-                Utils.alert(this, "Conversation error!", "Some error occurred when trying to open \"" + conversationName +
-                        "\" conversation.\r\n" + "The conversation may be deleted");
-                return;
-            }
-        }
+        Utils.setGroupUsersForChatting(this, conversationName);
+//        ParseQuery<ParseObject> groupQuery = ParseQuery.getQuery("Group");
+//        groupQuery = groupQuery.whereEqualTo("name", conversationName);
+//        ParseObject group = null;
+//        boolean groupNameExist = true;
+//        try {
+//            group = groupQuery.getFirst();
+//        } catch (ParseException e) {
+//            // The conversation is only between 2 users so in some cases it is saved only in local db.
+//            groupNameExist = false;
+//        }
+//        if(groupNameExist) { // Some user create the group
+//            ParseRelation<ParseUser> groupUsers = group.getRelation("users");
+//            ParseQuery<ParseUser> usersQuery = groupUsers.getQuery();
+//
+//            try {
+//                Chat.chatWith = usersQuery.find();
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//                Utils.alert(this, "Conversation users error!", "Some error occurred when trying to get users details of \"" +
+//                        conversationName + "\" conversation.\r\n");
+//                return;
+//            }
+//            //Remove the current user from the list that hold the users that will get the messages.
+//            Chat.chatWith.remove(ParseUser.getCurrentUser());
+//        }
+//        else { // The current user opened conversation with specific user or vice versa.
+//            iChat.putExtra("Chat with single", 0); // Update that the conversation is with single user (not a group)
+//            ParseQuery<ParseUser> userQuery = ParseQuery.getQuery(ParseUser.class);
+//            userQuery = userQuery.whereEqualTo("username", conversationName);
+//            Chat.chatWith = new ArrayList<ParseUser>();
+//            try{
+//                Chat.chatWith.add(userQuery.getFirst());
+//            }catch (ParseException pe){
+//                Utils.alert(this, "Conversation error!", "Some error occurred when trying to open \"" + conversationName +
+//                        "\" conversation.\r\n" + "The conversation may be deleted");
+//                return;
+//            }
+//        }
         //"Open the conversation.
         isConvsOpen.put(conversationName, true);
 

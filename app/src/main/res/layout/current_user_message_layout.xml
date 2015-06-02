@@ -35,7 +35,7 @@
                 android:layout_gravity="center" />
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -53,7 +53,17 @@
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/bg_layout_msg" />
 
-        </LinearLayout>
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/curr_user_menu"
+                android:background="@drawable/ic_action_overflow"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:focusableInTouchMode="false" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 </LinearLayout>

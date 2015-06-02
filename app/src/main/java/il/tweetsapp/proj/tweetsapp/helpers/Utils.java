@@ -4,18 +4,31 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
+import il.tweetsapp.proj.tweetsapp.Activities.Chat;
+import il.tweetsapp.proj.tweetsapp.Activities.Conversations;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
 import il.tweetsapp.proj.tweetsapp.R;
 
@@ -23,6 +36,7 @@ import il.tweetsapp.proj.tweetsapp.R;
  * Created by Haim on 12/27/2014.
  */
 public class Utils {
+    public static Message menuClickedMessage = null;
 
     public static void alert(Context ctx, String title, String msg){
         AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
@@ -38,17 +52,75 @@ public class Utils {
     }
 
     public static void printMessage(Activity activity, Message msg, boolean isGroupCreateMsg){
+        final Context ctx = activity.getApplicationContext();
         LinearLayout messages = (LinearLayout)activity.findViewById(R.id.messages);
+        ImageButton menuButton;
         LinearLayout inflatedView;
-        if(msg.getMessage_owner().equals(ParseUser.getCurrentUser().getUsername()))
+
+        if(msg.getMessage_owner().equals(ParseUser.getCurrentUser().getUsername())) {
             //inflate view for current user messages
             inflatedView = (LinearLayout) View.inflate(activity.getApplicationContext(), R.layout.current_user_message_layout, null);
-        else if(isGroupCreateMsg)
+
+            //Handle in button that used for message menu
+            menuButton = (ImageButton)inflatedView.findViewById(R.id.curr_user_menu);
+            menuButton.setTag(msg);
+            menuButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    menuClickedMessage = (Message)v.getTag(); // Get the message that it's menu just clicked
+
+                    PopupMenu popup = new PopupMenu(ctx, v);
+                    /** Adding menu items to the popUpMenu */
+                    popup.getMenuInflater().inflate(R.menu.menu_current_user_msg, popup.getMenu());
+                    /** Defining menu item click listener for the popup menu */
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            Toast.makeText(ctx, "You selected the action : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ctx, menuClickedMessage.getMessage_text(), Toast.LENGTH_LONG).show();
+                            return true;
+                        }
+                    });
+                    /** Showing the popup menu */
+                    popup.show();
+                }
+            });
+
+        }else if(isGroupCreateMsg) {
             //inflate view for group create message
-            inflatedView = (LinearLayout)View.inflate(activity.getApplicationContext(), R.layout.group_create_message_layout, null);
-        else
+            inflatedView = (LinearLayout) View.inflate(activity.getApplicationContext(), R.layout.group_create_message_layout, null);
+        }else {
             //inflate view for other users messages
-            inflatedView = (LinearLayout)View.inflate(activity.getApplicationContext(), R.layout.users_message_layout, null);
+            inflatedView = (LinearLayout) View.inflate(activity.getApplicationContext(), R.layout.users_message_layout, null);
+
+            //Handle in button that used for message menu
+            menuButton = (ImageButton)inflatedView.findViewById(R.id.msg_user_menu);
+            menuButton.setTag(msg);
+            menuButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    menuClickedMessage = (Message)v.getTag(); // Get the message that it's menu just clicked
+
+                    PopupMenu popup = new PopupMenu(ctx, v);
+                    /** Adding menu items to the popUpMenu */
+                    popup.getMenuInflater().inflate(R.menu.users_msg_menu, popup.getMenu());
+                    /** Defining menu item click listener for the popup menu */
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            //Todo - handle this scenarios - 1)open dialog for adding comment. 2) Show all comments.
+                            if(item.getTitle().equals("Add comment...")){
+                                openCommentDialog(ctx);
+                            }
+                            return true;
+                        }
+                    });
+                    /** Showing the popup menu */
+                    popup.show();
+                }
+            });
+
+        }
         //View newMsgLayout = inflater.inflate(R.layout.current_user_message_layout, messages, true);
         TextView msgTxtV = (TextView)inflatedView.findViewById(R.id.msgTextView);
         TextView timeTxtV = (TextView)inflatedView.findViewById(R.id.msgTimeText);
@@ -59,6 +131,43 @@ public class Utils {
 
 
         messages.addView(inflatedView);
+    }
+
+    private static void openCommentDialog(Context ctx) {
+        // get prompts.xml view
+        final Context context = ctx;
+        LayoutInflater li = LayoutInflater.from(ctx);
+        View promptsView = li.inflate(R.layout.comment_dialod, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Chat.getInstance());
+
+        // set prompts.xml to alertDialog builder
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText userComment = (EditText) promptsView
+                .findViewById(R.id.commentText);
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                //Todo - Remove Toast debug
+                                Toast.makeText(context, userComment.getText().toString(), Toast.LENGTH_LONG).show();
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        // show it
+        alertDialog.show();
     }
 
 
@@ -89,5 +198,47 @@ public class Utils {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         String time = sdf.format(cal.getTime());
         return time;
+    }
+
+    public static void setGroupUsersForChatting(Context context, String conversationName){
+
+        ParseQuery<ParseObject> groupQuery = ParseQuery.getQuery("Group");
+        groupQuery = groupQuery.whereEqualTo("name", conversationName);
+        ParseObject group = null;
+        boolean groupNameExist = true;
+        try {
+            group = groupQuery.getFirst();
+        } catch (ParseException e) {
+            // The conversation is only between 2 users so in some cases it is saved only in local db.
+            groupNameExist = false;
+        }
+        if(groupNameExist) { // Some user create the group
+            ParseRelation<ParseUser> groupUsers = group.getRelation("users");
+            ParseQuery<ParseUser> usersQuery = groupUsers.getQuery();
+
+            try {
+                Chat.chatWith = usersQuery.find();
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Utils.alert(context, "Conversation users error!", "Some error occurred when trying to get users details of \"" +
+                        conversationName + "\" conversation.\r\n");
+                return;
+            }
+            //Remove the current user from the list that hold the users that will get the messages.
+            Chat.chatWith.remove(ParseUser.getCurrentUser());
+        }
+        else { // The current user opened conversation with specific user or vice versa.
+            Conversations.iChat.putExtra("Chat with single", 0); // Update that the conversation is with single user (not a group)
+            ParseQuery<ParseUser> userQuery = ParseQuery.getQuery(ParseUser.class);
+            userQuery = userQuery.whereEqualTo("username", conversationName);
+            Chat.chatWith = new ArrayList<ParseUser>();
+            try{
+                Chat.chatWith.add(userQuery.getFirst());
+            }catch (ParseException pe){
+                Utils.alert(context, "Conversation error!", "Some error occurred when trying to open \"" + conversationName +
+                        "\" conversation.\r\n" + "The conversation may be deleted");
+                return;
+            }
+        }
     }
 }
