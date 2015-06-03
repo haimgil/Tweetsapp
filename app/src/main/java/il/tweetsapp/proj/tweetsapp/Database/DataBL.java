@@ -6,6 +6,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
+import il.tweetsapp.proj.tweetsapp.Objcets.Comment;
 import il.tweetsapp.proj.tweetsapp.Objcets.Conversation;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
 
@@ -74,7 +75,7 @@ public class DataBL {
                     cursor.getString(1),
                     cursor.getString(2),
                     cursor.getString(3),
-                    (cursor.getInt(4)==1)? true : false);
+                    (cursor.getInt(4)==1)? true : false, cursor.getInt(5));
             messages.add(tmpMsg);
         }
         dataDAL.closeDb();
@@ -93,6 +94,21 @@ public class DataBL {
         return users;
     }
 
+    public List<Comment> getMessageComments(String conversationName, int messageId){
+        Cursor cursor = dataDAL.pullMessageComments(conversationName, messageId);
+        List<Comment> comments = new ArrayList<Comment>();
+
+        Comment commentToAdd;
+        while(cursor.moveToNext()){
+            commentToAdd = new Comment(cursor.getString(0),
+                                       cursor.getString(1),
+                                       cursor.getString(2),
+                                       cursor.getString(3));
+            comments.add(commentToAdd);
+        }
+        return comments;
+    }
+
 
     public boolean addConversation(String conversationName){
         return dataDAL.pushRowToConversationsTable(conversationName);
@@ -106,6 +122,10 @@ public class DataBL {
         return dataDAL.pushRowToMessagesTable(conversationName, message.getMessage_text(), message.getMessage_owner(),
                                                 message.getTime(), message.getDate(),
                                                     (message.getIsGroupCreateMsg())? 1:0);
+    }
+
+    public boolean addCommentToDbTable(String conversationName, int messageId, Comment comment){
+        return dataDAL.pushRowToCommentsTable(conversationName, messageId, comment);
     }
 }
 

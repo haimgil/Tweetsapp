@@ -1,5 +1,7 @@
 package il.tweetsapp.proj.tweetsapp.Objcets;
 
+import java.util.List;
+
 /**
  * Created by Haim on 3/26/2015.
  */
@@ -10,13 +12,17 @@ public class Message {
     private String time;
     private String date;
     private Boolean isGroupCreateMsg;
+    private int messageId;
+    private List<Comment> comments;
 
-    public Message(String message_text, String message_owner, String time, String date, Boolean isGroupCreateMsg) {
+    public Message(String message_text, String message_owner, String time, String date, Boolean isGroupCreateMsg, int messageId) {
         this.message_text = message_text;
         this.message_owner = message_owner;
         this.time = time;
         this.date = date;
         this.isGroupCreateMsg = isGroupCreateMsg;
+        this.messageId = messageId;
+        comments = null;
     }
 
 
@@ -52,6 +58,10 @@ public class Message {
         this.date = date;
     }
 
+    public int getMessageId() {
+        return messageId;
+    }
+
     public String toString(){
         String msgVariables = "Text: " + this.message_text + "\r\nOwner: " + this.message_owner + "\r\nTime: " + this.time
                 + "\r\nDate: " +  this.date;
@@ -60,6 +70,10 @@ public class Message {
 
     public Boolean getIsGroupCreateMsg() {
         return isGroupCreateMsg;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }
 

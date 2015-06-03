@@ -27,12 +27,24 @@ public class TweetsAppDbHelper extends SQLiteOpenHelper {
                 Constants.COLUMN_USER_NAME + " TEXT NOT NULL);");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS " + Constants.MESSAGES_TABLE_NAME + "(" +
+                Constants._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 Constants.COLUMN_CONVERSATION_NAME + " TEXT NOT NULL, " +
                 Constants.COLUMN_MSG_TXT_NAME + " TEXT NOT NULL, " +
                 Constants.COLUMN_MSG_OWNER_NAME + " TEXT NOT NULL, " +
                 Constants.COLUMN_MSG_TIME_NAME + " TEXT NOT NULL, " +
                 Constants.COLUMN_MSG_DATE_NAME + " TEXT NOT NULL, " +
                 Constants.COLUMN_MSG_BOOLEAN_NAME + " INTEGER);");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + Constants.COMMENTS_TABLE_NAME + "(" +
+                Constants._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                Constants.COLUMN_COMMENT_TEXT_NAME + " TEXT NOT NULL, " +
+                Constants.COLUMN_COMMENT_OWNER_NAME + " TEXT NOT NULL, " +
+                Constants.COLUMN_MSG_TIME_NAME + " TEXT NOT NULL, " +
+                Constants.COLUMN_MSG_DATE_NAME + " TEXT NOT NULL, " +
+                Constants.COLUMN_CONVERSATION_NAME + " TEXT NOT NULL, " +
+                Constants.COLUMN_MESSAGES_ID + " INTEGER NOT NULL);");//, " +
+                //"PRIMARY KEY (" + Constants._ID + ", " + Constants.COLUMN_MESSAGES_ID + "));");
+//Todo - check this out - is that table write properly?
     }
 
     @Override

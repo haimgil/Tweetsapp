@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,9 +28,12 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Activities.Chat;
 import il.tweetsapp.proj.tweetsapp.Activities.Conversations;
+import il.tweetsapp.proj.tweetsapp.Database.DataBL;
+import il.tweetsapp.proj.tweetsapp.Objcets.Comment;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
 import il.tweetsapp.proj.tweetsapp.R;
 
@@ -37,6 +42,7 @@ import il.tweetsapp.proj.tweetsapp.R;
  */
 public class Utils {
     public static Message menuClickedMessage = null;
+    public static DataBL dataBL;
 
     public static void alert(Context ctx, String title, String msg){
         AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
@@ -51,8 +57,10 @@ public class Utils {
         alertDialog.show();
     }
 
-    public static void printMessage(Activity activity, Message msg, boolean isGroupCreateMsg){
+    public static void printMessage(Activity activity, Message msg, boolean isGroupCreateMsg, final String conversationName){
         final Context ctx = activity.getApplicationContext();
+        final String convName = conversationName;
+        dataBL = new DataBL(ctx);
         LinearLayout messages = (LinearLayout)activity.findViewById(R.id.messages);
         ImageButton menuButton;
         LinearLayout inflatedView;
@@ -110,7 +118,12 @@ public class Utils {
                         public boolean onMenuItemClick(MenuItem item) {
                             //Todo - handle this scenarios - 1)open dialog for adding comment. 2) Show all comments.
                             if(item.getTitle().equals("Add comment...")){
-                                openCommentDialog(ctx);
+                                openCommentDialog(ctx, conversationName);
+                            }
+                            else if(item.getTitle().equals("Comments")){
+                                List<Comment> comments = dataBL.getMessageComments(conversationName, menuClickedMessage.getMessageId());
+                                Toast.makeText(ctx, comments.get(0).getCommentText() + "\r\n" + comments.get(1).getCommentText() + "\r\n" +
+                                comments.get(2).getCommentText(), Toast.LENGTH_LONG).show();
                             }
                             return true;
                         }
@@ -133,7 +146,7 @@ public class Utils {
         messages.addView(inflatedView);
     }
 
-    private static void openCommentDialog(Context ctx) {
+    private static void openCommentDialog(Context ctx, final String conversationName) {
         // get prompts.xml view
         final Context context = ctx;
         LayoutInflater li = LayoutInflater.from(ctx);
@@ -154,6 +167,10 @@ public class Utils {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog,int id) {
                                 //Todo - Remove Toast debug
+                                Comment comment = new Comment(userComment.getText().toString(),
+                                                                ParseUser.getCurrentUser().getUsername(),
+                                                                    getCurrentDate(), getCurrentTime());
+                                dataBL.addCommentToDbTable(conversationName, menuClickedMessage.getMessageId(), comment);
                                 Toast.makeText(context, userComment.getText().toString(), Toast.LENGTH_LONG).show();
                             }
                         })
@@ -199,7 +216,6 @@ public class Utils {
     }
 
     public static void setGroupUsersForChatting(Context context, String conversationName){
-
         ParseQuery<ParseObject> groupQuery = ParseQuery.getQuery("Group");
         groupQuery = groupQuery.whereEqualTo("name", conversationName);
         ParseObject group = null;
@@ -226,7 +242,8 @@ public class Utils {
             Chat.chatWith.remove(ParseUser.getCurrentUser());
         }
         else { // The current user opened conversation with specific user or vice versa.
-            Conversations.iChat.putExtra("Chat with single", 0); // Update that the conversation is with single user (not a group)
+            if(Conversations.iChat != null)
+                Conversations.iChat.putExtra("Chat with single", 0); // Update that the conversation is with single user (not a group)
             ParseQuery<ParseUser> userQuery = ParseQuery.getQuery(ParseUser.class);
             userQuery = userQuery.whereEqualTo("username", conversationName);
             Chat.chatWith = new ArrayList<ParseUser>();
@@ -238,5 +255,12 @@ public class Utils {
                 return;
             }
         }
+    }
+
+    public static boolean isNetworkAvailable(Context ctx) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager)ctx.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

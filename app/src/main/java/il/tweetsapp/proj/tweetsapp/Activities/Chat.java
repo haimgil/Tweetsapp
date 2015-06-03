@@ -69,7 +69,7 @@ public class Chat extends ActionBarActivity{
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(msgEditText.getText().toString().length() > 0)
+                if(msgEditText.getText().toString().length() > 0 && Utils.isNetworkAvailable(INSTANCE))
                     sendButton.setEnabled(true);
                 else
                     sendButton.setEnabled(false);
@@ -89,7 +89,7 @@ public class Chat extends ActionBarActivity{
 
             List<Message> messages = dataBL.getConversationMessages(conversationName);
             for(int i=0; i < messages.size(); i++){
-                Utils.printMessage(INSTANCE, messages.get(i), messages.get(i).getIsGroupCreateMsg());
+                Utils.printMessage(INSTANCE, messages.get(i), messages.get(i).getIsGroupCreateMsg(), conversationName);
             }
             if(intent.hasExtra("Group created successfully"))
                 Toast.makeText(this, "The group \"" + conversationName + "\" was created successfully!", Toast.LENGTH_LONG).show();
@@ -147,10 +147,10 @@ public class Chat extends ActionBarActivity{
 
         // Create new message object for insert to database
         final Message newMsg = new Message(txtMessage.getText().toString(), ParseUser.getCurrentUser().getUsername(),
-                Utils.getCurrentTime(), Utils.getCurrentDate(), false);
+                Utils.getCurrentTime(), Utils.getCurrentDate(), false, 0);
 
         //Print the message to the sender screen.
-        Utils.printMessage(INSTANCE, newMsg, newMsg.getIsGroupCreateMsg());
+        Utils.printMessage(INSTANCE, newMsg, newMsg.getIsGroupCreateMsg(), conversationName);
         // Insert the message to current user local db.
         dataBL.addMessageToDbTable(newMsg, conversationName);
 

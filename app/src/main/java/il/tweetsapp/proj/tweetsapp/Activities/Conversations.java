@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -133,12 +134,17 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
 
                 break;
             case R.id.action_group_create:
-                actionIntent = new Intent(this, GroupCreate.class);
-                actionIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                if(Utils.isNetworkAvailable(this)) {
+                    actionIntent = new Intent(this, GroupCreate.class);
+                    actionIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                }else
+                    Toast.makeText(this, getResources().getString(R.string.network_connection_error),Toast.LENGTH_LONG).show();
                 break;
             case R.id.action_new_conversation:
-                //Todo - Check internet connection
-                actionIntent = new Intent(this, Users_list.class);
+                if(Utils.isNetworkAvailable(this))
+                    actionIntent = new Intent(this, Users_list.class);
+                else
+                    Toast.makeText(this, getResources().getString(R.string.network_connection_error),Toast.LENGTH_LONG).show();
                 break;
             case R.id.action_search:
                 actionIntent = new Intent(Intent.ACTION_SEARCH);
@@ -153,52 +159,15 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-       iChat = new Intent(this, Chat.class);
+        if(!Utils.isNetworkAvailable(this)){ // Check that network connection is available.
+            Toast.makeText(this, getResources().getString(R.string.network_connection_error), Toast.LENGTH_LONG).show();
+            return;
+        }
+        iChat = new Intent(this, Chat.class);
         // Update the user to chat with.
         String conversationName = conversationsNames.get(position);
         Utils.setGroupUsersForChatting(this, conversationName);
-//        ParseQuery<ParseObject> groupQuery = ParseQuery.getQuery("Group");
-//        groupQuery = groupQuery.whereEqualTo("name", conversationName);
-//        ParseObject group = null;
-//        boolean groupNameExist = true;
-//        try {
-//            group = groupQuery.getFirst();
-//        } catch (ParseException e) {
-//            // The conversation is only between 2 users so in some cases it is saved only in local db.
-//            groupNameExist = false;
-//        }
-//        if(groupNameExist) { // Some user create the group
-//            ParseRelation<ParseUser> groupUsers = group.getRelation("users");
-//            ParseQuery<ParseUser> usersQuery = groupUsers.getQuery();
-//
-//            try {
-//                Chat.chatWith = usersQuery.find();
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//                Utils.alert(this, "Conversation users error!", "Some error occurred when trying to get users details of \"" +
-//                        conversationName + "\" conversation.\r\n");
-//                return;
-//            }
-//            //Remove the current user from the list that hold the users that will get the messages.
-//            Chat.chatWith.remove(ParseUser.getCurrentUser());
-//        }
-//        else { // The current user opened conversation with specific user or vice versa.
-//            iChat.putExtra("Chat with single", 0); // Update that the conversation is with single user (not a group)
-//            ParseQuery<ParseUser> userQuery = ParseQuery.getQuery(ParseUser.class);
-//            userQuery = userQuery.whereEqualTo("username", conversationName);
-//            Chat.chatWith = new ArrayList<ParseUser>();
-//            try{
-//                Chat.chatWith.add(userQuery.getFirst());
-//            }catch (ParseException pe){
-//                Utils.alert(this, "Conversation error!", "Some error occurred when trying to open \"" + conversationName +
-//                        "\" conversation.\r\n" + "The conversation may be deleted");
-//                return;
-//            }
-//        }
-        //"Open the conversation.
         isConvsOpen.put(conversationName, true);
-
-
         iChat.putExtra("Conversation name", conversationName);
         startActivity(iChat);
     }

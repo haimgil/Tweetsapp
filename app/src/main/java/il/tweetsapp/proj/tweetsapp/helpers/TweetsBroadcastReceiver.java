@@ -57,7 +57,7 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
                     data.getString("msg_owner"), // In case that the message is notify about group create this value is the Group Name.
                     data.getString("msg_time"),
                     data.getString("msg_date"),
-                    data.getBoolean("msg_gCreate"));
+                    data.getBoolean("msg_gCreate"),0);
 
             // In case that the message is notify about group create
             if(msgToDb.getIsGroupCreateMsg()) {
@@ -124,7 +124,7 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
 
             //Print the message or send notification.
             if(Chat.getInstance() != null && isConvOpen && !Chat.onPauseCalled)
-                Utils.printMessage(Chat.getInstance(), msgToDb, msgToDb.getIsGroupCreateMsg());
+                Utils.printMessage(Chat.getInstance(), msgToDb, msgToDb.getIsGroupCreateMsg(), conversationName);
             else
                 sendNotification(context, msgToDb, conversationName, msgToDb.getIsGroupCreateMsg());
 
