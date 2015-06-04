@@ -116,7 +116,7 @@ public class Utils {
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
-                            //Todo - handle this scenarios - 1)open dialog for adding comment. 2) Show all comments.
+                            //Todo - handle this scenarios - Show all comments.
                             if(item.getTitle().equals("Add comment...")){
                                 openCommentDialog(ctx, conversationName);
                             }
@@ -242,6 +242,7 @@ public class Utils {
             Chat.chatWith.remove(ParseUser.getCurrentUser());
         }
         else { // The current user opened conversation with specific user or vice versa.
+            Chat.isChatWithSingle = true;
             if(Conversations.iChat != null)
                 Conversations.iChat.putExtra("Chat with single", 0); // Update that the conversation is with single user (not a group)
             ParseQuery<ParseUser> userQuery = ParseQuery.getQuery(ParseUser.class);

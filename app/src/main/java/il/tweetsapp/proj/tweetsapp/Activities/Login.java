@@ -105,7 +105,6 @@ public class Login extends Activity {
         ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
     }
 
-    // Todo - handle facebook login problem
     public void onFacebookClick(View view){
         final Context ctx = this;
         final ProgressDialog pd = ProgressDialog.show(this, "", "Logging in...", true);

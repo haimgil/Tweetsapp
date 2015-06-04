@@ -42,9 +42,8 @@ public class TweetsAppDbHelper extends SQLiteOpenHelper {
                 Constants.COLUMN_MSG_TIME_NAME + " TEXT NOT NULL, " +
                 Constants.COLUMN_MSG_DATE_NAME + " TEXT NOT NULL, " +
                 Constants.COLUMN_CONVERSATION_NAME + " TEXT NOT NULL, " +
-                Constants.COLUMN_MESSAGES_ID + " INTEGER NOT NULL);");//, " +
-                //"PRIMARY KEY (" + Constants._ID + ", " + Constants.COLUMN_MESSAGES_ID + "));");
-//Todo - check this out - is that table write properly?
+                Constants.COLUMN_MESSAGES_ID + " INTEGER NOT NULL);");
+
     }
 
     @Override

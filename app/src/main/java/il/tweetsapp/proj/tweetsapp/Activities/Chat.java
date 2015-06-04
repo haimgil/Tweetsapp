@@ -39,10 +39,10 @@ public class Chat extends ActionBarActivity{
     private EditText msgEditText;
     private ScrollView msgsScrollView;
     private DataBL dataBL;
-    private boolean isChatWithSingle;
+    public static boolean isChatWithSingle;
 
     public static boolean onPauseCalled;
-
+    //Todo - Create activity for message comments
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
