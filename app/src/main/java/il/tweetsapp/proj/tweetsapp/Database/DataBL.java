@@ -103,7 +103,8 @@ public class DataBL {
             commentToAdd = new Comment(cursor.getString(0),
                                        cursor.getString(1),
                                        cursor.getString(2),
-                                       cursor.getString(3));
+                                       cursor.getString(3),
+                                       cursor.getString(4));
             comments.add(commentToAdd);
         }
         return comments;

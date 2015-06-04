@@ -3,6 +3,27 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+        android:id="@+id/rGroupClassification">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/r_button_positive"
+            android:id="@+id/rButtonPos"
+            android:layout_marginLeft="75dp"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/r_button_negative"
+            android:id="@+id/rButtonNeg"
+            android:layout_marginLeft="25dp"/>
+    </RadioGroup>
+
     <EditText
         android:id="@+id/commentText"
         android:layout_width="match_parent"

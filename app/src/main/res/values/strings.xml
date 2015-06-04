@@ -51,5 +51,7 @@
     <string name="comment_hint">Add your comment...</string>
     <string name="network_connection_error">Internet connection is required.
         Check your internet connection</string>
+    <string name="r_button_positive">Positive</string>
+    <string name="r_button_negative">Negative</string>
 
 </resources>

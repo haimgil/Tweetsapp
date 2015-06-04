@@ -41,8 +41,9 @@ public class TweetsAppDbHelper extends SQLiteOpenHelper {
                 Constants.COLUMN_COMMENT_OWNER_NAME + " TEXT NOT NULL, " +
                 Constants.COLUMN_MSG_TIME_NAME + " TEXT NOT NULL, " +
                 Constants.COLUMN_MSG_DATE_NAME + " TEXT NOT NULL, " +
+                Constants.COLUMN_CLASSIFICATION_NAME + " TEXT NOT NULL, " +
                 Constants.COLUMN_CONVERSATION_NAME + " TEXT NOT NULL, " +
-                Constants.COLUMN_MESSAGES_ID + " INTEGER NOT NULL);");
+                Constants.COLUMN_MESSAGES_ID_NAME + " INTEGER NOT NULL);");
 
     }
 

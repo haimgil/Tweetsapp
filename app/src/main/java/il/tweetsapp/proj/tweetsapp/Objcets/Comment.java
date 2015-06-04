@@ -10,11 +10,14 @@ public class Comment {
     private String commentDate;
     private String commentTime;
 
-    public Comment(String commentText, String commentOwner, String commentDate, String commentTime) {
+    private String commentClassification;
+
+    public Comment(String commentText, String commentOwner, String commentDate, String commentTime, String commentClassification) {
         this.commentText = commentText;
         this.commentOwner = commentOwner;
         this.commentDate = commentDate;
         this.commentTime = commentTime;
+        this.commentClassification = commentClassification;
     }
 
     public String getCommentText() {
@@ -31,6 +34,10 @@ public class Comment {
 
     public String getCommentTime() {
         return commentTime;
+    }
+
+    public String getCommentClassification() {
+        return commentClassification;
     }
 
 }

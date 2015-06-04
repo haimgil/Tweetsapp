@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -122,8 +124,8 @@ public class Utils {
                             }
                             else if(item.getTitle().equals("Comments")){
                                 List<Comment> comments = dataBL.getMessageComments(conversationName, menuClickedMessage.getMessageId());
-                                Toast.makeText(ctx, comments.get(0).getCommentText() + "\r\n" + comments.get(1).getCommentText() + "\r\n" +
-                                comments.get(2).getCommentText(), Toast.LENGTH_LONG).show();
+                                Toast.makeText(ctx, comments.get(0).getCommentText() + " Classify is: " + comments.get(0).getCommentClassification() + "\r\n" + comments.get(1).getCommentText()+ " Classify is: " + comments.get(1).getCommentClassification() + "\r\n" +
+                                comments.get(2).getCommentText()+ " Classify is: " + comments.get(2).getCommentClassification(), Toast.LENGTH_LONG).show();
                             }
                             return true;
                         }
@@ -150,33 +152,42 @@ public class Utils {
         // get prompts.xml view
         final Context context = ctx;
         LayoutInflater li = LayoutInflater.from(ctx);
-        View promptsView = li.inflate(R.layout.comment_dialod, null);
+        final View promptsView = li.inflate(R.layout.comment_dialod, null);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Chat.getInstance());
 
         // set prompts.xml to alertDialog builder
         alertDialogBuilder.setView(promptsView);
 
-        final EditText userComment = (EditText) promptsView
-                .findViewById(R.id.commentText);
+        final EditText userComment = (EditText) promptsView.findViewById(R.id.commentText);
+        final RadioGroup classifyRadioGroup = (RadioGroup)promptsView.findViewById(R.id.rGroupClassification);
 
         // set dialog message
         alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton("OK",
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
-                                //Todo - Remove Toast debug
+                            public void onClick(DialogInterface dialog, int id) {
+                                int rButtonId = classifyRadioGroup.getCheckedRadioButtonId();
+                                if (rButtonId < 0) { // No RadioButton is checked
+                                    Toast.makeText(context, "You have to classify your comment!\r\n\r\t\r\t\r\t\r\t\r\tPositive/Negative",
+                                            Toast.LENGTH_LONG).show();
+                                    return;
+                                }
+                                RadioButton chosenButton = (RadioButton)promptsView.findViewById(rButtonId);
                                 Comment comment = new Comment(userComment.getText().toString(),
-                                                                ParseUser.getCurrentUser().getUsername(),
-                                                                    getCurrentDate(), getCurrentTime());
+                                        ParseUser.getCurrentUser().getUsername(),
+                                        getCurrentDate(), getCurrentTime(), chosenButton.getText().toString());
+                                // Notify that the comment has benn added.
+                                Toast.makeText(context, "Your comment successfully added!\r\n " +
+                                                         "Go to 'Comments' to watch all comments", Toast.LENGTH_LONG).show();
+
                                 dataBL.addCommentToDbTable(conversationName, menuClickedMessage.getMessageId(), comment);
-                                Toast.makeText(context, userComment.getText().toString(), Toast.LENGTH_LONG).show();
                             }
                         })
                 .setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });

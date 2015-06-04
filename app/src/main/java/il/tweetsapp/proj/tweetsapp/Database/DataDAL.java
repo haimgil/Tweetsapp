@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
-import java.util.List;
-
 import il.tweetsapp.proj.tweetsapp.Objcets.Comment;
 import il.tweetsapp.proj.tweetsapp.helpers.Constants;
 
@@ -128,7 +126,8 @@ public class DataDAL {
         values.put(Constants.COLUMN_COMMENT_OWNER_NAME, comment.getCommentOwner());
         values.put(Constants.COLUMN_MSG_DATE_NAME, comment.getCommentDate());
         values.put(Constants.COLUMN_MSG_TIME_NAME, comment.getCommentTime());
-        values.put(Constants.COLUMN_MESSAGES_ID, msgId);
+        values.put(Constants.COLUMN_MESSAGES_ID_NAME, msgId);
+        values.put(Constants.COLUMN_CLASSIFICATION_NAME, comment.getCommentClassification());
         // Insert the row to the table and close the connection
         db.insertOrThrow(Constants.COMMENTS_TABLE_NAME, null, values);
         db.close();
@@ -249,11 +248,11 @@ public class DataDAL {
         Cursor cursor;
         //Columns that get from preferably table
         String [] columns = {Constants.COLUMN_COMMENT_TEXT_NAME, Constants.COLUMN_COMMENT_OWNER_NAME,
-                Constants.COLUMN_MSG_DATE_NAME, Constants.COLUMN_MSG_TIME_NAME};
+                Constants.COLUMN_MSG_DATE_NAME, Constants.COLUMN_MSG_TIME_NAME, Constants.COLUMN_CLASSIFICATION_NAME};
 
         cursor = db.query(Constants.COMMENTS_TABLE_NAME,
                 columns,
-                Constants.COLUMN_CONVERSATION_NAME + "=? AND " + Constants.COLUMN_MESSAGES_ID  + "=?",
+                Constants.COLUMN_CONVERSATION_NAME + "=? AND " + Constants.COLUMN_MESSAGES_ID_NAME + "=?",
                             new String[] {conversationName, String.valueOf(messageId)}, null, null, null);
         return cursor;
     }
