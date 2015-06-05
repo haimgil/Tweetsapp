@@ -139,7 +139,7 @@ public class Login extends Activity {
                 public void onCompleted(GraphUser facebookUser, Response response) {
                     if (facebookUser != null) {
                         ParseUser.getCurrentUser().put("name", facebookUser.getFirstName());
-                        ParseUser.getCurrentUser().setUsername(facebookUser.getName());
+                        ParseUser.getCurrentUser().setUsername(facebookUser.getUsername());
                         ParseUser.getCurrentUser().saveInBackground();
                     }
                 }

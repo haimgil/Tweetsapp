@@ -124,6 +124,7 @@ public class Utils {
                             }
                             else if(item.getTitle().equals("Comments")){
                                 List<Comment> comments = dataBL.getMessageComments(conversationName, menuClickedMessage.getMessageId());
+                                //Todo - remove Toast from here
                                 Toast.makeText(ctx, comments.get(0).getCommentText() + " Classify is: " + comments.get(0).getCommentClassification() + "\r\n" + comments.get(1).getCommentText()+ " Classify is: " + comments.get(1).getCommentClassification() + "\r\n" +
                                 comments.get(2).getCommentText()+ " Classify is: " + comments.get(2).getCommentClassification(), Toast.LENGTH_LONG).show();
                             }
