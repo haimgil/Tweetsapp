@@ -25,7 +25,6 @@ public class Main extends Activity {
         settings = getSharedPreferences("PrefsFile", MODE_PRIVATE);
         isLoggedIn = settings.getBoolean("login", false);
 
-
         Intent activity = null;
         if(ParseUser.getCurrentUser()!=null && isLoggedIn)
             activity = new Intent(this, Conversations.class);

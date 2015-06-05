@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -35,8 +36,8 @@ import il.tweetsapp.proj.tweetsapp.R;
  * Created by Haim on 12/27/2014.
  */
 public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
-   private int notificationId = 001;
-   private DataBL dataBL;
+
+    private DataBL dataBL;
     public TweetsBroadcastReceiver(){
     }
 
@@ -159,14 +160,22 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
                         PendingIntent.FLAG_UPDATE_CURRENT);
 
         notification.setContentIntent(resultPendingIntent);
-
+        SharedPreferences preferences = context.getSharedPreferences("PrefsFile", Context.MODE_PRIVATE);
         // Sets an ID for the notification
-        int mNotificationId = notificationId++;
+        int notificationId = preferences.getInt("notificationId", 001);
+
+        Log.d("Notification ID","Notification ID is " + notificationId);
         // Gets an instance of the NotificationManager service
         NotificationManager mNotifyMgr = (NotificationManager)context.getSystemService(context.NOTIFICATION_SERVICE);
         // Builds the notification and issues it.
-        mNotifyMgr.notify(mNotificationId, notification.build());
+        mNotifyMgr.notify(notificationId, notification.build());
         playRingNotification(context);
+
+        // Save the notificationId in Preferences file.
+        preferences = context.getSharedPreferences("PrefsFile", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("notificationId", ++notificationId);
+        editor.commit();
     }
 
     private void playRingNotification(Context context) {

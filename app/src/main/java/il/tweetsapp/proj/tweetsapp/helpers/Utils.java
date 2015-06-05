@@ -45,6 +45,7 @@ import il.tweetsapp.proj.tweetsapp.R;
 public class Utils {
     public static Message menuClickedMessage = null;
     public static DataBL dataBL;
+    public static int notificationId = 0;
 
     public static void alert(Context ctx, String title, String msg){
         AlertDialog alertDialog = new AlertDialog.Builder(ctx).create();
