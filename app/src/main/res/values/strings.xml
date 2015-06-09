@@ -53,5 +53,6 @@
         Check your internet connection</string>
     <string name="r_button_positive">Positive</string>
     <string name="r_button_negative">Negative</string>
+    <string name="title_activity_comments">Comments</string>
 
 </resources>

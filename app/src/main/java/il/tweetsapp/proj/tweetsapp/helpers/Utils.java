@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Activities.Chat;
 import il.tweetsapp.proj.tweetsapp.Activities.Conversations;
+import il.tweetsapp.proj.tweetsapp.Comments;
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Comment;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
@@ -60,7 +62,7 @@ public class Utils {
         alertDialog.show();
     }
 
-    public static void printMessage(Activity activity, Message msg, boolean isGroupCreateMsg, final String conversationName){
+    public static void printMessage(final Activity activity, Message msg, boolean isGroupCreateMsg, final String conversationName){
         final Context ctx = activity.getApplicationContext();
         final String convName = conversationName;
         dataBL = new DataBL(ctx);
@@ -124,6 +126,12 @@ public class Utils {
                                 openCommentDialog(ctx, conversationName);
                             }
                             else if(item.getTitle().equals("Comments")){
+                                Intent commentsIntent = new Intent().setClass(activity.getApplication(), Comments.class);
+                                commentsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                commentsIntent.putExtra("messageId", menuClickedMessage.getMessageId());
+                                commentsIntent.putExtra("conversationName", conversationName);
+                                activity.getApplication().startActivity(commentsIntent);
+
                                 List<Comment> comments = dataBL.getMessageComments(conversationName, menuClickedMessage.getMessageId());
                                 //Todo - remove Toast from here
                                 Toast.makeText(ctx, comments.get(0).getCommentText() + " Classify is: " + comments.get(0).getCommentClassification() + "\r\n" + comments.get(1).getCommentText()+ " Classify is: " + comments.get(1).getCommentClassification() + "\r\n" +

@@ -126,6 +126,7 @@ public class Login extends Activity {
                     pairingUserToInstallationId();
                     Intent i = new Intent(Login.this, Conversations.class);
                     startActivity(i);
+                    finish();
                 }
             }
         });

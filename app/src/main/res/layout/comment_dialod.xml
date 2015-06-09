@@ -14,14 +14,16 @@
             android:layout_height="wrap_content"
             android:text="@string/r_button_positive"
             android:id="@+id/rButtonPos"
-            android:layout_marginLeft="75dp"/>
+            android:layout_marginLeft="75dp"
+            android:textColor="#00ff00" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/r_button_negative"
             android:id="@+id/rButtonNeg"
-            android:layout_marginLeft="25dp"/>
+            android:layout_marginLeft="25dp"
+            android:textColor="#ffff1f0e" />
     </RadioGroup>
 
     <EditText

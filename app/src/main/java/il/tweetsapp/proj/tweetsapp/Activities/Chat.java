@@ -98,7 +98,7 @@ public class Chat extends ActionBarActivity{
                 chatWith = new ArrayList<ParseUser>();
                 Utils.setGroupUsersForChatting(this,conversationName);
             }
-        }else { // Not supposed to be here
+        }else { // Not supposed to got here
             conversationName = null;
             Toast.makeText(this, "Some error occurred in conversation name assigning!", Toast.LENGTH_LONG).show();
         }

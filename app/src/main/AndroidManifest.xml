@@ -46,7 +46,7 @@
             android:name=".Activities.Chat"
             android:label="@string/title_activity_chat"
             android:parentActivityName=".Activities.Conversations"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
@@ -71,15 +71,15 @@
         <activity
             android:name=".Activities.Users_list"
             android:label="@string/title_activity_users_list"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
-            android:parentActivityName=".Activities.Conversations" >
+            android:parentActivityName=".Activities.Conversations"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" >
         </activity>
         <activity
             android:name=".Activities.Conversations"
             android:label="@string/title_activity_conversations" >
-            <meta-data android:name="android.app.searchable"
+            <meta-data
+                android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-
         </activity>
         <activity
             android:name=".Activities.GroupCreate"
@@ -117,6 +117,15 @@
                 <action android:name="com.parse.push.intent.DELETE" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".Comments"
+            android:label="@string/title_activity_comments"
+            android:parentActivityName=".Activities.Chat" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="il.tweetsapp.proj.tweetsapp.Activities.Chat" />
+        </activity>
     </application>
 
 </manifest>
