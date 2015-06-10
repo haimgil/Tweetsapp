@@ -208,7 +208,7 @@ public class DataDAL {
 
     /**
      * Getting all messages that has been sent in the specific conversation.
-     * @param ConversationName - the conversation name to get all messages from.
+     * @param conversationName - the conversation name to get all messages from.
      * @return cursor to all existing messages in this conversation.
      */
     public Cursor pullConversationMessages(String conversationName){
@@ -232,6 +232,27 @@ public class DataDAL {
                             columns,
                              Constants.COLUMN_CONVERSATION_NAME + "=?", new String[] {conversationName}, null, null, null);
 
+        return cursor;
+    }
+
+    public Cursor pullMessageById(String conversationName, int messageId){
+        try {
+            db = dbHelper.getReadableDatabase();
+        }catch (SQLiteException e){
+            Log.e("getReadableDatabase", "Failed!");
+            if(db.isOpen())
+                db.close();
+            return null;
+        }
+
+        Cursor cursor;
+        String[] columns = {Constants.COLUMN_MSG_TXT_NAME, Constants.COLUMN_MSG_OWNER_NAME,
+                                Constants.COLUMN_MSG_TIME_NAME, Constants.COLUMN_MSG_DATE_NAME,
+                                    Constants.COLUMN_MSG_BOOLEAN_NAME, Constants._ID};
+
+        cursor = db.query(Constants.MESSAGES_TABLE_NAME, columns,
+                    Constants.COLUMN_CONVERSATION_NAME + "=? AND " + Constants._ID + "=?",
+                        new String[] {conversationName, String.valueOf(messageId)}, null, null, null);
         return cursor;
     }
 

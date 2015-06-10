@@ -7,7 +7,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
@@ -21,19 +21,21 @@
                 android:layout_marginTop="5dp"
                 android:layout_gravity="center"
                 android:textColor="#ff1c16ff"
-                android:layout_marginLeft="110dp" />
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="65dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/msg_time_text"
-                android:id="@+id/msgTimeText"
+                android:id="@+id/msgTimeTextView"
                 android:textColor="#ff1c16ff"
+                android:layout_gravity="center"
                 android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_gravity="center" />
-        </LinearLayout>
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp" />
+        </RelativeLayout>
 
         <RelativeLayout
             android:orientation="horizontal"

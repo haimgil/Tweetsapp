@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/comment_dialog_title"
-            android:id="@+id/textView2"
+            android:id="@+id/cmntDialogTitle"
             android:textColor="#ffffff"
             android:gravity="center"
             android:layout_gravity="center_vertical"

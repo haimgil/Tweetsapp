@@ -2,6 +2,7 @@ package il.tweetsapp.proj.tweetsapp.Database;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +93,21 @@ public class DataBL {
         }
         dataDAL.closeDb();
         return users;
+    }
+
+    public Message getMessageById(String conversationName, int messageId){
+        Cursor cursor = dataDAL.pullMessageById(conversationName, messageId);
+        if(cursor.moveToNext()) {
+            Message message = new Message(cursor.getString(0),
+                                          cursor.getString(1),
+                                          cursor.getString(2),
+                                          cursor.getString(3),
+                                          (cursor.getInt(4)==1)? true : false,
+                                          cursor.getInt(5));
+            return message;
+        }
+        Log.e("GetMessageById", "Conversation name or messageId is incorrect!");
+        return null;
     }
 
     public List<Comment> getMessageComments(String conversationName, int messageId){

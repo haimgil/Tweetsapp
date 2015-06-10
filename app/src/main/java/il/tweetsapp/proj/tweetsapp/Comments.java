@@ -15,18 +15,21 @@ import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Comment;
+import il.tweetsapp.proj.tweetsapp.Objcets.Message;
 
 
 public class Comments extends ActionBarActivity {
 
     DataBL dataBL;
     LinearLayout comments;
+    LinearLayout messageLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comments);
         comments = (LinearLayout)findViewById(R.id.comments);
+        messageLayout = (LinearLayout)findViewById(R.id.msgHolderLayout);
         dataBL = new DataBL(this);
 
         Intent intent = getIntent();
@@ -34,9 +37,29 @@ public class Comments extends ActionBarActivity {
             Toast.makeText(this, "Error occurred while trying to fetch comments from db", Toast.LENGTH_LONG).show();
             return;
         }
-        List<Comment> comments = dataBL.getMessageComments(intent.getStringExtra("conversationName"), intent.getIntExtra("messageId", -1));
+        Message message = dataBL.getMessageById(intent.getStringExtra("conversationName"),
+                intent.getIntExtra("messageId", -1));
+        if(message == null)
+            Toast.makeText(this, "Some error Occurred while get message from db",Toast.LENGTH_SHORT).show();
 
+        List<Comment> comments = dataBL.getMessageComments(intent.getStringExtra("conversationName"),
+                                                                intent.getIntExtra("messageId", -1));
+        printMessageToScreen(message);
         printCommentsToScreen(comments);
+    }
+
+    private void printMessageToScreen(Message message) {
+        LinearLayout inflatedView = (LinearLayout)View.inflate(this.getApplicationContext(),
+                                                            R.layout.comments_main_msg_layout, null);
+        TextView msgTxtTView = (TextView)inflatedView.findViewById(R.id.msgTextView);
+        TextView msgDateTView = (TextView)inflatedView.findViewById(R.id.msgDateTextView);
+        TextView msgTimeTView = (TextView)inflatedView.findViewById(R.id.msgTimeTextView);
+
+        msgTxtTView.setText(message.getMessage_text());
+        msgDateTView.setText(message.getDate());
+        msgTimeTView.setText(message.getTime());
+
+        this.messageLayout.addView(inflatedView);
     }
 
     private void printCommentsToScreen(List<Comment> comments) {
