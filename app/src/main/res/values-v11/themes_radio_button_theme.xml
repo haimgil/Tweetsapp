@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="radio_button_theme" parent="@style/_radio_button_theme"/>
+
+  <style name="_radio_button_theme" parent="Theme.AppCompat.Light.DarkActionBar">
+
+    <item name="android:listChoiceIndicatorSingle">@drawable/radio_button_theme_btn_radio_holo_light</item>
+
+  </style>
+
+</resources>

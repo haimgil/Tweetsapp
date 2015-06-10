@@ -54,5 +54,6 @@
     <string name="r_button_positive">Positive</string>
     <string name="r_button_negative">Negative</string>
     <string name="title_activity_comments">Comments</string>
+    <string name="comment_dialog_title">New comment</string>
 
 </resources>
