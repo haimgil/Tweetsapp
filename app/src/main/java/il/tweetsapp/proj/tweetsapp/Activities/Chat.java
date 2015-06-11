@@ -44,7 +44,7 @@ public class Chat extends ActionBarActivity{
     public static boolean isChatWithSingle;
 
     public static boolean onPauseCalled;
-    //Todo - Create activity for message comments
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
@@ -111,6 +111,7 @@ public class Chat extends ActionBarActivity{
     @Override
     protected void onResume() {
         super.onResume();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         onPauseCalled = false;
     }
 

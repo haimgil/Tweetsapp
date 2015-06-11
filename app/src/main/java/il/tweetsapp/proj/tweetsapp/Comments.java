@@ -24,6 +24,8 @@ public class Comments extends ActionBarActivity {
     LinearLayout comments;
     LinearLayout messageLayout;
 
+    //Todo - fix message text deviation
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

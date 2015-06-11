@@ -40,7 +40,7 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversations);
         dataBL = new DataBL(this);
-        if(isConvsOpen == null) // In some cases that Hashmap initialized in TweetsBroadcastReceiver class.
+        if(isConvsOpen == null) // In some cases that HashMap initialized in TweetsBroadcastReceiver class.
             isConvsOpen = new LinkedHashMap<String, Boolean>();
 
         conversationsListView = (ListView)findViewById(R.id.conversationsList);
@@ -154,7 +154,7 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
         if(actionIntent != null)
             startActivity(actionIntent);
 
-        return super.onOptionsItemSelected(item);
+        return true;// super.onOptionsItemSelected(item);
     }
 
     @Override

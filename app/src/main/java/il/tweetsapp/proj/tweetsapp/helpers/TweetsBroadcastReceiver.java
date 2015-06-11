@@ -126,13 +126,12 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
             // Push the message to the local db
             dataBL.addMessageToDbTable(msgToDb, conversationName);
 
-            //todo - remove debug
             boolean isConvOpen = false;
             if(Conversations.isConvsOpen != null){
                 if(Conversations.isConvsOpen.get(conversationName) != null)
                     isConvOpen = Conversations.isConvsOpen.get(conversationName);
             }
-            else{// In case that the Hashmap for conversations not initialized before, initializing it here.
+            else{// In case that the HashMap for conversations not initialized before, initializing it here.
                 List<String> convsNames = dataBL.getConversationsNames();
                 Conversations.isConvsOpen = new LinkedHashMap<String, Boolean>();
                 for(String convName : convsNames) {
@@ -146,8 +145,6 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
             else
                 sendNotification(context, msgToDb, conversationName, msgToDb.getIsGroupCreateMsg());
 
-            //Todo - delete code below (1 Line for debug)
-            //Toast.makeText(context, msgToDb.toString(), Toast.LENGTH_LONG).show();
         } catch (JSONException je) {
             Log.e("ParseBroadcastReceiver", je.getMessage());
             return;

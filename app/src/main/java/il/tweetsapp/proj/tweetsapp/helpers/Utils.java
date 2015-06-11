@@ -102,7 +102,6 @@ public class Utils {
                                 List<Comment> comments = dataBL.getMessageComments(conversationName, menuClickedMessage.getMessageId());
 
                             }
-                            Toast.makeText(ctx, menuClickedMessage.getMessage_text(), Toast.LENGTH_LONG).show();
                             return true;
                         }
                     });
