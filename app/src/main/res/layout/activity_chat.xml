@@ -36,8 +36,7 @@
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:textSize="25dp"
-            android:maxLength="100"
-            android:focusable="false"/>
+            android:maxLength="100"/>
 
         <Button
             android:layout_width="47dp"

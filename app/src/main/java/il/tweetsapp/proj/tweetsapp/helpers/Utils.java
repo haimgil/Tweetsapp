@@ -20,7 +20,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
@@ -60,6 +62,7 @@ public class Utils {
                     }
                 });
         alertDialog.show();
+
     }
 
     public static void printMessage(final Activity activity, Message msg, boolean isGroupCreateMsg, final String conversationName){
@@ -89,7 +92,16 @@ public class Utils {
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
-                            Toast.makeText(ctx, "You selected the action : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                            if(item.getTitle().equals("Comments")){
+                                Intent commentsIntent = new Intent().setClass(activity.getApplication(), Comments.class);
+                                commentsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                                commentsIntent.putExtra("messageId", menuClickedMessage.getOwnerMessageId());
+                                commentsIntent.putExtra("conversationName", conversationName);
+                                activity.getApplication().startActivity(commentsIntent);
+
+                                List<Comment> comments = dataBL.getMessageComments(conversationName, menuClickedMessage.getMessageId());
+
+                            }
                             Toast.makeText(ctx, menuClickedMessage.getMessage_text(), Toast.LENGTH_LONG).show();
                             return true;
                         }
@@ -121,7 +133,6 @@ public class Utils {
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
-                            //Todo - handle this scenarios - Show all comments.
                             if(item.getTitle().equals("Add comment...")){
                                 openCommentDialog(ctx, conversationName);
                             }
@@ -133,9 +144,7 @@ public class Utils {
                                 activity.getApplication().startActivity(commentsIntent);
 
                                 List<Comment> comments = dataBL.getMessageComments(conversationName, menuClickedMessage.getMessageId());
-                                //Todo - remove Toast from here
-                                Toast.makeText(ctx, comments.get(0).getCommentText() + " Classify is: " + comments.get(0).getCommentClassification() + "\r\n" + comments.get(1).getCommentText()+ " Classify is: " + comments.get(1).getCommentClassification() + "\r\n" +
-                                comments.get(2).getCommentText()+ " Classify is: " + comments.get(2).getCommentClassification(), Toast.LENGTH_LONG).show();
+
                             }
                             return true;
                         }
@@ -158,7 +167,7 @@ public class Utils {
         messages.addView(inflatedView);
     }
 
-    private static void openCommentDialog(Context ctx, final String conversationName) {
+    private static void openCommentDialog(final Context ctx, final String conversationName) {
         // get prompts.xml view
         final Context context = ctx;
         LayoutInflater li = LayoutInflater.from(ctx);
@@ -180,7 +189,8 @@ public class Utils {
                             public void onClick(DialogInterface dialog, int id) {
                                 int rButtonId = classifyRadioGroup.getCheckedRadioButtonId();
                                 if (rButtonId < 0) { // No RadioButton is checked
-                                    Toast.makeText(context, "You have to classify your comment!\r\n\r\t\r\t\r\t\r\t\r\tPositive/Negative",
+                                    Toast.makeText(context, "You have to classify your comment!\r\n" +
+                                                            "      (Positive/Negative)",
                                             Toast.LENGTH_LONG).show();
                                     return;
                                 }
@@ -188,6 +198,7 @@ public class Utils {
                                 Comment comment = new Comment(userComment.getText().toString(),
                                         ParseUser.getCurrentUser().getUsername(),
                                         getCurrentDate(), getCurrentTime(), chosenButton.getText().toString());
+                                sendCommentToConversationUsers(ctx, comment, conversationName, menuClickedMessage);
                                 // Notify that the comment has benn added.
                                 Toast.makeText(context, "Your comment successfully added!\r\n " +
                                                          "Go to 'Comments' to watch all comments", Toast.LENGTH_LONG).show();
@@ -208,6 +219,39 @@ public class Utils {
         alertDialog.show();
     }
 
+    private static void sendCommentToConversationUsers(Context ctx, Comment comment, String convName, Message message) {
+
+        ParseQuery<ParseInstallation> destQuery = ParseQuery.getQuery(ParseInstallation.class);
+        for(ParseUser user : Chat.chatWith){
+            if(!ParseUser.getCurrentUser().getObjectId().equals(user.getObjectId())) {
+                ParseQuery<ParseInstallation> destination = destQuery.whereEqualTo("user", user);
+                try {
+                    final JSONObject commentDetails = Utils.generateCommentJSONObject(comment, message);
+                    if(Chat.isChatWithSingle)
+                        commentDetails.put("Conversation name", ParseUser.getCurrentUser().getUsername());
+                    else
+                        commentDetails.put("Conversation name", convName);
+
+                    ParsePush.sendDataInBackground(commentDetails, destination);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private static JSONObject generateCommentJSONObject(Comment comment, Message message) throws JSONException{
+        JSONObject object = new JSONObject();
+        object.put("comment_alert", comment.getCommentText());
+        object.put("comment_owner", comment.getCommentOwner());
+        object.put("comment_date", comment.getCommentDate());
+        object.put("comment_time", comment.getCommentTime());
+        object.put("comment_classification", comment.getCommentClassification());
+        object.put("msg_owner", message.getMessage_owner());
+        object.put("msgId_comment", message.getOwnerMessageId());
+        return object;
+    }
+
 
     public static JSONObject generateMessageJSONObject(Message msg) throws JSONException {
         JSONObject object = new JSONObject();
@@ -216,6 +260,7 @@ public class Utils {
         object.put("msg_time", msg.getTime());
         object.put("msg_date", msg.getDate());
         object.put("msg_gCreate", msg.getIsGroupCreateMsg());
+        object.put("msg_ownerMsgId", msg.getOwnerMessageId());
 
         return object;
     }

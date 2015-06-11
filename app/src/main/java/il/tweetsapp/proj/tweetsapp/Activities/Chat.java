@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -48,6 +50,8 @@ public class Chat extends ActionBarActivity{
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         INSTANCE = this;
         dataBL = new DataBL(this);
@@ -147,12 +151,21 @@ public class Chat extends ActionBarActivity{
 
         // Create new message object for insert to database
         final Message newMsg = new Message(txtMessage.getText().toString(), ParseUser.getCurrentUser().getUsername(),
-                Utils.getCurrentTime(), Utils.getCurrentDate(), false, 0);
+                Utils.getCurrentTime(), Utils.getCurrentDate(), false, 0, -1);
 
         //Print the message to the sender screen.
         Utils.printMessage(INSTANCE, newMsg, newMsg.getIsGroupCreateMsg(), conversationName);
         // Insert the message to current user local db.
-        dataBL.addMessageToDbTable(newMsg, conversationName);
+        long ownerMsgId = dataBL.addMessageToDbTable(newMsg, conversationName);
+        int tmp = dataBL.updateMsgId(ownerMsgId);
+        Message tmpMsg = dataBL.getMessageById(conversationName, ownerMsgId);
+
+        if(ownerMsgId < 0){
+            Log.e("Add message to db", "Error occurred while try to push message to db");
+            Toast.makeText(this, "Error occurred while try to push message to db", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        newMsg.setOwnerMessageId(ownerMsgId);
 
         ParseQuery<ParseInstallation> destQuery = ParseQuery.getQuery(ParseInstallation.class);
 

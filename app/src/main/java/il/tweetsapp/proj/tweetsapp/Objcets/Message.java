@@ -12,16 +12,21 @@ public class Message {
     private String time;
     private String date;
     private Boolean isGroupCreateMsg;
-    private int messageId;
+    private long messageId;
+    private long ownerMessageId;
+
     private List<Comment> comments;
 
-    public Message(String message_text, String message_owner, String time, String date, Boolean isGroupCreateMsg, int messageId) {
+
+    public Message(String message_text, String message_owner, String time, String date,
+                                        Boolean isGroupCreateMsg, long messageId, long ownerMessageId) {
         this.message_text = message_text;
         this.message_owner = message_owner;
         this.time = time;
         this.date = date;
         this.isGroupCreateMsg = isGroupCreateMsg;
         this.messageId = messageId;
+        this.ownerMessageId = ownerMessageId;
         comments = null;
     }
 
@@ -58,8 +63,16 @@ public class Message {
         this.date = date;
     }
 
-    public int getMessageId() {
+    public long getMessageId() {
         return messageId;
+    }
+
+    public long getOwnerMessageId() {
+        return ownerMessageId;
+    }
+
+    public void setOwnerMessageId(long ownerMessageId) {
+        this.ownerMessageId = ownerMessageId;
     }
 
     public String toString(){

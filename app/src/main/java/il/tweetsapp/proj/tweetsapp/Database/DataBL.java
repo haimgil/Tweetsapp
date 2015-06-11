@@ -76,7 +76,9 @@ public class DataBL {
                     cursor.getString(1),
                     cursor.getString(2),
                     cursor.getString(3),
-                    (cursor.getInt(4)==1)? true : false, cursor.getInt(5));
+                    (cursor.getInt(4)==1)? true : false,
+                    cursor.getLong(5),
+                    cursor.getLong(6));
             messages.add(tmpMsg);
         }
         dataDAL.closeDb();
@@ -95,7 +97,7 @@ public class DataBL {
         return users;
     }
 
-    public Message getMessageById(String conversationName, int messageId){
+    public Message getMessageById(String conversationName, long messageId){
         Cursor cursor = dataDAL.pullMessageById(conversationName, messageId);
         if(cursor.moveToNext()) {
             Message message = new Message(cursor.getString(0),
@@ -103,14 +105,35 @@ public class DataBL {
                                           cursor.getString(2),
                                           cursor.getString(3),
                                           (cursor.getInt(4)==1)? true : false,
-                                          cursor.getInt(5));
+                                          cursor.getLong(5),
+                                          cursor.getLong(6));
             return message;
         }
         Log.e("GetMessageById", "Conversation name or messageId is incorrect!");
         return null;
     }
 
-    public List<Comment> getMessageComments(String conversationName, int messageId){
+    /**
+     * Get the message ID of the current user by the message owner and the message owner id.
+     * @param conversationName
+     * @param msgOwner
+     * @param ownerMsgId
+     * @return the local message id or -1 if some error occurred.
+     */
+
+    public long getMessageLocalId(String conversationName, String msgOwner, long ownerMsgId){
+        long msgId;
+        Cursor cursor = dataDAL.pullLocalMsgId(conversationName, msgOwner, ownerMsgId);
+
+        if(cursor.moveToNext()){
+            msgId = cursor.getLong(0);
+            return msgId;
+        }
+
+        return -1;
+    }
+
+    public List<Comment> getMessageComments(String conversationName, long messageId){
         Cursor cursor = dataDAL.pullMessageComments(conversationName, messageId);
         List<Comment> comments = new ArrayList<Comment>();
 
@@ -135,14 +158,18 @@ public class DataBL {
         return dataDAL.pushRowToConversationUsersTable(conversationName, userName);
     }
 
-    public boolean addMessageToDbTable(Message message, String conversationName){
+    public long addMessageToDbTable(Message message, String conversationName){
         return dataDAL.pushRowToMessagesTable(conversationName, message.getMessage_text(), message.getMessage_owner(),
                                                 message.getTime(), message.getDate(),
-                                                    (message.getIsGroupCreateMsg())? 1:0);
+                                                    (message.getIsGroupCreateMsg())? 1:0, message.getOwnerMessageId());
     }
 
-    public boolean addCommentToDbTable(String conversationName, int messageId, Comment comment){
+    public boolean addCommentToDbTable(String conversationName, long messageId, Comment comment){
         return dataDAL.pushRowToCommentsTable(conversationName, messageId, comment);
+    }
+
+    public int updateMsgId(long msgId){
+        return dataDAL.updateRowInMessageTable(msgId);
     }
 }
 

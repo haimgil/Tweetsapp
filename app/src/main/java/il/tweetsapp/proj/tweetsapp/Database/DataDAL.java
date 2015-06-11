@@ -84,15 +84,15 @@ public class DataDAL {
      * @param msgTime - Time the message has been sent.
      * @return True if row added successfully, otherwise return false.
      */
-    public boolean pushRowToMessagesTable(String conversationName, String msgTxt, String msgOwner,
-                                          String msgTime, String msgDate, int isGroupCreate){
+    public long pushRowToMessagesTable(String conversationName, String msgTxt, String msgOwner,
+                                          String msgTime, String msgDate, int isGroupCreate, long ownerMsgId){
         try{
             db = dbHelper.getWritableDatabase();
         }catch (SQLiteException e){
             Log.e("getWritableDatabase", "Failed!");
             if(db.isOpen())
                 db.close();
-            return false;
+            return -1;
         }
 
         // Save the values of a new row in ContentValues object
@@ -103,14 +103,15 @@ public class DataDAL {
         values.put(Constants.COLUMN_MSG_TIME_NAME, msgTime);
         values.put(Constants.COLUMN_MSG_DATE_NAME, msgDate);
         values.put(Constants.COLUMN_MSG_BOOLEAN_NAME, isGroupCreate);
+        values.put(Constants.COLUMN_OWNER_MSG_ID_NAME, ownerMsgId);
         // Insert the row to the table and close the connection
-        db.insertOrThrow(Constants.MESSAGES_TABLE_NAME, null, values);
+        long id = db.insertOrThrow(Constants.MESSAGES_TABLE_NAME, null, values);
         db.close();
 
-        return true;
+        return id;
     }
 
-    public boolean pushRowToCommentsTable(String conversationName, int msgId, Comment comment){
+    public boolean pushRowToCommentsTable(String conversationName, long msgId, Comment comment){
         try{
             db = dbHelper.getWritableDatabase();
         }catch (SQLiteException e){
@@ -133,6 +134,24 @@ public class DataDAL {
         db.close();
 
         return true;
+    }
+
+    public int updateRowInMessageTable(long msgId){
+        try{
+            db = dbHelper.getWritableDatabase();
+        }catch (SQLiteException e){
+            Log.e("getWritableDatabase", "Failed!");
+            if(db.isOpen())
+                db.close();
+            return -1;
+        }
+        // Save the values of a new row in ContentValues object
+        ContentValues values = new ContentValues();
+        values.put(Constants.COLUMN_OWNER_MSG_ID_NAME, msgId);
+
+        int rowId = db.update(Constants.MESSAGES_TABLE_NAME, values,
+                Constants._ID + "=" + msgId, null);
+        return rowId;
     }
 
     /**
@@ -226,7 +245,7 @@ public class DataDAL {
         //Columns that get from preferably table
         String [] columns = {Constants.COLUMN_MSG_TXT_NAME, Constants.COLUMN_MSG_OWNER_NAME,
                                 Constants.COLUMN_MSG_TIME_NAME, Constants.COLUMN_MSG_DATE_NAME,
-                                    Constants.COLUMN_MSG_BOOLEAN_NAME, Constants._ID};
+                                    Constants.COLUMN_MSG_BOOLEAN_NAME, Constants._ID, Constants.COLUMN_OWNER_MSG_ID_NAME};
 
         cursor = db.query(Constants.MESSAGES_TABLE_NAME,
                             columns,
@@ -235,7 +254,7 @@ public class DataDAL {
         return cursor;
     }
 
-    public Cursor pullMessageById(String conversationName, int messageId){
+    public Cursor pullMessageById(String conversationName, long messageId){
         try {
             db = dbHelper.getReadableDatabase();
         }catch (SQLiteException e){
@@ -248,7 +267,7 @@ public class DataDAL {
         Cursor cursor;
         String[] columns = {Constants.COLUMN_MSG_TXT_NAME, Constants.COLUMN_MSG_OWNER_NAME,
                                 Constants.COLUMN_MSG_TIME_NAME, Constants.COLUMN_MSG_DATE_NAME,
-                                    Constants.COLUMN_MSG_BOOLEAN_NAME, Constants._ID};
+                                    Constants.COLUMN_MSG_BOOLEAN_NAME, Constants._ID, Constants.COLUMN_OWNER_MSG_ID_NAME};
 
         cursor = db.query(Constants.MESSAGES_TABLE_NAME, columns,
                     Constants.COLUMN_CONVERSATION_NAME + "=? AND " + Constants._ID + "=?",
@@ -256,7 +275,27 @@ public class DataDAL {
         return cursor;
     }
 
-    public Cursor pullMessageComments(String conversationName, int messageId){
+    public Cursor pullLocalMsgId(String conversationName, String messageOwner, long ownerMsgId){
+        try{ // Open the database for reading data
+            db = dbHelper.getReadableDatabase();
+        }catch (SQLiteException e){ // Handling exception
+            Log.e("getReadableDatabase", "Failed!");
+            if(db.isOpen())
+                db.close();
+            return null;
+        }
+
+        Cursor cursor;
+        String[] column = {Constants._ID};
+        cursor = db.query(Constants.MESSAGES_TABLE_NAME, column,
+                Constants.COLUMN_CONVERSATION_NAME + "=? AND " + Constants.COLUMN_MSG_OWNER_NAME + "=? AND " +
+                        Constants.COLUMN_OWNER_MSG_ID_NAME + "=?",
+                new String[] {conversationName, messageOwner, String.valueOf(ownerMsgId)}, null, null, null);
+
+        return cursor;
+    }
+
+    public Cursor pullMessageComments(String conversationName, long messageId){
         try{ // Open the database for reading data
             db = dbHelper.getReadableDatabase();
         }catch (SQLiteException e){ // Handling exception

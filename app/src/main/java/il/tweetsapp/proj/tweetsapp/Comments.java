@@ -38,12 +38,14 @@ public class Comments extends ActionBarActivity {
             return;
         }
         Message message = dataBL.getMessageById(intent.getStringExtra("conversationName"),
-                intent.getIntExtra("messageId", -1));
-        if(message == null)
-            Toast.makeText(this, "Some error Occurred while get message from db",Toast.LENGTH_SHORT).show();
+                intent.getLongExtra("messageId", -1));
+        if(message == null) {
+            Toast.makeText(this, "Some error Occurred while get message from db", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         List<Comment> comments = dataBL.getMessageComments(intent.getStringExtra("conversationName"),
-                                                                intent.getIntExtra("messageId", -1));
+                                                                intent.getLongExtra("messageId", -1));
         printMessageToScreen(message);
         printCommentsToScreen(comments);
     }

@@ -219,13 +219,13 @@ public class GroupCreate extends ActionBarActivity {
                             }
                             //Push automatic message to local db of the group creator about creating new group.
                             Message message = new Message("You just created the group \"" + groupName + "\"!", groupName,
-                                                            Utils.getCurrentTime(), Utils.getCurrentDate(), true, 0);
+                                                            Utils.getCurrentTime(), Utils.getCurrentDate(), true, 0, 0);
                             dbObject.addMessageToDbTable(message, groupName);
 
                             // send notification to group members
                             String msg = "You have been added to group \"" + groupName + "\" by " + ParseUser.getCurrentUser().getUsername();
                             Message gCreateNotify = new Message(msg, groupName,
-                                    Utils.getCurrentTime(),Utils.getCurrentDate(), true, 0);
+                                    Utils.getCurrentTime(),Utils.getCurrentDate(), true, 0, 0);
                             ParseQuery<ParseInstallation> destination;
                             try {
                                 JSONObject jsonObject = Utils.generateMessageJSONObject(gCreateNotify);
