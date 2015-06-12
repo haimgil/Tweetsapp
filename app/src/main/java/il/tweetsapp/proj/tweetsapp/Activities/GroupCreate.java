@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseException;
@@ -48,7 +47,7 @@ import il.tweetsapp.proj.tweetsapp.helpers.Utils;
 
 public class GroupCreate extends ActionBarActivity {
 
-    private TextView groupCreateTextView;
+    private Button groupCreateButton;
     private MyCustomAdapter dataAdapter = null;
     private Dialog addUserDialog;
     private List<ParseUser> newGroupUsers;
@@ -64,9 +63,9 @@ public class GroupCreate extends ActionBarActivity {
 
         newGroupUsers = new ArrayList<ParseUser>();
         addUserDialog = null;
-        groupCreateTextView = (TextView) findViewById(R.id.groupCreateButton);
+        groupCreateButton = (Button) findViewById(R.id.groupCreateButton);
         Typeface myFont = Typeface.createFromAsset(getAssets(), "fonts/Top_Secret.ttf");
-        groupCreateTextView.setTypeface(myFont);
+        groupCreateButton.setTypeface(myFont);
     }
 
 

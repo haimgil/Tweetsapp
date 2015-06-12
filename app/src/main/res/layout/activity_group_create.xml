@@ -61,19 +61,14 @@
 
     </LinearLayout>
 
-
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/create_button"
         android:id="@+id/groupCreateButton"
+        android:text="@string/create_button"
+        android:textSize="30dp"
+        android:background="@drawable/group_create_button_btn_default_holo_light"
         android:layout_gravity="center"
-        android:singleLine="true"
-        android:textSize="40dp"
-        android:textColor="#ea040504"
-        android:layout_marginLeft="0dp"
-        android:clickable="true"
-        android:onClick="onCreateGroupClick"
-        android:layout_marginBottom="200dp" />
+        android:onClick="onCreateGroupClick"/>
 
 </LinearLayout>
