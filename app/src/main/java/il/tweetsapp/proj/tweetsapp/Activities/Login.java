@@ -1,8 +1,10 @@
 package il.tweetsapp.proj.tweetsapp.Activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -11,6 +13,7 @@ import android.content.pm.Signature;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,11 +27,14 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.R;
 import il.tweetsapp.proj.tweetsapp.helpers.Utils;
@@ -36,16 +42,19 @@ import il.tweetsapp.proj.tweetsapp.helpers.Utils;
 
 public class Login extends Activity {
 
+    private static Activity INSTANCE;
     private EditText username;
     private EditText password;
     private String[] loginDetails;
     private SharedPreferences settings;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        INSTANCE = this;
         /* debug-----------------*/
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
@@ -107,32 +116,84 @@ public class Login extends Activity {
 
     public void onFacebookClick(View view){
         final Context ctx = this;
-        final ProgressDialog pd = ProgressDialog.show(this, "", "Logging in...", true);
+        boolean isUsernameSet = false;
 
-        ParseFacebookUtils.logIn(Arrays.asList("public_profile", "email"), this, new LogInCallback() {
-            @Override
-            public void done(ParseUser parseUser, ParseException e) {
-                pd.dismiss();
-                if(parseUser == null || e!=null) {
-                    Utils.alert(Login.this, "", "Login with Facebook failed");
-                }else{
-                    makeMeRequest();
+        LayoutInflater li = LayoutInflater.from(this);
+        final View promptsView = li.inflate(R.layout.set_username_dialog_layout, null);
 
-                    settings = getSharedPreferences("PrefsFile", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putBoolean("login",true);
-                    editor.apply();
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
-                    pairingUserToInstallationId();
-                    Intent i = new Intent(Login.this, Conversations.class);
-                    startActivity(i);
-                    finish();
-                }
-            }
-        });
+        // set prompts.xml to alertDialog builder
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText usernameEditText = (EditText) promptsView.findViewById(R.id.usernameText);
+        final Collection<String> c = new ArrayList<String>();
+        c.add("public_profile");
+        c.add("email");
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                if(usernameExist(usernameEditText.getText().toString())){
+                                    Utils.alert(ctx, "Username in use", "Username already exist. Please try another");
+                                    return;
+                                }
+                                final ProgressDialog pd = ProgressDialog.show(ctx, "", "Logging in...", true);
+                                ParseFacebookUtils.logIn(c, INSTANCE, new LogInCallback() {
+                                    @Override
+                                    public void done(ParseUser parseUser, ParseException e) {
+                                        pd.dismiss();
+                                        if (parseUser == null || e != null) {
+                                            Utils.alert(Login.this, "", "Login with Facebook failed");
+                                        } else {
+                                            makeMeRequest(usernameEditText.getText().toString());
+
+                                            settings = getSharedPreferences("PrefsFile", MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = settings.edit();
+                                            editor.putBoolean("login", true);
+                                            editor.apply();
+
+                                            pairingUserToInstallationId();
+                                            Intent i = new Intent(Login.this, Conversations.class);
+                                            startActivity(i);
+                                            finish();
+                                        }
+                                    }
+                                });
+
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        // show it
+        alertDialog.show();
+
     }
 
-    public void makeMeRequest() {
+    public boolean usernameExist(String username){
+        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+        query = query.whereEqualTo("username", username);
+        List<ParseUser> users;
+        try {
+            users = query.find();
+        } catch (ParseException e) {
+            Utils.alert(INSTANCE, "Facebook Login", "Some error occurred. Login failed!");
+            return true;
+        }
+        if(users.size() > 0)
+            return true;
+        return false;
+    }
+
+    public void makeMeRequest(final String username) {
         if (ParseFacebookUtils.getSession().isOpened()) {
             Request.newMeRequest(ParseFacebookUtils.getSession(), new Request.GraphUserCallback() {
 
@@ -140,7 +201,7 @@ public class Login extends Activity {
                 public void onCompleted(GraphUser facebookUser, Response response) {
                     if (facebookUser != null) {
                         ParseUser.getCurrentUser().put("name", facebookUser.getFirstName());
-                        ParseUser.getCurrentUser().setUsername(facebookUser.getName());
+                        ParseUser.getCurrentUser().setUsername(username);
                         ParseUser.getCurrentUser().saveInBackground();
                     }
                 }

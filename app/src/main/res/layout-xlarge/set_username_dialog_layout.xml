@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/tweetsapp_background2"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/username_dialog_title"
+            android:id="@+id/usernameDialogTitle"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.5"
+            android:textSize="25dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/usernameText"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:hint="@string/username"
+        android:textColorHint="@android:color/secondary_text_light_nodisable"
+        android:textColor="@android:color/black"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="15dp">
+
+        <requestFocus />
+
+    </EditText>
+
+</LinearLayout>

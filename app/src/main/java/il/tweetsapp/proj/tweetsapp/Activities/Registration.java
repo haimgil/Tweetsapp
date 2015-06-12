@@ -114,7 +114,6 @@ public class Registration extends Activity {
             if(e.getMessage().equals("email_in_use")) {
                 Utils.alert(this, "Registration", "Registration Failed. Email address already in use.");
             }
-            //TODO - handle this part
             else if(e.getMessage().equals("username " + username + " already taken")){
                 Utils.alert(this, "Registration", "Registration Failed. Username already in use.");
             }
