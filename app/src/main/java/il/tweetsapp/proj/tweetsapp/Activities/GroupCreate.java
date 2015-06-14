@@ -1,11 +1,8 @@
 package il.tweetsapp.proj.tweetsapp.Activities;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -17,30 +14,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
+import android.widget.CheckedTextView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.parse.ParseException;
-import com.parse.ParseInstallation;
-import com.parse.ParseObject;
-import com.parse.ParsePush;
 import com.parse.ParseQuery;
-import com.parse.ParseRelation;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
-import il.tweetsapp.proj.tweetsapp.Database.DataBL;
-import il.tweetsapp.proj.tweetsapp.Objcets.Message;
 import il.tweetsapp.proj.tweetsapp.R;
 import il.tweetsapp.proj.tweetsapp.helpers.Utils;
 
@@ -48,12 +33,13 @@ import il.tweetsapp.proj.tweetsapp.helpers.Utils;
 public class GroupCreate extends ActionBarActivity {
 
     private Button groupCreateButton;
-    private MyCustomAdapter dataAdapter = null;
+    private GroupCreateAdapter dataAdapter = null;
     private Dialog addUserDialog;
     private List<ParseUser> newGroupUsers;
+    private ListView usersListView;
 
     /******************************************************/
-    final HashMap<ParseUser, Boolean> hashMap = new LinkedHashMap<ParseUser, Boolean>();
+    //final public static Hashtable<ParseUser, Boolean> usersSelected = new Hashtable<ParseUser, Boolean>();
     /*****************************************************/
 
     @Override
@@ -61,11 +47,25 @@ public class GroupCreate extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_create);
 
+        usersListView = (ListView)findViewById(R.id.users_for_group);
         newGroupUsers = new ArrayList<ParseUser>();
         addUserDialog = null;
+
+
         groupCreateButton = (Button) findViewById(R.id.groupCreateButton);
         Typeface myFont = Typeface.createFromAsset(getAssets(), "fonts/Top_Secret.ttf");
         groupCreateButton.setTypeface(myFont);
+        dataAdapter = new GroupCreateAdapter(this, R.layout.row_listview_dialog_layout, R.id.usernameCheckedTView, getUsersObjects());
+
+        usersListView.setAdapter(dataAdapter);
+
+        usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                dataAdapter.toggleChecked(position);
+
+            }
+        });
     }
 
 
@@ -91,72 +91,10 @@ public class GroupCreate extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onAddUsersClick(View view) {
-
-        addUserDialog = openUserSelectDialog();
-        checkButtonClick();
-
-    }
-
-    private Dialog openUserSelectDialog() {
-        Dialog addUserDialog = new Dialog(this);
-        addUserDialog.setTitle("Select user");
-        addUserDialog.setContentView(R.layout.listview_dialog_layout);
-        ArrayList<ParseUser> usersList = getUsersObjects();
-        insertToHashMap(usersList);
-        dataAdapter = new MyCustomAdapter(this, R.layout.row_listview_dialog_layout, usersList);
-        ListView listView = (ListView)addUserDialog.findViewById(R.id.dialogListView);
-        listView.setAdapter(dataAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ParseUser user = (ParseUser) parent.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(),
-                        "Clicked on parseUser: " + user.getUsername(),
-                        Toast.LENGTH_LONG).show();
-            }
-        });
-
-        addUserDialog.show();
-        return addUserDialog;
-    }
-
-    private void insertToHashMap(ArrayList<ParseUser> usersList) {
-        for(int i=0; i < usersList.size(); i++){
-            hashMap.put(usersList.get(i), false);
-        }
-    }
-
-    private void checkButtonClick() {
-
-        Button myButton = (Button) addUserDialog.findViewById(R.id.dialogConfirm);
-        myButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                StringBuffer responseText = new StringBuffer();
-                responseText.append("The following were selected...\n");
-
-                ArrayList<ParseUser> usersList = dataAdapter.usersList;
-                for(int i=0; i < usersList.size(); i++){
-                    ParseUser parseUser = usersList.get(i);
-                    if(hashMap.get(parseUser)){
-                        newGroupUsers.add(parseUser);
-                    }
-                }
-                hashMap.clear();
-//                Toast.makeText(getApplicationContext(),
-//                        newGroupUsers.get(0).getUsername() + "\r\n" + newGroupUsers.get(1).getUsername(), Toast.LENGTH_LONG).show();
-                addUserDialog.dismiss();
-            }
-        });
-    }
 
 
     public void onCreateGroupClick(View view) {
-        EditText groupNameEditT = (EditText)findViewById(R.id.groupNameFiled);
+     /*   EditText groupNameEditT = (EditText)findViewById(R.id.groupNameFiled);
         final String groupName = groupNameEditT.getText().toString().trim();
         // Checks that group name was entered.
         if(groupName.length() < 1){
@@ -265,38 +203,50 @@ public class GroupCreate extends ActionBarActivity {
                     }).execute(group);
                 }
             }
-        });
+        });*/
+
+        String userChosen = "";
+        newGroupUsers = dataAdapter.getCheckedItems();
+        for(ParseUser user : newGroupUsers){
+            userChosen += user.getUsername() + "\r\n";
+        }
+        Toast.makeText(this, userChosen, Toast.LENGTH_LONG).show();
     }
 
     /**
      * Getting list of users objects.
      * User object contains the all details that may be necessary.
      */
-    private ArrayList<ParseUser> getUsersObjects() {
+    private List<ParseUser> getUsersObjects() {
         ParseQuery<ParseUser> allUsers = ParseQuery.getQuery(ParseUser.class);
         allUsers = allUsers.whereNotEqualTo("username", ParseUser.getCurrentUser().getUsername());
         try {
-            return new ArrayList<ParseUser>(allUsers.find());
+            List<ParseUser> users = allUsers.find();
+            return users;
 
         }catch (ParseException pe){
             Log.d("com.parse.ParseException", "Saving users objects failed");
-            return null;
+            Utils.alert(this, "Import users error", "Some error occurred while trying to import users from server!");
+            // Return empty list instead null that will cause to crashing.
+            return new ArrayList<ParseUser>();
         }
     }
 
 
-    private class MyCustomAdapter extends ArrayAdapter<ParseUser> {
+    /*private class MyCustomAdapter extends ArrayAdapter<ParseUser> {
         private ArrayList<ParseUser> usersList;
+        private LayoutInflater inflater;
 
         public MyCustomAdapter(Context context, int textViewResourceId,
-                               ArrayList<ParseUser> usersList) {
+                               List<ParseUser> usersList) {
             super(context, textViewResourceId, usersList);
             this.usersList = new ArrayList<ParseUser>();
             this.usersList.addAll(usersList);
+            this.inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         private class ViewHolder {
-            CheckBox username;
+            CheckedTextView username;
         }
 
 
@@ -307,12 +257,10 @@ public class GroupCreate extends ActionBarActivity {
             Log.v("ConvertView", String.valueOf(position));
 
             if (convertView == null) {
-                LayoutInflater vi = (LayoutInflater)getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE);
-                convertView = vi.inflate(R.layout.row_listview_dialog_layout, null);
+                convertView = inflater.inflate(R.layout.row_listview_dialog_layout, null);
 
                 holder = new ViewHolder();
-                holder.username = (CheckBox) convertView.findViewById(R.id.checkBox);
+                holder.username = (CheckedTextView) convertView.findViewById(R.id.gCreateCBox);
                 convertView.setTag(holder);
 
                 holder.username.setOnClickListener( new View.OnClickListener() {
@@ -323,7 +271,11 @@ public class GroupCreate extends ActionBarActivity {
                                 "Clicked on Checkbox: " + cb.getText() +
                                         " is " + cb.isChecked(),
                                 Toast.LENGTH_LONG).show();
-                        hashMap.put(parseUser, cb.isChecked());
+                        usersSelected.put(parseUser, cb.isChecked());
+                        if(usersSelected.get(parseUser))
+                            newGroupUsers.add(parseUser);
+                        else
+                            newGroupUsers.remove(parseUser);
                     }
                 });
             }
@@ -337,6 +289,77 @@ public class GroupCreate extends ActionBarActivity {
 
             return convertView;
         }
+    }*/
+    private class GroupCreateAdapter extends ArrayAdapter<ParseUser> {
+
+        private HashMap<ParseUser, Boolean> checkedUsers = new HashMap<ParseUser, Boolean>();
+        private List<ParseUser> users;
+
+        public GroupCreateAdapter(Context context, int resource, int textViewResourceId, List<ParseUser> users) {
+            super(context, resource, textViewResourceId, users);
+
+            for(ParseUser user : users){
+                checkedUsers.put(user, false);
+            }
+            this.users = users;
+        }
+
+        public void toggleChecked(int position){
+            ParseUser user = users.get(position);
+            if(checkedUsers.get(user)){
+                checkedUsers.put(user, false);
+            }else{
+                checkedUsers.put(user, true);
+            }
+
+            notifyDataSetChanged();
+        }
+
+        /*public List<Integer> getCheckedItemPositions(){
+            List<Integer> checkedItemPositions = new ArrayList<Integer>();
+
+            for(int i = 0; i < myChecked.size(); i++){
+                if (myChecked.get(i)){
+                    (checkedItemPositions).add(i);
+                }
+            }
+
+            return checkedItemPositions;
+        }*/
+
+
+        public List<ParseUser> getCheckedItems(){
+            List<ParseUser> checkedUsersList= new ArrayList<ParseUser>();
+
+            for(ParseUser user : users){
+                if (checkedUsers.get(user)){
+                    (checkedUsersList).add(user);
+                }
+            }
+
+            return checkedUsersList;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View row = convertView;
+
+            if(row==null){
+                LayoutInflater inflater=getLayoutInflater();
+                row=inflater.inflate(R.layout.row_listview_dialog_layout, parent, false);
+            }
+
+            CheckedTextView checkedTextView = (CheckedTextView)row.findViewById(R.id.usernameCheckedTView);
+            checkedTextView.setText(users.get(position).getUsername());
+
+            Boolean checked = checkedUsers.get(position);
+            if (checked != null) {
+                checkedTextView.setChecked(checked);
+            }
+
+            return row;
+        }
+
     }
 
 }

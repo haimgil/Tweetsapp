@@ -31,35 +31,10 @@
             android:textColor="#ffffff" />
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.10"
-        android:weightSum="1"
-        android:layout_marginTop="5dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/GroupCreateFiled2"
-            android:id="@+id/userAddText"
-            android:textSize="25dp"
-            android:textColor="#ffffff"
-            android:layout_marginLeft="70dp"
-            android:layout_marginTop="10dp" />
-
-        <ImageButton
-            android:layout_width="42dp"
-            android:layout_height="46dp"
-            android:id="@+id/userAddButton"
-            android:background="@drawable/add_user"
-            android:layout_marginLeft="15dp"
-            android:onClick="onAddUsersClick"
-            android:nestedScrollingEnabled="false"
-            android:layout_marginTop="12dp" />
-
-    </LinearLayout>
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="300dp"
+        android:id="@+id/users_for_group" />
 
     <Button
         android:layout_width="wrap_content"
@@ -69,6 +44,7 @@
         android:textSize="30dp"
         android:background="@drawable/group_create_button_btn_default_holo_light"
         android:layout_gravity="center"
-        android:onClick="onCreateGroupClick"/>
+        android:onClick="onCreateGroupClick"
+        android:layout_marginTop="20dp" />
 
 </LinearLayout>
