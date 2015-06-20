@@ -158,8 +158,6 @@ public class Chat extends ActionBarActivity{
         Utils.printMessage(INSTANCE, newMsg, newMsg.getIsGroupCreateMsg(), conversationName);
         // Insert the message to current user local db.
         long ownerMsgId = dataBL.addMessageToDbTable(newMsg, conversationName);
-        int tmp = dataBL.updateMsgId(ownerMsgId);
-        Message tmpMsg = dataBL.getMessageById(conversationName, ownerMsgId);
 
         if(ownerMsgId < 0){
             Log.e("Add message to db", "Error occurred while try to push message to db");

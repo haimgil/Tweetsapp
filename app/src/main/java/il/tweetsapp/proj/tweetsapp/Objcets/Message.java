@@ -35,16 +35,8 @@ public class Message {
         return message_text;
     }
 
-    public void setMessage_text(String message_text) {
-        this.message_text = message_text;
-    }
-
     public String getMessage_owner() {
         return message_owner;
-    }
-
-    public void setMessage_owner(String message_owner) {
-        this.message_owner = message_owner;
     }
 
     public void setTime(String time) {

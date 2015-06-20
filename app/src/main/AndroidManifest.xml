@@ -119,7 +119,7 @@
         </receiver>
 
         <activity
-            android:name=".Comments"
+            android:name=".Activities.Comments"
             android:label="@string/title_activity_comments"
             android:parentActivityName=".Activities.Chat" >
             <meta-data

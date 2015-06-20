@@ -37,7 +37,7 @@ import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Activities.Chat;
 import il.tweetsapp.proj.tweetsapp.Activities.Conversations;
-import il.tweetsapp.proj.tweetsapp.Comments;
+import il.tweetsapp.proj.tweetsapp.Activities.Comments;
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Comment;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
@@ -239,7 +239,7 @@ public class Utils {
         }
     }
 
-    private static JSONObject generateCommentJSONObject(Comment comment, Message message) throws JSONException{
+    public static JSONObject generateCommentJSONObject(Comment comment, Message message) throws JSONException{
         JSONObject object = new JSONObject();
         object.put("comment_alert", comment.getCommentText());
         object.put("comment_owner", comment.getCommentOwner());

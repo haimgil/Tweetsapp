@@ -1,4 +1,4 @@
-package il.tweetsapp.proj.tweetsapp;
+package il.tweetsapp.proj.tweetsapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import java.util.List;
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Comment;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
+import il.tweetsapp.proj.tweetsapp.R;
 
 
 public class Comments extends ActionBarActivity {
