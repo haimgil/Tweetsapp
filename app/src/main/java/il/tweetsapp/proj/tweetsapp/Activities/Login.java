@@ -178,7 +178,7 @@ public class Login extends Activity {
 
     }
 
-    public boolean usernameExist(String username){
+    public static boolean usernameExist(String username){
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
         query = query.whereEqualTo("username", username);
         List<ParseUser> users;
@@ -200,7 +200,7 @@ public class Login extends Activity {
                 @Override
                 public void onCompleted(GraphUser facebookUser, Response response) {
                     if (facebookUser != null) {
-                        ParseUser.getCurrentUser().put("name", facebookUser.getFirstName());
+                        ParseUser.getCurrentUser().put("name", facebookUser.getName());
                         ParseUser.getCurrentUser().setUsername(username);
                         ParseUser.getCurrentUser().saveInBackground();
                     }

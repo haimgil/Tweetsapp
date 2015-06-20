@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/date_text"
+                android:id="@+id/msgDateTextView"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center"
+                android:textColor="#ff1c16ff"
+                android:layout_marginLeft="245dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/msg_time_text"
+                android:id="@+id/msgTimeText"
+                android:textColor="#ff1c16ff"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:layout_weight="0.8">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/msg_text"
+                android:id="@+id/msgTextView"
+                android:textSize="20dp"
+                android:textColor="#fffffff5"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/bg_layout_msg" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/curr_user_menu"
+                android:background="@drawable/ic_action_overflow"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:focusableInTouchMode="false" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>

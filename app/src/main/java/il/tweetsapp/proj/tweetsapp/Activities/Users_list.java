@@ -106,9 +106,9 @@ public class Users_list extends ActionBarActivity implements AdapterView.OnItemC
                 }
                 List<String> searchList = new ArrayList<String>();
                 // Check for every conversation name if contains the string 's'
-                for(String convName : usersNames){
-                    if(convName.contains(s)) {
-                        searchList.add(convName);
+                for(String username : usersNames){
+                    if(username.toLowerCase().contains(s.toLowerCase())) {
+                        searchList.add(username);
                     }
                 }
                 ListItemAdapter searchAdapter = new ListItemAdapter(ctx, searchList);

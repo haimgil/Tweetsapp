@@ -6,6 +6,7 @@ import android.test.ApplicationTestCase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import il.tweetsapp.proj.tweetsapp.Activities.Login;
 import il.tweetsapp.proj.tweetsapp.Objcets.Comment;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
 import il.tweetsapp.proj.tweetsapp.helpers.Utils;
@@ -55,5 +56,10 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void testIsUsernameExist(){
+        boolean isUsernameExist = Login.usernameExist("/NoName/");
+        assertFalse(isUsernameExist);
     }
 }

@@ -40,8 +40,9 @@ public class Comments extends ActionBarActivity {
             Toast.makeText(this, "Error occurred while trying to fetch comments from db", Toast.LENGTH_LONG).show();
             return;
         }
-        Message message = dataBL.getMessageById(intent.getStringExtra("conversationName"),
-                intent.getLongExtra("messageId", -1));
+        String convName = intent.getStringExtra("conversationName");
+        long msgId = intent.getLongExtra("messageId", -1);
+        Message message = dataBL.getMessageById(convName, msgId);
         if(message == null) {
             Toast.makeText(this, "Some error Occurred while get message from db", Toast.LENGTH_SHORT).show();
             return;

@@ -107,7 +107,7 @@ public class Conversations extends ActionBarActivity implements AdapterView.OnIt
                 List<String> searchList = new ArrayList<String>();
                 // Check for every conversation name if contains the string 's'
                 for(String convName : conversationsNames){
-                    if(convName.contains(s)) {
+                    if(convName.toLowerCase().contains(s.toLowerCase())) {
                         searchList.add(convName);
                     }
                 }

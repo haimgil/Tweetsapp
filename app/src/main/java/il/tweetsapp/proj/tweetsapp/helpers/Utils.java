@@ -95,7 +95,7 @@ public class Utils {
                             if(item.getTitle().equals("Comments")){
                                 Intent commentsIntent = new Intent().setClass(activity.getApplication(), Comments.class);
                                 commentsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-                                commentsIntent.putExtra("messageId", menuClickedMessage.getOwnerMessageId());
+                                commentsIntent.putExtra("messageId", menuClickedMessage.getMessageId());
                                 commentsIntent.putExtra("conversationName", conversationName);
                                 activity.getApplication().startActivity(commentsIntent);
 

@@ -63,7 +63,7 @@ public class GroupCreate extends ActionBarActivity {
 
 
         Button groupCreateButton = (Button) findViewById(R.id.groupCreateButton);
-        Typeface myFont = Typeface.createFromAsset(getAssets(), "fonts/Top_Secret.ttf");
+        Typeface myFont = Typeface.createFromAsset(getAssets(), "fonts/LemonMilk.otf");
         groupCreateButton.setTypeface(myFont);
         dataAdapter = new GroupCreateAdapter(this, R.layout.row_listview_dialog_layout, R.id.usernameCheckedTView, getUsersObjects());
 
@@ -86,7 +86,7 @@ public class GroupCreate extends ActionBarActivity {
                 // Check for every conversation name if contains the string 's'
                 List<ParseUser> users = getUsersObjects();
                 for(ParseUser user : users){
-                    if(user.getUsername().contains(s)) {
+                    if(user.getUsername().toLowerCase().contains(s.toLowerCase())) {
                         searchList.add(user);
                     }
                 }

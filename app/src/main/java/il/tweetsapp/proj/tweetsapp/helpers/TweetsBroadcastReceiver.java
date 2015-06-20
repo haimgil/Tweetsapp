@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Activities.Chat;
+import il.tweetsapp.proj.tweetsapp.Activities.Comments;
 import il.tweetsapp.proj.tweetsapp.Activities.Conversations;
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Comment;
@@ -64,14 +65,18 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
                 String msgOwner = data.getString("msg_owner");
                 long ownerMsgId = data.getLong("msgId_comment");
 
+                long tmpMsgId;
+
                 if(msgOwner.equals(ParseUser.getCurrentUser().getUsername())){
                     dataBL.addCommentToDbTable(conversationName, ownerMsgId, comment);
+                    tmpMsgId = ownerMsgId;
                 }
                 else{
                     long localMsgId = dataBL.getMessageLocalId(conversationName, msgOwner, ownerMsgId);
                     dataBL.addCommentToDbTable(conversationName, localMsgId, comment);
+                    tmpMsgId = localMsgId;
                 }
-                sendCommentNotification(context, comment, conversationName, msgOwner);
+                sendCommentNotification(context, comment, conversationName, msgOwner, tmpMsgId);
                 playRingNotification(context);
 
                 return;
@@ -151,7 +156,7 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
         }
     }
 
-    private void sendCommentNotification(Context context, Comment comment, String conversationName, String msgOwner) {
+    private void sendCommentNotification(Context context, Comment comment, String conversationName, String msgOwner, long msgId) {
         String notifyMsg;
         if(msgOwner.equals(ParseUser.getCurrentUser().getUsername()))
             notifyMsg = comment.getCommentOwner() + " Commented about your message";
@@ -164,8 +169,9 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
                         .setContentText(comment.getCommentText());
         notification.setAutoCancel(true);
 
-        Intent resultIntent = new Intent(context, Chat.class);
-        resultIntent.putExtra("Conversation name", conversationName);
+        Intent resultIntent = new Intent(context, Comments.class);
+        resultIntent.putExtra("conversationName", conversationName);
+        resultIntent.putExtra("messageId", msgId);
         resultIntent.putExtra("Open conversation", 0);
 
         // Because clicking the notification opens a new ("special") activity, there's no need to create an artificial back stack.
