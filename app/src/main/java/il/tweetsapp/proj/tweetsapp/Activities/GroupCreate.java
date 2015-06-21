@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -57,6 +58,8 @@ public class GroupCreate extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_create);
         final Context ctx = this;
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         usersListView = (ListView)findViewById(R.id.users_for_group);
         newGroupUsers = new ArrayList<ParseUser>();
@@ -231,6 +234,7 @@ public class GroupCreate extends ActionBarActivity {
 
                             Intent iChat = new Intent(ctx, Chat.class);
                             iChat.putExtra("Conversation name",groupName);
+                            iChat.putExtra("Open conversation", 0);
                             iChat.putExtra("Group created successfully",0);
                             startActivity(iChat);
                         }

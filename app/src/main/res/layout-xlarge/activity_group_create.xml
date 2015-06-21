@@ -22,8 +22,9 @@
             android:id="@+id/groupNameFiled"
             android:textColor="#ffffff"
             android:layout_marginLeft="15dp"
+            android:textColorHint="#6ca0d8ff"
             android:hint="@string/groupCreateField1"
-            android:textColorHint="#6ca0d8ff" />
+            android:textSize="30dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -73,7 +74,7 @@
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="300dp"
+        android:layout_height="900dp"
         android:id="@+id/users_for_group"
         android:background="#26FFFFFF" />
 

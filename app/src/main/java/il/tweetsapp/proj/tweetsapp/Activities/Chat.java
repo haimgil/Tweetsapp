@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseInstallation;
@@ -37,10 +38,16 @@ public class Chat extends ActionBarActivity{
     private static Chat INSTANCE = null;
     public static List <ParseUser> chatWith = null;
     public static String conversationName;
+    public static ScrollView msgsScrollView;
     private Button sendButton;
     private EditText msgEditText;
-    private ScrollView msgsScrollView;
+    private TextView numOfCharacters;
     private DataBL dataBL;
+
+    private static String lastMsgOwner;
+    private static String lastMsgDate;
+    private static String lastMsgTime;
+
     public static boolean isChatWithSingle;
 
     public static boolean onPauseCalled;
@@ -51,12 +58,17 @@ public class Chat extends ActionBarActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        lastMsgOwner = "";
+        lastMsgDate = "";
+        lastMsgTime = "";
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         INSTANCE = this;
         dataBL = new DataBL(this);
         onPauseCalled = false;
 
+        numOfCharacters = (TextView)findViewById(R.id.numOfCharacters);
         msgEditText = (EditText)findViewById(R.id.msgEditText);
         sendButton = (Button)findViewById(R.id.sendMsgButton);
         msgsScrollView = (ScrollView)findViewById(R.id.messagesScrollView);
@@ -77,6 +89,9 @@ public class Chat extends ActionBarActivity{
                     sendButton.setEnabled(true);
                 else
                     sendButton.setEnabled(false);
+                String text = msgEditText.getText().toString();
+                int numOfChars = Utils.MAX_CHARACTERS_IN_MESSAGE - text.length();
+                numOfCharacters.setText(String.valueOf(numOfChars));
             }
 
             @Override
@@ -93,7 +108,11 @@ public class Chat extends ActionBarActivity{
 
             List<Message> messages = dataBL.getConversationMessages(conversationName);
             for(int i=0; i < messages.size(); i++){
-                Utils.printMessage(INSTANCE, messages.get(i), messages.get(i).getIsGroupCreateMsg(), conversationName);
+                Utils.printMessage(INSTANCE, messages.get(i), messages.get(i).getIsGroupCreateMsg(), conversationName,
+                                                                                       lastMsgOwner, lastMsgDate, lastMsgTime);
+                lastMsgOwner = messages.get(i).getMessage_owner();
+                lastMsgDate = messages.get(i).getDate();
+                lastMsgTime = messages.get(i).getTime();
             }
             if(intent.hasExtra("Group created successfully"))
                 Toast.makeText(this, "The group \"" + conversationName + "\" was created successfully!", Toast.LENGTH_LONG).show();
@@ -155,7 +174,11 @@ public class Chat extends ActionBarActivity{
                 Utils.getCurrentTime(), Utils.getCurrentDate(), false, 0, -1);
 
         //Print the message to the sender screen.
-        Utils.printMessage(INSTANCE, newMsg, newMsg.getIsGroupCreateMsg(), conversationName);
+        Utils.printMessage(INSTANCE, newMsg, newMsg.getIsGroupCreateMsg(), conversationName, lastMsgOwner, lastMsgDate, lastMsgTime);
+        lastMsgOwner = newMsg.getMessage_owner();
+        lastMsgDate = newMsg.getDate();
+        lastMsgTime = newMsg.getTime();
+
         // Insert the message to current user local db.
         long ownerMsgId = dataBL.addMessageToDbTable(newMsg, conversationName);
 
@@ -189,6 +212,30 @@ public class Chat extends ActionBarActivity{
         }
         txtMessage.setText("");
         sendButton.setEnabled(false);
+    }
+
+    public static String getLastMsgOwner() {
+        return lastMsgOwner;
+    }
+
+    public static String getLastMsgDate() {
+        return lastMsgDate;
+    }
+
+    public static String getLastMsgTime() {
+        return lastMsgTime;
+    }
+
+    public static void setLastMsgDate(String lastMsgDate) {
+        Chat.lastMsgDate = lastMsgDate;
+    }
+
+    public static void setLastMsgOwner(String lastMsgOwner) {
+        Chat.lastMsgOwner = lastMsgOwner;
+    }
+
+    public static void setLastMsgTime(String lastMsgTime) {
+        Chat.lastMsgTime = lastMsgTime;
     }
 }
 

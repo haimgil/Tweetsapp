@@ -15,7 +15,8 @@
             android:text="@string/date_text"
             android:id="@+id/commentDateTView"
             android:textColor="#ff1310ff"
-            android:layout_marginLeft="125dp" />
+            android:layout_marginLeft="305dp"
+            android:textSize="25dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -24,7 +25,8 @@
             android:text="@string/msg_time_text"
             android:id="@+id/commentTimeTView"
             android:layout_marginLeft="10dp"
-            android:textColor="#ff1310ff" />
+            android:textColor="#ff1310ff"
+            android:textSize="25dp" />
     </LinearLayout>
 
     <RelativeLayout
@@ -43,28 +45,30 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/comment_owner_username"
                 android:id="@+id/cmntOwnerTView"
-                android:textColor="#60100d10" />
+                android:textColor="#60100d10"
+                android:textSize="25dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Comment text"
                 android:id="@+id/commentTView"
-                android:textSize="20dp"
+                android:textSize="40dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
         </LinearLayout>
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:id="@+id/pros_cons_view"
             android:background="@drawable/pros_view"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp" />
 
     </RelativeLayout>
 

@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="il.tweetsapp.proj.tweetsapp.Activities.Conversations">
 
-    <item android:id="@+id/action_settings"
+    <!--<item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="never" /> -->
     <item
         android:id="@+id/action_group_create"
         android:title="@string/group"

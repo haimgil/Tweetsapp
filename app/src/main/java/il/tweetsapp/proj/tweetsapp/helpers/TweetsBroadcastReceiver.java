@@ -146,7 +146,8 @@ public class TweetsBroadcastReceiver extends ParseBroadcastReceiver {
 
             //Print the message or send notification.
             if(Chat.getInstance() != null && isConvOpen && !Chat.onPauseCalled)
-                Utils.printMessage(Chat.getInstance(), msgToDb, msgToDb.getIsGroupCreateMsg(), conversationName);
+                Utils.printMessage(Chat.getInstance(), msgToDb, msgToDb.getIsGroupCreateMsg(), conversationName,
+                                                    Chat.getLastMsgOwner(), Chat.getLastMsgDate(), Chat.getLastMsgTime());
             else
                 sendNotification(context, msgToDb, conversationName, msgToDb.getIsGroupCreateMsg());
 

@@ -23,8 +23,8 @@
                 android:layout_marginTop="5dp"
                 android:layout_gravity="center"
                 android:textColor="#ff1c16ff"
-                android:layout_marginStart="110dp"
-                android:layout_marginLeft="110dp" />
+                android:layout_marginStart="225dp"
+                android:layout_marginLeft="225dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -34,8 +34,8 @@
                 android:id="@+id/msgTimeText"
                 android:textColor="#ff1c16ff"
                 android:layout_marginTop="5dp"
-                android:layout_marginStart="195dp"
-                android:layout_marginLeft="195dp"
+                android:layout_marginStart="315dp"
+                android:layout_marginLeft="315dp"
                 android:layout_gravity="center"
                 android:gravity="center|center_horizontal" />
         </RelativeLayout>
@@ -49,7 +49,7 @@
 
             <ImageButton
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:id="@+id/msg_user_menu"
                 android:background="@drawable/ic_action_overflow"
                 android:adjustViewBounds="false" />
@@ -72,9 +72,9 @@
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="@string/username"
                     android:id="@+id/usernameTView"
-                    android:layout_gravity="end"
+                    android:layout_gravity="right"
                     android:textColor="#75fffeba"
-                    android:textSize="15sp"
+                    android:textSize="15dp"
                     android:visibility="visible" />
 
                 <TextView
@@ -83,9 +83,10 @@
                     android:maxWidth="280dp"
                     android:text="@string/msg_text"
                     android:id="@+id/msgTextView"
-                    android:textSize="20sp"
+                    android:textSize="20dp"
                     android:textColor="#fffffff5"
-                    android:layout_alignParentRight="true"/>
+                    android:autoText="false"
+                    android:layout_alignParentRight="true" />
             </LinearLayout>
 
         </RelativeLayout>

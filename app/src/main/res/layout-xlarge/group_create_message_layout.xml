@@ -7,7 +7,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
@@ -21,22 +21,21 @@
                 android:layout_marginTop="5dp"
                 android:layout_gravity="center"
                 android:textColor="#ff1c16ff"
-                android:layout_alignParentRight="false"
-                android:layout_marginLeft="160dp" />
+                android:layout_marginLeft="275dp"
+                android:textSize="26dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/msg_time_text"
-                android:id="@+id/msgTimeTextView"
+                android:id="@+id/msgTimeText"
                 android:textColor="#ff1c16ff"
-                android:layout_gravity="center"
                 android:layout_marginTop="5dp"
-                android:layout_alignParentRight="false"
-                android:layout_alignWithParentIfMissing="false"
-                android:layout_marginLeft="100dp" />
-        </RelativeLayout>
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center"
+                android:textSize="26dp" />
+        </LinearLayout>
 
         <RelativeLayout
             android:orientation="horizontal"
@@ -48,15 +47,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="280dp"
                 android:text="@string/msg_text"
                 android:id="@+id/msgTextView"
-                android:textSize="20dp"
-                android:textColor="#fffffff5"
+                android:textSize="28dp"
+                android:textColor="#b932346e"
+                android:layout_gravity="center"
                 android:autoText="false"
-                android:layout_alignParentRight="true"
-                android:background="@drawable/bg_layout_users_msg"
-                android:layout_marginRight="5dp" />
+                android:background="@drawable/bg_layout_gcreate_msg"
+                android:gravity="center"
+                android:maxWidth="270dp"
+                android:layout_centerInParent="true" />
 
         </RelativeLayout>
 

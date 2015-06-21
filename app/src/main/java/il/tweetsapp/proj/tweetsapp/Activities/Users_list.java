@@ -34,8 +34,6 @@ public class Users_list extends ActionBarActivity implements AdapterView.OnItemC
     private List<String> usersNames;
     private DataBL dataBL;
 
-    //Todo - Handle in search option
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

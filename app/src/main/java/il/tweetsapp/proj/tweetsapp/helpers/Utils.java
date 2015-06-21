@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,8 +38,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import il.tweetsapp.proj.tweetsapp.Activities.Chat;
-import il.tweetsapp.proj.tweetsapp.Activities.Conversations;
 import il.tweetsapp.proj.tweetsapp.Activities.Comments;
+import il.tweetsapp.proj.tweetsapp.Activities.Conversations;
 import il.tweetsapp.proj.tweetsapp.Database.DataBL;
 import il.tweetsapp.proj.tweetsapp.Objcets.Comment;
 import il.tweetsapp.proj.tweetsapp.Objcets.Message;
@@ -47,6 +49,7 @@ import il.tweetsapp.proj.tweetsapp.R;
  * Created by Haim on 12/27/2014.
  */
 public class Utils {
+    public static int MAX_CHARACTERS_IN_MESSAGE = 60;
     public static Message menuClickedMessage = null;
     public static DataBL dataBL;
     public static int notificationId = 0;
@@ -65,9 +68,15 @@ public class Utils {
 
     }
 
-    public static void printMessage(final Activity activity, Message msg, boolean isGroupCreateMsg, final String conversationName){
+    public static void printMessage(final Activity activity, Message msg, boolean isGroupCreateMsg, final String conversationName,
+                                                        String lastMsgOwner, String lastMsgDate, String lastMsgTime){
         final Context ctx = activity.getApplicationContext();
         final String convName = conversationName;
+
+        TextView msgTxtV;
+        TextView timeTxtV;
+        TextView dateTxtV;
+
         dataBL = new DataBL(ctx);
         LinearLayout messages = (LinearLayout)activity.findViewById(R.id.messages);
         ImageButton menuButton;
@@ -76,6 +85,11 @@ public class Utils {
         if(msg.getMessage_owner().equals(ParseUser.getCurrentUser().getUsername())) {
             //inflate view for current user messages
             inflatedView = (LinearLayout) View.inflate(activity.getApplicationContext(), R.layout.current_user_message_layout, null);
+
+            msgTxtV = (TextView)inflatedView.findViewById(R.id.msgTextView);
+            timeTxtV = (TextView)inflatedView.findViewById(R.id.msgTimeText);
+            dateTxtV = (TextView)inflatedView.findViewById(R.id.msgDateTextView);
+            msgTxtV.setText(msg.getMessage_text());
 
             //Handle in button that used for message menu
             menuButton = (ImageButton)inflatedView.findViewById(R.id.curr_user_menu);
@@ -113,9 +127,30 @@ public class Utils {
         }else if(isGroupCreateMsg) {
             //inflate view for group create message
             inflatedView = (LinearLayout) View.inflate(activity.getApplicationContext(), R.layout.group_create_message_layout, null);
+            msgTxtV = (TextView)inflatedView.findViewById(R.id.msgTextView);
+            timeTxtV = (TextView)inflatedView.findViewById(R.id.msgTimeText);
+            dateTxtV = (TextView)inflatedView.findViewById(R.id.msgDateTextView);
+
+            msgTxtV.setText(msg.getMessage_text());
+
         }else {
             //inflate view for other users messages
             inflatedView = (LinearLayout) View.inflate(activity.getApplicationContext(), R.layout.users_message_layout, null);
+
+            msgTxtV = (TextView)inflatedView.findViewById(R.id.msgTextView);
+            TextView usernameTextV = (TextView)inflatedView.findViewById(R.id.usernameTView);
+            if(msg.getMessage_owner().equals(lastMsgOwner)){
+                usernameTextV.setVisibility(View.GONE);
+            }else {
+                usernameTextV.setText(msg.getMessage_owner());
+                Chat.setLastMsgOwner(msg.getMessage_owner());
+            }
+            msgTxtV.setText(msg.getMessage_text());
+
+            timeTxtV = (TextView)inflatedView.findViewById(R.id.msgTimeText);
+            dateTxtV = (TextView)inflatedView.findViewById(R.id.msgDateTextView);
+
+
 
             //Handle in button that used for message menu
             menuButton = (ImageButton)inflatedView.findViewById(R.id.msg_user_menu);
@@ -155,13 +190,19 @@ public class Utils {
 
         }
         //View newMsgLayout = inflater.inflate(R.layout.current_user_message_layout, messages, true);
-        TextView msgTxtV = (TextView)inflatedView.findViewById(R.id.msgTextView);
-        TextView timeTxtV = (TextView)inflatedView.findViewById(R.id.msgTimeText);
-        TextView dateTxtV = (TextView)inflatedView.findViewById(R.id.msgDateTextView);
-        msgTxtV.setText(msg.getMessage_owner() + ": " + msg.getMessage_text());
-        timeTxtV.setText(msg.getTime());
-        dateTxtV.setText(msg.getDate());
-
+        if(msg.getDate().equals(lastMsgDate)){
+            dateTxtV.setVisibility(View.GONE);
+        }else {
+            dateTxtV.setText(msg.getDate());
+            Chat.setLastMsgDate(msg.getDate());
+        }
+        if(msg.getTime().equals(lastMsgTime)){
+            timeTxtV.setVisibility(View.GONE);
+        }else {
+            timeTxtV.setText(msg.getTime());
+            Chat.setLastMsgTime(msg.getTime());
+        }
+        inflatedView.requestFocus();
 
         messages.addView(inflatedView);
     }
@@ -170,7 +211,7 @@ public class Utils {
         // get prompts.xml view
         final Context context = ctx;
         LayoutInflater li = LayoutInflater.from(ctx);
-        final View promptsView = li.inflate(R.layout.comment_dialod, null);
+        final View promptsView = li.inflate(R.layout.comment_dialog_layout, null);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Chat.getInstance());
 
@@ -179,6 +220,26 @@ public class Utils {
 
         final EditText userComment = (EditText) promptsView.findViewById(R.id.commentText);
         final RadioGroup classifyRadioGroup = (RadioGroup)promptsView.findViewById(R.id.rGroupClassification);
+        final TextView numOfCharacters = (TextView)promptsView.findViewById(R.id.numOfChars);
+
+        userComment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String text = userComment.getText().toString();
+                int numOfChars = MAX_CHARACTERS_IN_MESSAGE - text.length();
+                numOfCharacters.setText(String.valueOf(numOfChars));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         // set dialog message
         alertDialogBuilder

@@ -29,6 +29,14 @@
         android:paddingRight="5dp"
         android:paddingBottom="10dp">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/characters_to_type"
+            android:id="@+id/numOfCharacters"
+            android:layout_gravity="center_vertical" />
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,11 +44,11 @@
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:textSize="25dp"
-            android:maxLength="100"/>
+            android:maxLength="60"/>
 
         <Button
             android:layout_width="47dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:enabled="false"
             android:id="@+id/sendMsgButton"

@@ -2,6 +2,7 @@ package il.tweetsapp.proj.tweetsapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,11 +22,11 @@ import il.tweetsapp.proj.tweetsapp.R;
 
 public class Comments extends ActionBarActivity {
 
-    DataBL dataBL;
-    LinearLayout comments;
-    LinearLayout messageLayout;
+    private DataBL dataBL;
+    private LinearLayout comments;
+    private LinearLayout messageLayout;
+    private String convName;
 
-    //Todo - fix message text deviation
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class Comments extends ActionBarActivity {
             Toast.makeText(this, "Error occurred while trying to fetch comments from db", Toast.LENGTH_LONG).show();
             return;
         }
-        String convName = intent.getStringExtra("conversationName");
+        convName = intent.getStringExtra("conversationName");
         long msgId = intent.getLongExtra("messageId", -1);
         Message message = dataBL.getMessageById(convName, msgId);
         if(message == null) {
@@ -71,6 +72,7 @@ public class Comments extends ActionBarActivity {
     private void printCommentsToScreen(List<Comment> comments) {
         ImageView prosOrConsView;
         TextView commentText;
+        TextView commentOwnerTView;
         TextView commentDateText;
         TextView commentTimeText;
 
@@ -78,6 +80,7 @@ public class Comments extends ActionBarActivity {
             LinearLayout inflatedView = (LinearLayout) View.inflate(this.getApplicationContext(), R.layout.comment_row, null);
             prosOrConsView = (ImageView)inflatedView.findViewById(R.id.pros_cons_view);
             commentText = (TextView)inflatedView.findViewById(R.id.commentTView);
+            commentOwnerTView = (TextView)inflatedView.findViewById(R.id.cmntOwnerTView);
             commentDateText = (TextView)inflatedView.findViewById(R.id.commentDateTView);
             commentTimeText = (TextView)inflatedView.findViewById(R.id.commentTimeTView);
             if(comment.getCommentClassification().equals("Positive"))
@@ -85,6 +88,7 @@ public class Comments extends ActionBarActivity {
             else
                 prosOrConsView.setImageResource(R.drawable.cons_view);
             commentText.setText(comment.getCommentText());
+            commentOwnerTView.setText(comment.getCommentOwner());
             commentDateText.setText(comment.getCommentDate());
             commentTimeText.setText(comment.getCommentTime());
 
@@ -110,7 +114,9 @@ public class Comments extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.up) {
+            Intent intent = NavUtils.getParentActivityIntent(this);
+            intent.putExtra("Conversation name", convName);
             return true;
         }
 

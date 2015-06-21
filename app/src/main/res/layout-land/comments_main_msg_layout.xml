@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:layout_width="match_parent" android:layout_height="wrap_content">
 
     <LinearLayout
         android:orientation="vertical"
@@ -23,20 +21,21 @@
                 android:layout_marginTop="5dp"
                 android:layout_gravity="center"
                 android:textColor="#ff1c16ff"
-                android:layout_marginStart="220dp"
-                android:layout_marginLeft="220dp" />
+                android:layout_alignParentRight="false"
+                android:layout_marginLeft="285dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="@string/msg_time_text"
-                android:id="@+id/msgTimeText"
+                android:id="@+id/msgTimeTextView"
                 android:textColor="#ff1c16ff"
+                android:layout_gravity="center"
                 android:layout_marginTop="5dp"
-                android:layout_marginStart="305dp"
-                android:layout_marginLeft="305dp"
-                android:layout_gravity="center" />
+                android:layout_alignParentRight="false"
+                android:layout_alignWithParentIfMissing="false"
+                android:layout_marginLeft="225dp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -46,36 +45,18 @@
             android:weightSum="1"
             android:layout_weight="0.8">
 
-            <LinearLayout
-                android:orientation="horizontal"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/curr_user_menu"
-                android:layout_toLeftOf="@+id/curr_user_menu">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/msg_text"
-                    android:id="@+id/msgTextView"
-                    android:textSize="20dp"
-                    android:textColor="#fffffff5"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/bg_layout_msg" />
-            </LinearLayout>
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/curr_user_menu"
-                android:background="@drawable/ic_action_overflow"
-                android:layout_alignParentTop="true"
+                android:maxWidth="280dp"
+                android:text="@string/msg_text"
+                android:id="@+id/msgTextView"
+                android:textSize="20dp"
+                android:textColor="#fffffff5"
+                android:autoText="false"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:focusableInTouchMode="false" />
+                android:background="@drawable/bg_layout_users_msg"
+                android:layout_marginRight="5dp" />
 
         </RelativeLayout>
 

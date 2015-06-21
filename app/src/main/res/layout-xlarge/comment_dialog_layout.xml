@@ -6,7 +6,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="55dp"
+        android:layout_height="75dp"
         android:background="@drawable/tweetsapp_background2"
         android:weightSum="1">
 
@@ -19,7 +19,7 @@
             android:gravity="center"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.5"
-            android:textSize="25dp"
+            android:textSize="40dp"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp" />
     </LinearLayout>
@@ -37,9 +37,10 @@
             android:text="@string/r_button_positive"
             android:button="@drawable/radio_button_theme_btn_radio_holo_light"
             android:id="@+id/rButtonPos"
-            android:layout_marginLeft="65dp"
+            android:layout_marginLeft="215dp"
             android:textColor="#629632"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:textSize="30dp" />
 
         <RadioButton
             android:layout_width="wrap_content"
@@ -49,21 +50,38 @@
             android:id="@+id/rButtonNeg"
             android:layout_marginLeft="20dp"
             android:textColor="#c00"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:textSize="30dp" />
     </RadioGroup>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal">
+        <EditText
+            android:id="@+id/commentText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="@string/comment_hint"
+            android:textColorHint="@android:color/secondary_text_light_nodisable"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="35dp"
+            android:maxLength="60"
+            android:layout_weight="0.8">
 
-    <EditText
-        android:id="@+id/commentText"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="@string/comment_hint"
-        android:textColorHint="@android:color/secondary_text_light_nodisable"
-        android:textColor="@android:color/black"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+            <requestFocus />
 
-        <requestFocus />
+        </EditText>
 
-    </EditText>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/characters_to_type"
+            android:id="@+id/numOfChars"
+            android:layout_marginRight="10dp"
+            android:textSize="30dp" />
+    </LinearLayout>
 
 </LinearLayout>
