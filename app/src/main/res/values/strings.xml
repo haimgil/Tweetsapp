@@ -59,5 +59,7 @@
     <string name="username_dialog_title">Set username</string>
     <string name="comment_owner_username">comment owner</string>
     <string name="characters_to_type">60</string>
+    <string name="recommendation_dialog_title">Your recommendation</string>
+    <string name="recommendation">Recommendation text</string>
 
 </resources>

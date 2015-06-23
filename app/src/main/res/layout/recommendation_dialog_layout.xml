@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/tweetsapp_background2"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/recommendation_dialog_title"
+            android:id="@+id/recommendationTitle"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.5"
+            android:textSize="25dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recommendationBody"
+            android:text="@string/recommendation"
+            android:textSize="18sp"/>
+        </LinearLayout>
+
+</LinearLayout>

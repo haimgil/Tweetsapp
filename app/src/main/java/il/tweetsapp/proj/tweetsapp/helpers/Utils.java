@@ -2,11 +2,13 @@ package il.tweetsapp.proj.tweetsapp.helpers;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -49,6 +51,16 @@ import il.tweetsapp.proj.tweetsapp.R;
  * Created by Haim on 12/27/2014.
  */
 public class Utils {
+
+    private static String POSITIVE_WORDS[] = {"best show ever", "very good", "very exciting", "excellent", "delightful", "entertaining", "fine",
+                                            "heartbreaking", "astonishing", "wonderful", "amazing", "shocking", "magical", "awesome",
+                                        "ingenious", "brilliant", "enjoying", "great", "epic", "surprising", "fun", "good", "not bad",
+                                    "hypnotist"};
+
+    private static String NEGATIVE_WORDS[] = {"worst show ever", "very bad", "disappointing", "downfall", "ridiculous", "dreadful", "awful",
+                                    "suck", "too long", "pointless", "predictable", "boring", "shit", "bad", "not so good", "disaster",
+                                "terrible", "poorly", "worse"};
+
     public static int MAX_CHARACTERS_IN_MESSAGE = 60;
     public static Message menuClickedMessage = null;
     public static DataBL dataBL;
@@ -68,7 +80,7 @@ public class Utils {
 
     }
 
-    public static void printMessage(final Activity activity, Message msg, boolean isGroupCreateMsg, final String conversationName,
+    public static void printMessage(final Activity activity, final Message msg, boolean isGroupCreateMsg, final String conversationName,
                                                         String lastMsgOwner, String lastMsgDate, String lastMsgTime){
         final Context ctx = activity.getApplicationContext();
         final String convName = conversationName;
@@ -115,6 +127,35 @@ public class Utils {
 
                                 List<Comment> comments = dataBL.getMessageComments(conversationName, menuClickedMessage.getMessageId());
 
+                            }
+
+                            else if(item.getTitle().equals("Should I?")){
+                                (new AsyncTask<Void, Void, Void>(){
+                                    ProgressDialog pDialog;
+                                    String recommendation;
+                                    @Override
+                                    protected void onPreExecute() {
+                                        super.onPreExecute();
+                                        pDialog = new ProgressDialog(Chat.getInstance());
+                                        pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                        pDialog.setMessage("Please wait while we generate your recommendation...");
+                                        pDialog.show();
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(Void aVoid) {
+                                        super.onPostExecute(aVoid);
+                                        pDialog.dismiss();
+                                        openRecommendationDialog(Chat.getInstance(), recommendation);
+                                    }
+
+                                    @Override
+                                    protected Void doInBackground(Void... params) {
+                                        recommendation = generateRecommendation(ctx, conversationName, menuClickedMessage.getMessageId());
+                                        return null;
+                                    }
+                                }).execute();
+                                generateRecommendation(ctx, conversationName, menuClickedMessage.getMessageId());
                             }
                             return true;
                         }
@@ -205,6 +246,132 @@ public class Utils {
         inflatedView.requestFocus();
 
         messages.addView(inflatedView);
+    }
+
+    private static String generateRecommendation(Context ctx, String conversationName, long messageId) {
+        List<Comment> comments = dataBL.getMessageComments(conversationName, messageId);
+        int positiveCounter = 0, negativeCounter = 0;
+        int positiveLength = 0, negativeLength = 0;
+
+        for(Comment comment : comments){
+            if(comment.getCommentClassification().equals("Positive")){
+                positiveCounter++;
+                for(String word : NEGATIVE_WORDS){ // Move on all the negative words
+                    // Checks if the word contained in the comment
+                    if(comment.getCommentText().toLowerCase().contains(word)){
+                        positiveLength -= word.length();
+                        if(!word.equals("bad")) { // Remove the word if its contained except 'bad' for using in positive words.
+                            String tmpComment = comment.getCommentText().toLowerCase().replace(word, "");
+                            comment.setCommentText(tmpComment);
+                        }
+                    }
+                }
+                for(String word : POSITIVE_WORDS){ // Move on all the positive words
+                    // Checks if the word contained in the comment
+                    if(comment.getCommentText().toLowerCase().contains(word)){
+                        if(word.equals("not bad"))
+                            positiveLength += 2; // 'not bad' is longer then, lets say 'good', but the mining is lower quality.
+                        else
+                            positiveLength += word.length();
+                        // Remove the word if its contained in comment.
+                        String tmpComment = comment.getCommentText().toLowerCase().replace(word, "");
+                        comment.setCommentText(tmpComment);
+
+                    }
+                }
+            }else if(comment.getCommentClassification().equals("Negative")){
+                negativeCounter++;
+                for(String word : POSITIVE_WORDS){ // Move on all the negative words
+                    // Checks if the word contained in the comment
+                    if(comment.getCommentText().toLowerCase().contains(word)){
+                        negativeLength -= word.length();
+                        if(!word.equals("good")) { // Remove the word if its contained except 'good' for using in positive words.
+                            String tmpComment = comment.getCommentText().toLowerCase().replace(word, "");
+                            comment.setCommentText(tmpComment);
+                        }
+                    }
+                }
+                for(String word : NEGATIVE_WORDS){ // Move on all the positive words
+                    // Checks if the word contained in the comment
+                    if(comment.getCommentText().toLowerCase().contains(word)){
+                        if(word.equals("not so good"))
+                            positiveLength += 2; // 'not so good' is longer then, lets say 'bad', but the mining is higher quality.
+                        else
+                            positiveLength += word.length();
+                        // Remove the word if its contained in comment.
+                        String tmpComment = comment.getCommentText().toLowerCase().replace(word, "");
+                        comment.setCommentText(tmpComment);
+
+                    }
+                }
+            }
+        }
+        String recommendation = "";
+        if (positiveCounter > negativeCounter){
+            if(positiveLength > negativeLength +20){
+                recommendation = "Most of your friends that commented about your message thought that you have to watch the movie/series!\r\n" +
+                        "You should know that your friends strongly recommend about that movie/series!";
+            }else if(positiveLength > negativeLength){
+                recommendation = "Most of your friends that commented about your message thought that the movie/series is very good!\r\n" +
+                        "You should know that they recommended you to watch in that movie/series!";
+            }else if(positiveLength +20 < negativeLength){
+                recommendation = "Most of your friends gives good reviews about that movie/series but in their opinion it could be " +
+                        "better!";
+            }else if(positiveLength < negativeLength){
+                recommendation = "Most of your friends that commented about your message thought that the movie/series is good!\r\n" +
+                        "Some of your friends restricted and thought that parts from the movie/series was little less good!";
+            }
+        }else if (positiveCounter == negativeCounter){
+            if(positiveLength > negativeLength){
+                recommendation = "Your friends was divided over their mind!\r\n" +
+                        "However, judging by each comment separately, you should watch this movie/series!";
+            }else if(positiveLength == negativeLength){
+                recommendation = "Your friends was totally divided over their mind!\r\n" +
+                        "In this case you should take a chance, watch in the movie/series and come back to give us your opinion!";
+            }else if(positiveLength < negativeLength){
+                recommendation = "Your friends was divided over their mind!\r\n" +
+                        "However, judging by each comment separately, not sure that you want to waste your time about that movie/series!";
+            }
+        }else {
+            if(positiveLength > negativeLength +20){
+                recommendation = "Most of your friends that commented about your message thought that the movie/series is not so good!\r\n" +
+                        "Yet, maybe you should try that movie/series because the positive comments contained \"warm\" words.";
+            }else if(positiveLength > negativeLength){
+                recommendation = "Most of your friends that commented about your message thought that the movie/series is not so good!\r\n" +
+                        "And yet, some of them thought you should watch in it so...";
+            }else if(positiveLength +20 < negativeLength){
+                recommendation = "Most of your friends that commented about your message thought that the movie/series is waste of time" +
+                        "and money!!!\r\n So ask about another movie/series because that movie/series you shouldn't watch!";
+            }else if(positiveLength < negativeLength){
+                recommendation = "Most of your friends that commented about your message thought that the movie/series is not good!\r\n" +
+                        "You should looking for another movie/series to watch!";
+            }
+        }
+        return recommendation;
+    }
+
+    private static void openRecommendationDialog(final Context ctx, final String recommendation){
+        LayoutInflater li = LayoutInflater.from(ctx);
+        final View promptsView = li.inflate(R.layout.recommendation_dialog_layout, null);
+
+        TextView recommendationTView = (TextView)promptsView.findViewById(R.id.recommendationBody);
+        recommendationTView.setText(recommendation);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(Chat.getInstance());
+        alertDialogBuilder.setView(promptsView);
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Thanks",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                            }
+                        });
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        // show it
+        alertDialog.show();
     }
 
     private static void openCommentDialog(final Context ctx, final String conversationName) {

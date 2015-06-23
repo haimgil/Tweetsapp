@@ -40,4 +40,8 @@ public class Comment {
         return commentClassification;
     }
 
+    public void setCommentText(String commentText) {
+        this.commentText = commentText;
+    }
+
 }
